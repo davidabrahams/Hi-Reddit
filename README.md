@@ -4,7 +4,8 @@
 ####David Abrahams, Yuzhong Huang, Nora Mohamed, Lucy Wilcox
 
 ##Project Description:
-	Our project is a Siri app that responds with Reddit comments. This app is for people who read Reddit and want to get Reddit comments read aloud to them at their voice command. The vast majority of Reddit users rarely or never post to Reddit and this gives them a way to receive snarky Reddit responses via voice. Additionally, many people only use Siri (or OK Google) for comedic purposes -- they say funny things to Siri to get a funny response. By using Reddit and crowdsourcing our responses, our OK Google will be much funnier and snarkier than the original alternative.
+	
+Our project is a Siri app that responds with Reddit comments. This app is for people who read Reddit and want to get Reddit comments read aloud to them at their voice command. The vast majority of Reddit users rarely or never post to Reddit and this gives them a way to receive snarky Reddit responses via voice. Additionally, many people only use Siri (or OK Google) for comedic purposes -- they say funny things to Siri to get a funny response. By using Reddit and crowdsourcing our responses, our OK Google will be much funnier and snarkier than the original alternative.
 	
 ##Project Goals:
 
