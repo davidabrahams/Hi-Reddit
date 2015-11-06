@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'io.indico:android:1.0.2'
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
