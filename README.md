@@ -4,6 +4,7 @@
 ####David Abrahams, Yuzhong Huang, Nora Mohamed, Lucy Wilcox
 
 ##Project Description:
+
 Our project is a Siri app that responds with Reddit comments. This app is for people who read Reddit and want to get Reddit comments read aloud to them at their voice command. The vast majority of Reddit users rarely or never post to Reddit and this gives them a way to receive snarky Reddit responses via voice. Additionally, many people only use Siri (or OK Google) for comedic purposes -- they say funny things to Siri to get a funny response. By using Reddit and crowdsourcing our responses, our OK Google will be much funnier and snarkier than the original alternative.
 	
 ##Project Goals:
@@ -31,14 +32,14 @@ Here are some technologies that we would use to create our app:
 
  - An API that lets us search through Reddit comments. Or possibly using
    a database of comments.
-    - jReddit
-    - An API from Reddit
+    - [jReddit](https://github.com/jReddit/jReddit)
+    - [An API from Reddit](https://www.reddit.com/r/redditdev/comments/3fv8vv/new_api_endpoint_now_you_can_search_comments/)
  - Do HTTP requests in order to search Reddit
-    - Volley
+    - [Volley](http://developer.android.com/training/volley/index.html)
  - Voice recognition library/SDK that turns speech to text, and also
    another that turns text  to speech
-    - Voice capabilities
-    - android.speech
+    - [Voice capabilities](http://developer.android.com/training/wearables/apps/voice.html)
+    - [android.speech](http://developer.android.com/reference/android/speech/package-summary.html)
  - We could possibly machine learning to better search for comments.This would probably include using a database, or we could use some of indico’s APIs to get the most relevantkeywords or tags that relate to our Reddit comment.
    
  - Possible use Google Voice’s search bar
