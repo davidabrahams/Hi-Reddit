@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import butterknife.Bind;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainFragment extends Fragment
 {
+
+    @Bind(R.id.alienImage) ImageView alienImage;
 
     public MainFragment()
     {
