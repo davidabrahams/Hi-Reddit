@@ -9,12 +9,22 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
+
 public class MainActivity extends AppCompatActivity
 {
-
+    public ArrayList<String> allComments;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        GetComment getComment = new GetComment(getApplicationContext());
+        getComment.commentSearch("yellow poster", new CommentCallback() {
+            @Override
+            public void callback(ArrayList<String> commentList) {
+                allComments = commentList;
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
