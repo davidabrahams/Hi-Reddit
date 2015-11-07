@@ -1,5 +1,6 @@
 package com.mobileproto.hireddit.hireddit;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,15 +23,18 @@ public class MainActivity extends AppCompatActivity
     {
         spokenString = "yellow poster";
         importantWords = "";
-        new GetWords(spokenString, importantWords, getApplicationContext()).execute();
-
-        GetComment getComment = new GetComment(getApplicationContext());
-        getComment.commentSearch(importantWords, new CommentCallback() {
-            @Override
-            public void callback(ArrayList<String> commentList) {
-                allComments = commentList;
-            }
-        });
+//        GetWords getWords = new GetWords(getApplicationContext());
+//        allComments = getWords.getRelatedComments(spokenString);
+//
+//        ArrayList<String> hasa = allComments;
+        new GetWordsAsync(allComments, spokenString, importantWords, getApplicationContext()).execute();
+//        GetComment getComment = new GetComment(getApplicationContext());
+//        getComment.commentSearch(importantWords, new CommentCallback() {
+//            @Override
+//            public void callback(ArrayList<String> commentList) {
+//                allComments = commentList;
+//            }
+//        });
 
 
 
