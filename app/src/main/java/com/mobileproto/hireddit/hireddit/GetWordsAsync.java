@@ -70,7 +70,12 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                 //delegate.processFinish(allComments);
             }
         });
+    }
+
+    public String returnComment(){
         ChooseComment chooseComment = new ChooseComment();
+        String comment = chooseComment.pickComment(allComments);
+        return comment;
     }
 }
 
