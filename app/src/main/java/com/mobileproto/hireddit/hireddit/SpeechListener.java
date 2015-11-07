@@ -15,61 +15,65 @@ import java.util.ArrayList;
 
 
     class SpeechListener implements RecognitionListener {
-
+        String TAG = "myDebug";
         private String voiceInput;
+        private ArrayList data;
 
         @Override
         public void onReadyForSpeech(Bundle params) {
-            Log.d("onReadyForSpeech", "" + params);
+            Log.d(TAG, "onReadyForSpeech " + params);
         }
 
         @Override
         public void onBeginningOfSpeech() {
-            Log.d("Begin Speech", "Start talking!");
+            Log.d(TAG, "oneBeginningOfSpeech - Start talking!");
         }
 
         @Override
         public void onRmsChanged(float rmsdB) {
-            Log.d("onRmsChanged", "" + rmsdB);
+            //Log.d(TAG, "onRmsChanged " + rmsdB);
         }
 
         @Override
         public void onBufferReceived(byte[] buffer) {
-            Log.d("onBufferReceived", "buffer buffer buffer");
+            Log.d(TAG, "onBuffer Received");
         }
 
         @Override
         public void onEndOfSpeech() {
-            Log.d("End Speech", "Finished talking.");
+            Log.d(TAG, "onEndOfSpeech - Finished talking.");
         }
 
         @Override
         public void onError(int error) {
-            Log.d("Error", "Error occurred with voice recognition. Error code: " + error);
+            Log.d(TAG, "onError - Error occurred with voice recognition. Error code: " + error);
         }
 
         @Override
         public void onResults(Bundle results) {
+            data = null;
             voiceInput = "";
-            Log.d("onResults", "" + results);
-            ArrayList data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            Log.d(TAG, "onResults " + results);
+            data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             for (int i = 0; i < data.size(); i++) {
                 voiceInput += data.get(i) + " ";
             }
-            Log.d("onResults", "ArrayList: " + voiceInput);
+            Log.d(TAG, "onResults - ArrayList: " + voiceInput);
+
+            //TODO: get results fromm here and put them in fragment
         }
 
-        public String getResults() {
-            return voiceInput;
+        public ArrayList getResults() {
+            return data;
         }
 
         @Override
         public void onPartialResults(Bundle partialResults) {
-            Log.d("onPartialResults", "" + partialResults);
+            Log.d(TAG, "onPartialResults " + partialResults);
         }
 
         @Override
         public void onEvent(int eventType, Bundle params) {
-            Log.d("onEvent", "" + eventType + ", " + params);
+            Log.d(TAG, "onEvent " + eventType + ", " + params);
         }
     }
