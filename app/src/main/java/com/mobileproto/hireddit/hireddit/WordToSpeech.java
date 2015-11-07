@@ -20,7 +20,7 @@ public class WordToSpeech {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
-                    m_ttobj.setLanguage(Locale.UK);
+                    m_ttobj.setLanguage(Locale.US);
                 }
             }
         });
@@ -28,5 +28,10 @@ public class WordToSpeech {
 
     public void speak(String toSpeak) {
         m_ttobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void stop() {
+        m_ttobj.stop();
+        m_ttobj.shutdown();
     }
 }
