@@ -9,14 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
 {
-    public WordToSpeech speech;
-    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,17 +20,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        speech = new WordToSpeech(this);
-        button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speech.speak("Bill is stupid");
-            }
-        });
-
 
 //        THIS CODE CAME WITH THE PRE-BUILT ACTIVITY BUT I DON'T THINK WE HAVE A USE FOR IT RIGHT NOW
 
@@ -75,12 +59,5 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        //Close the Text to Speech Library
-        if(speech !=null){
-            speech.stop();
-        }
-        super.onDestroy();
-    }
+
 }
