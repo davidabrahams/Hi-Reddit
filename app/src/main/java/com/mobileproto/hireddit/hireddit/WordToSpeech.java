@@ -27,7 +27,13 @@ public class WordToSpeech {
     }
 
     public void speak(String toSpeak) {
-        mTtobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        // version check, if SDK is newer than 21, use the update speak method
+        // if not, use the deprecated one
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            mTtobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            mTtobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     public void stop() {
