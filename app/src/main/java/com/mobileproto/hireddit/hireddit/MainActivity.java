@@ -16,10 +16,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
-    public ArrayList<String> allComments;
-    public String spokenString;
-    public String importantWords;
-    public String postComment;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -29,23 +25,6 @@ public class MainActivity extends AppCompatActivity
         MainFragment mainFragment = new MainFragment();
         ft.replace(R.id.container, mainFragment);
         ft.commit();
-
-//        spokenString = "yellow poster";
-////        GetWords getWords = new GetWords(getApplicationContext());
-////        allComments = getWords.getRelatedComments(spokenString);
-////
-//        //ArrayList<String> hasa = allComments;
-//        new GetWordsAsync(postComment, spokenString, importantWords, getApplicationContext()).execute();
-
-//        GetComment getComment = new GetComment(getApplicationContext());
-//        getComment.commentSearch(importantWords, new CommentCallback() {
-//            @Override
-//            public void callback(ArrayList<String> commentList) {
-//                allComments = commentList;
-//            }
-//        });
-
-//
 //
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);

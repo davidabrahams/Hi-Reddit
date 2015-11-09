@@ -29,8 +29,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     private String spokenString;
     private String importantWords;
     private Context context;
-    //public ArrayList<String> wordList = new ArrayList<>();
-    public String wordList;
+    public String wordList = "";
     public ArrayList<String> allComments;
     public String postComment;
     public TextView commentText;
@@ -46,16 +45,12 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     @Override
     protected String doInBackground(Void... params) {
         try {
-            //final ArrayList<String> wordList = new ArrayList<String>();
             indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
                 @Override
                 public void handle(IndicoResult result) throws IndicoException {
-                    //ArrayList<String> wordList = new ArrayList<String>();
                     Log.i("Indico Keywords", "keywords: " + result.getKeywords());
                     if (result.getKeywords() != null) {
                         wordList = result.getKeywords().keySet().toString();
-                        //wordList.add(result.getKeywords().keySet().toString());
-
                     }
                 }
             });
@@ -70,7 +65,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         if (result.length() > 0) {
-            importantWords = result.replace(",", "").replace("[", "").replace("]", ""); //.toString();
+            importantWords = result.replace(",", "").replace("[", "").replace("]", "");
             GetComment getComment = new GetComment(context);
             getComment.commentSearch(importantWords, new CommentCallback() {
                 @Override
@@ -79,7 +74,6 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
                     ChooseComment chooseComment = new ChooseComment();
                     postComment = chooseComment.pickComment(allComments);
                     commentText.setText(postComment);
-                    // delegate.processFinish(allComments);
                 }
             });
         }

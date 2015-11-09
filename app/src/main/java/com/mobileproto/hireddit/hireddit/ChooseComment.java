@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class ChooseComment {
 
     public String pickComment(ArrayList<String> allComments){
-        return "testing!!";
+        return allComments.get(0);
+        //return "testing!!";
     }
 
 }

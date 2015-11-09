@@ -32,12 +32,9 @@ public class MainFragment extends Fragment
         myFramentView = inflater.inflate(R.layout.fragment_main, container, false);
         commentText = (TextView) myFramentView.findViewById(R.id.commentText);
         spokenString = "yellow poster";
-//        GetWords getWords = new GetWords(getApplicationContext());
-//        allComments = getWords.getRelatedComments(spokenString);
-//
-        //ArrayList<String> hasa = allComments;
+
         new GetWordsAsync(postComment, spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
-        //comment.setText("eou");
+
     return myFramentView;
     }
 }
