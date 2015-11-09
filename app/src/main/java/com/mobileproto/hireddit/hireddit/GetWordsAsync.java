@@ -5,10 +5,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Set;
 
 import io.indico.Indico;
 import io.indico.enums.TextTag;
@@ -27,12 +30,14 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     private Context context;
     public ArrayList<String> wordList = new ArrayList<>();
     public ArrayList<String> allComments;
-    //public AsyncIndicoResponse delegate = null;
-    public GetWordsAsync(ArrayList<String> allComments, String spokenString, String importantWords, Context context){
-        this.allComments = allComments;
+    public String postComment;
+    public TextView commentText;
+    public GetWordsAsync(String postComment, String spokenString, String importantWords, Context context, TextView commentText){
+        this.postComment = postComment;
         this.spokenString = spokenString;
         this.importantWords = importantWords;
         this.context = context;
+        this.commentText = commentText;
     }
     String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
     Indico indico = Indico.init(context, indicoApiKey, null);
@@ -44,12 +49,11 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                 @Override
                 public void handle(IndicoResult result) throws IndicoException {
                     //ArrayList<String> wordList = new ArrayList<String>();
-                    Log.i("Indico Sentiment", "sentiment of: " + result.getKeywords());
+                    Log.i("Indico Keywords", "keywords: " + result.getKeywords());
                     if (result.getKeywords() != null) {
-                        wordList.add(result.getKeywords().toString());
+                        wordList.add(result.getKeywords().keySet().toString());
                     }
                 }
-                //return wordList;
             });
             return wordList;
         } catch (IOException | IndicoException e) {
@@ -61,43 +65,19 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     @Override
     protected void onPostExecute(ArrayList<String> result) {
         super.onPostExecute(result);
-        importantWords = result.toString();
-        GetComment getComment = new GetComment(context);
-        getComment.commentSearch(importantWords, new CommentCallback() {
-            @Override
-            public void callback(ArrayList<String> commentList) {
-                allComments = commentList;
-                //delegate.processFinish(allComments);
-            }
-        });
-    }
-
-    public String returnComment(){
-        ChooseComment chooseComment = new ChooseComment();
-        String comment = chooseComment.pickComment(allComments);
-        return comment;
+        if (! result.isEmpty()) {
+            importantWords = result.toString();
+            GetComment getComment = new GetComment(context);
+            getComment.commentSearch(importantWords, new CommentCallback() {
+                @Override
+                public void callback(ArrayList<String> commentList) {
+                    allComments = commentList;
+                    ChooseComment chooseComment = new ChooseComment();
+                    postComment = chooseComment.pickComment(allComments);
+                    commentText.setText(postComment);
+                    // delegate.processFinish(allComments);
+                }
+            });
+        }
     }
 }
-
-//public class GetWords extends AppCompatActivity {
-//
-//    String indicoApiKey = "A7a8f16edc7a58c8a7773ba95c6d2241bA";
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        Indico.init(this, indicoApiKey, null);
-//
-//        try {
-//            Indico.sentiment.predict("indico is so easy to use!", new IndicoCallback<IndicoResult>() {
-//                @Override public void handle(IndicoResult result) throws IndicoException {
-//                    Log.i("Indico Sentiment", "sentiment of: " + result.getSentiment());
-//                }
-//            });
-//        } catch (IOException | IndicoException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//}

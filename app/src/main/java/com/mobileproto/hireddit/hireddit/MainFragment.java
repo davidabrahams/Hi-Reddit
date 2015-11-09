@@ -5,12 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainFragment extends Fragment
 {
+    public String spokenString;
+    public String importantWords;
+    public String postComment;
+    private View myFramentView;
+    public TextView commentText;
 
     public MainFragment()
     {
@@ -20,6 +29,15 @@ public class MainFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        myFramentView = inflater.inflate(R.layout.fragment_main, container, false);
+        commentText = (TextView) myFramentView.findViewById(R.id.commentText);
+        spokenString = "yellow poster";
+//        GetWords getWords = new GetWords(getApplicationContext());
+//        allComments = getWords.getRelatedComments(spokenString);
+//
+        //ArrayList<String> hasa = allComments;
+        new GetWordsAsync(postComment, spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
+        //comment.setText("eou");
+    return myFramentView;
     }
 }

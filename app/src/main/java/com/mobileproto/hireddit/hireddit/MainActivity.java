@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,16 +19,24 @@ public class MainActivity extends AppCompatActivity
     public ArrayList<String> allComments;
     public String spokenString;
     public String importantWords;
+    public String postComment;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        spokenString = "yellow poster";
-        importantWords = "";
-//        GetWords getWords = new GetWords(getApplicationContext());
-//        allComments = getWords.getRelatedComments(spokenString);
-//
-//        ArrayList<String> hasa = allComments;
-        new GetWordsAsync(allComments, spokenString, importantWords, getApplicationContext()).execute();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        MainFragment mainFragment = new MainFragment();
+        ft.replace(R.id.container, mainFragment);
+        ft.commit();
+
+//        spokenString = "yellow poster";
+////        GetWords getWords = new GetWords(getApplicationContext());
+////        allComments = getWords.getRelatedComments(spokenString);
+////
+//        //ArrayList<String> hasa = allComments;
+//        new GetWordsAsync(postComment, spokenString, importantWords, getApplicationContext()).execute();
+
 //        GetComment getComment = new GetComment(getApplicationContext());
 //        getComment.commentSearch(importantWords, new CommentCallback() {
 //            @Override
@@ -36,12 +45,12 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//
+//
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
 //        THIS CODE CAME WITH THE PRE-BUILT ACTIVITY BUT I DON'T THINK WE HAVE A USE FOR IT RIGHT NOW
 
