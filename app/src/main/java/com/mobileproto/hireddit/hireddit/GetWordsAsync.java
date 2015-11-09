@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 
 import io.indico.Indico;
@@ -24,11 +25,12 @@ import io.indico.utils.IndicoException;;
 /**
  * Created by lwilcox on 11/5/2015.
  */
-public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
+public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     private String spokenString;
     private String importantWords;
     private Context context;
-    public ArrayList<String> wordList = new ArrayList<>();
+    //public ArrayList<String> wordList = new ArrayList<>();
+    public String wordList;
     public ArrayList<String> allComments;
     public String postComment;
     public TextView commentText;
@@ -42,16 +44,18 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
     Indico indico = Indico.init(context, indicoApiKey, null);
     @Override
-    protected ArrayList<String> doInBackground(Void... params) {
+    protected String doInBackground(Void... params) {
         try {
             //final ArrayList<String> wordList = new ArrayList<String>();
-            indico.keywords.predict("indico is so easy to use!", new IndicoCallback<IndicoResult>() {
+            indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
                 @Override
                 public void handle(IndicoResult result) throws IndicoException {
                     //ArrayList<String> wordList = new ArrayList<String>();
                     Log.i("Indico Keywords", "keywords: " + result.getKeywords());
                     if (result.getKeywords() != null) {
-                        wordList.add(result.getKeywords().keySet().toString());
+                        wordList = result.getKeywords().keySet().toString();
+                        //wordList.add(result.getKeywords().keySet().toString());
+
                     }
                 }
             });
@@ -63,10 +67,10 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     }
 
     @Override
-    protected void onPostExecute(ArrayList<String> result) {
+    protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        if (! result.isEmpty()) {
-            importantWords = result.toString();
+        if (result.length() > 0) {
+            importantWords = result.replace(",", "").replace("[", "").replace("]", ""); //.toString();
             GetComment getComment = new GetComment(context);
             getComment.commentSearch(importantWords, new CommentCallback() {
                 @Override
