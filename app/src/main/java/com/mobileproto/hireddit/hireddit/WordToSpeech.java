@@ -12,26 +12,26 @@ import java.util.Locale;
  * WordToSpeech is able to speak out different languages, but for this project, we set it to English
  */
 public class WordToSpeech {
-    private TextToSpeech m_ttobj;
+    private TextToSpeech ttobj;
 
     public WordToSpeech(Context appContext) {
 
-        m_ttobj = new TextToSpeech(appContext, new TextToSpeech.OnInitListener() {
+        ttobj = new TextToSpeech(appContext, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
-                    m_ttobj.setLanguage(Locale.US);
+                    ttobj.setLanguage(Locale.US);
                 }
             }
         });
     }
 
     public void speak(String toSpeak) {
-        m_ttobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        ttobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     public void stop() {
-        m_ttobj.stop();
-        m_ttobj.shutdown();
+        ttobj.stop();
+        ttobj.shutdown();
     }
 }
