@@ -11,7 +11,13 @@ import java.util.ArrayList;
 public class ChooseComment {
 
     public String pickComment(ArrayList<String> allComments){
-        return allComments.get(0);
+        for (int i = 0; i > allComments.size(); i++){
+            if (allComments.get(i).length() < 1000) {
+                return allComments.get(i);
+            }
+        }
+        return "not short enough";
+        //return allComments.get(0);
         //return "testing!!";
     }
 

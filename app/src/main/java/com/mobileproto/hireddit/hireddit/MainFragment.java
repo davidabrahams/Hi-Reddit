@@ -31,7 +31,7 @@ public class MainFragment extends Fragment
     {
         myFramentView = inflater.inflate(R.layout.fragment_main, container, false);
         commentText = (TextView) myFramentView.findViewById(R.id.commentText);
-        spokenString = "yellow poster";
+        spokenString = "Why do my hands smell?";
 
         new GetWordsAsync(postComment, spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
 
