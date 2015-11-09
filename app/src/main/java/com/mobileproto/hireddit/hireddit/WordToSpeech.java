@@ -6,10 +6,10 @@ import android.speech.tts.TextToSpeech;
 import java.util.Locale;
 
 /**
- * TextToSpeech includes a method which will convert text to corresponding audio output
- * TextToSpeech constructor gets the application context
+ * WordToSpeech includes a method which will convert text to corresponding audio output
+ * WordToSpeech constructor gets the application context
  * Speak() takes a String to generate an audio output
- * TextToSpeech is able to speak out different languages, but for this project, we set it to English
+ * WordToSpeech is able to speak out different languages, but for this project, we set it to English
  */
 public class WordToSpeech {
     private TextToSpeech m_ttobj;
