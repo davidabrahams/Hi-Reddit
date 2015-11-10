@@ -1,6 +1,7 @@
 package com.mobileproto.hireddit.hireddit;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -11,12 +12,15 @@ import java.util.ArrayList;
 public class ChooseComment {
 
     public String pickComment(ArrayList<String> allComments){
-        for (int i = 0; i > allComments.size(); i++){
-            if (allComments.get(i).length() < 1000) {
-                return allComments.get(i);
-            }
-        }
-        return "not short enough";
+//        for (int i = 0; i > allComments.size(); i++){
+//            Integer length = allComments.get(i).length();
+//            String teh = length.toString();
+//            Log.d("length",teh);
+//            if (allComments.get(i).length() < 300) {
+//                return allComments.get(i);
+//            }
+//        }
+        return allComments.get(0);
         //return allComments.get(0);
         //return "testing!!";
     }
