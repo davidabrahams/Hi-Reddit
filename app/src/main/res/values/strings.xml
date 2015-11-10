@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Hi Reddit</string>
     <string name="action_settings">Settings</string>
+
+    <color name="light_blue">#b3d5d9</color>
+
 </resources>
