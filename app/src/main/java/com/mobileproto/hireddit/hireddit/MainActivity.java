@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements
 
     FragmentManager manager;
 
+    public static final int HOME_SCREEN_CLICK = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -55,5 +57,16 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, f).addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(int transition)
+    {
+        switch (transition)
+        {
+            case HOME_SCREEN_CLICK:
+                switchFragment(SpeakFragment.newInstance());
+                break;
+        }
     }
 }

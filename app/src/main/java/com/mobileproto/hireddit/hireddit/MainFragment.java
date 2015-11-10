@@ -61,6 +61,15 @@ public class MainFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         alienImage.setImageResource(R.drawable.reddit_alien);
+        view.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                mListener.onFragmentInteraction(MainActivity.HOME_SCREEN_CLICK);
+                return true;
+            }
+        });
         return view;
     }
 
@@ -95,7 +104,7 @@ public class MainFragment extends Fragment
      */
     public interface OnFragmentInteractionListener
     {
-        // public void onFragmentInteraction(Object o);
+        public void onFragmentInteraction(int transition);
     }
 
 }
