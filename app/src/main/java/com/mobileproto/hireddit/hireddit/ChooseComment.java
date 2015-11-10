@@ -16,8 +16,10 @@ public class ChooseComment {
 //            Integer length = allComments.get(i).length();
 //            String teh = length.toString();
 //            Log.d("length",teh);
-//            if (allComments.get(i).length() < 300) {
-//                return allComments.get(i);
+//            if (allComments.get(i).length() < 400) {
+//                if (! allComments.get(i).toLowerCase().contains("http")) {
+//                    return allComments.get(i);
+//                }
 //            }
 //        }
         return allComments.get(0);
