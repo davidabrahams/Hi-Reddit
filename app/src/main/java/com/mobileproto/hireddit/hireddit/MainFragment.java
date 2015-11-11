@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainFragment extends Fragment {
     String TAG = "myDebug";
     private View view;
     private SpeechRecognizer sr;
@@ -27,7 +27,7 @@ public class MainActivityFragment extends Fragment {
     private ArrayList voiceInput;
     private boolean isListening = false;
 
-    public MainActivityFragment() {
+    public MainFragment() {
     }
 
     @Override
@@ -69,7 +69,6 @@ public class MainActivityFragment extends Fragment {
         isListening = true;
         sr.startListening(recognizerIntent);
     }
-
 
     public void dontListen(){ //doesn't need to be called, but I'll leave it here if we want to manually stop recording for some reason?
         Log.d(TAG, "Stop listening.");
