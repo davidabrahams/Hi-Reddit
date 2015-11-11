@@ -19,13 +19,8 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainFragment extends Fragment {
-    String TAG = "myDebug";
+    String TAG = "MainFragment debug";
     private View view;
-    private SpeechRecognizer sr;
-    private SpeechListener listener;
-    private Intent recognizerIntent;
-    private ArrayList voiceInput;
-    private boolean isListening = false;
 
     public MainFragment() {
     }
@@ -34,44 +29,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        Button speechButton = (Button) view.findViewById(R.id.speech);
-
-        // *~Speech stuff~* //
-        listener = new SpeechListener(new SpeechCalback() {
-            @Override
-            public void callback(ArrayList voiceResult) {
-                Log.d(TAG, "callbacking -> you got resultzzz");
-                voiceInput = voiceResult;
-                Log.d(TAG, "" + voiceInput);
-                isListening = false;
-            }
-        });
-
-        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        sr = SpeechRecognizer.createSpeechRecognizer(getContext());
-        sr.setRecognitionListener(listener);
-
-        speechButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isListening) {
-                    doListen();
-                } else{
-                    //what you want to happen if you press the button an you're already listening for voice
-                }
-            }
-        });
         return view;
     }
 
-    public void doListen(){
-        Log.d(TAG, "Start listening.");
-        isListening = true;
-        sr.startListening(recognizerIntent);
-    }
-
-    public void dontListen(){ //doesn't need to be called, but I'll leave it here if we want to manually stop recording for some reason?
-        Log.d(TAG, "Stop listening.");
-        sr.stopListening();
-    }
 }

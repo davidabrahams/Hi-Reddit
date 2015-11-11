@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Voice Recognition: For speech to text input
  */
 
-class SpeechListener implements RecognitionListener {
+public class SpeechListener implements RecognitionListener {
     String TAG = "myDebug";
     private String voiceInput;
     private ArrayList data;
