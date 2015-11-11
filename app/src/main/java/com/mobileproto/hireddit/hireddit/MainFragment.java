@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainFragment extends Fragment {
-    String TAG = "Hi Reddit Debug";
+    String TAG = "MainFragment Debug";
     private View view;
 
     public MainFragment() {

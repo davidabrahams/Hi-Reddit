@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * Speech Fragment: Holds functionality for requesting and recieving voice input
  */
 public class SpeechFragment extends Fragment{
-    String TAG = "Hi Reddit Debug";
+    String TAG = "SpeechFragment Debug";
     private View view;
     private SpeechRecognizer sr;
     private SpeechListener listener;
