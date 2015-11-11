@@ -1,6 +1,7 @@
 package com.mobileproto.hireddit.hireddit;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    public WordToSpeech speech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        speech = new WordToSpeech(this);
 
 //        THIS CODE CAME WITH THE PRE-BUILT ACTIVITY BUT I DON'T THINK WE HAVE A USE FOR IT RIGHT NOW
 
@@ -54,4 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
