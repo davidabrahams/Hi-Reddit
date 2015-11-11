@@ -1,5 +1,6 @@
 package com.mobileproto.hireddit.hireddit;
 
+import android.content.Intent;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -22,8 +23,9 @@ public class MainActivityFragment extends Fragment {
     private View view;
     private SpeechRecognizer sr;
     private SpeechListener listener;
-
+    private Intent recognizerIntent;
     private ArrayList voiceInput;
+    private boolean isListening = false;
 
     public MainActivityFragment() {
     }
@@ -32,16 +34,31 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
-
         Button speechButton = (Button) view.findViewById(R.id.speech);
-        listener = new SpeechListener();
+
+        // *~Speech stuff~* //
+        listener = new SpeechListener(new SpeechCalback() {
+            @Override
+            public void callback(ArrayList voiceResult) {
+                Log.d(TAG, "callbacking -> you got resultzzz");
+                voiceInput = voiceResult;
+                Log.d(TAG, "" + voiceInput);
+                isListening = false;
+            }
+        });
+
+        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         sr = SpeechRecognizer.createSpeechRecognizer(getContext());
         sr.setRecognitionListener(listener);
 
         speechButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doListen();
+                if (!isListening) {
+                    doListen();
+                } else{
+                    //what you want to happen if you press the button an you're already listening for voice
+                }
             }
         });
         return view;
@@ -49,11 +66,12 @@ public class MainActivityFragment extends Fragment {
 
     public void doListen(){
         Log.d(TAG, "Start listening.");
-        sr.startListening(RecognizerIntent.getVoiceDetailsIntent(getContext()));
-
-       // voiceInput = listener.getResults();
+        isListening = true;
+        sr.startListening(recognizerIntent);
     }
-    public void dontListen(){ //doesn't need to be called, but I'll leave it here if we want to manually stop recording.
+
+
+    public void dontListen(){ //doesn't need to be called, but I'll leave it here if we want to manually stop recording for some reason?
         Log.d(TAG, "Stop listening.");
         sr.stopListening();
     }
