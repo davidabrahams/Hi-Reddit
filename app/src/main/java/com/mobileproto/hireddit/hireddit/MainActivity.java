@@ -59,13 +59,23 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
+    private void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut)
+    {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(customAnimationIn, customAnimationOut);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, f);
+        transaction.commit();
+    }
+
     @Override
     public void onFragmentInteraction(int transition)
     {
         switch (transition)
         {
             case HOME_SCREEN_CLICK:
-                switchFragment(SpeakFragment.newInstance());
+                switchFragment(SpeakFragment.newInstance(), R.anim.slide_in_up,
+                        R.anim.slide_out_up);
                 break;
         }
     }
