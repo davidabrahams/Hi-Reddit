@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 
 public class SpeechListener implements RecognitionListener {
-    String TAG = "myDebug";
+    String TAG = "Hi Reddit Debug";
     private String voiceInput;
     private ArrayList data;
     private int flag = 0;
