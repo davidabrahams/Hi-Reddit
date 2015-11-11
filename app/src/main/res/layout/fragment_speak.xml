@@ -6,21 +6,40 @@
              android:background="@color/light_blue">
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="75dp"
-        android:id="@+id/imageView"
-        android:src="@drawable/reddit_head"
-        android:layout_alignBottom="@+id/helloReddit"
-        android:layout_toRightOf="@+id/helloReddit"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_large"
-        android:text="@string/hello_reddit"
-        android:id="@+id/helloReddit"
-        android:layout_marginTop="109dp"
-        android:layout_marginLeft="30dp"/>
+        android:layout_marginTop="109dp">
+
+
+        <View android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_size_large"
+            android:text="@string/hello_reddit"
+            android:id="@+id/helloReddit"/>
+
+
+        <View android:layout_width="25dp"
+              android:layout_height="match_parent"/>
+
+        <ImageView
+            android:layout_width="74dp"
+            android:layout_height="62dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="right"
+            android:src="@drawable/reddit_head"/>
+
+        <View android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" />
+
+    </LinearLayout>
 
 </RelativeLayout>
