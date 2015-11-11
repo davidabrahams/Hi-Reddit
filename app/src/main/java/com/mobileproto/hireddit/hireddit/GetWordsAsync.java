@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 
 import io.indico.Indico;
@@ -25,11 +24,11 @@ import io.indico.utils.IndicoException;;
 /**
  * Created by lwilcox on 11/5/2015.
  */
-public class GetWordsAsync extends AsyncTask<Void, Void, String>{
+public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     private String spokenString;
     private String importantWords;
     private Context context;
-    public String wordList = "";
+    public ArrayList<String> wordList = new ArrayList<>();
     public ArrayList<String> allComments;
     public String postComment;
     public TextView commentText;
@@ -42,14 +41,16 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
     Indico indico = Indico.init(context, indicoApiKey, null);
     @Override
-    protected String doInBackground(Void... params) {
+    protected ArrayList<String> doInBackground(Void... params) {
         try {
-            indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
+
+            //final ArrayList<String> wordList = new ArrayList<String>();
+            indico.keywords.predict("indico is so easy to use!", new IndicoCallback<IndicoResult>() {
                 @Override
                 public void handle(IndicoResult result) throws IndicoException {
                     Log.i("Indico Keywords", "keywords: " + result.getKeywords());
                     if (result.getKeywords() != null) {
-                        wordList = result.getKeywords().keySet().toString();
+                        wordList.add(result.getKeywords().keySet().toString());
                     }
                 }
             });
@@ -61,11 +62,10 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(ArrayList<String> result) {
         super.onPostExecute(result);
-        String toeh = result;
-        if (result.length() > 0) {
-            importantWords = result.replace(",", "").replace("[", "").replace("]", "");
+        if (! result.isEmpty()) {
+            importantWords = result.toString();
             GetComment getComment = new GetComment(context);
             getComment.commentSearch(importantWords, new CommentCallback() {
                 @Override
