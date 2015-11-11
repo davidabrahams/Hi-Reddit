@@ -24,6 +24,11 @@ import butterknife.ButterKnife;
 public class SpeakFragment extends Fragment
 {
     private OnFragmentInteractionListener mListener;
+    public String spokenString;
+    public String importantWords;
+    private View myFramentView;
+    public TextView commentText;
+
 
     @Bind(R.id.helloReddit) TextView helloReddit;
 
@@ -66,6 +71,8 @@ public class SpeakFragment extends Fragment
                 "fonts/volkswagen-serial-bold.ttf");
 
         helloReddit.setTypeface(tf);
+        spokenString = "why are my hands so smelly?";
+        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
 
         return view;
     }

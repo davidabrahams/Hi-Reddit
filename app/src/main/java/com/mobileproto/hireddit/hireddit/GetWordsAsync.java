@@ -45,7 +45,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
         try {
 
             //final ArrayList<String> wordList = new ArrayList<String>();
-            indico.keywords.predict("indico is so easy to use!", new IndicoCallback<IndicoResult>() {
+            indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
                 @Override
                 public void handle(IndicoResult result) throws IndicoException {
                     Log.i("Indico Keywords", "keywords: " + result.getKeywords());
@@ -66,6 +66,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
         super.onPostExecute(result);
         if (! result.isEmpty()) {
             importantWords = result.toString();
+            importantWords = importantWords.replace(",", "").replace("[", "").replace("]", "");
             GetComment getComment = new GetComment(context);
             getComment.commentSearch(importantWords, new CommentCallback() {
                 @Override

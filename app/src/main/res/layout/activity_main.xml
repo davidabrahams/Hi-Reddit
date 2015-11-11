@@ -22,20 +22,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-<<<<<<< HEAD
-    <!--<include layout="@layout/content_main"/>-->
-    <FrameLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:id="@+id/container">
-    </FrameLayout>>
-
-=======
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container">
     </FrameLayout>
->>>>>>> refs/remotes/origin/ui
 
 </android.support.design.widget.CoordinatorLayout>
