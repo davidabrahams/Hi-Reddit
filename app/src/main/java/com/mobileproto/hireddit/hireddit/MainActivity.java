@@ -2,25 +2,42 @@ package com.mobileproto.hireddit.hireddit;
 
 import android.content.Context;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+=======
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+>>>>>>> refs/remotes/origin/ui
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
 {
+=======
+public class MainActivity extends AppCompatActivity implements
+        MainFragment.OnFragmentInteractionListener, SpeakFragment.OnFragmentInteractionListener
+{
+
+    FragmentManager manager;
+
+    public static final int HOME_SCREEN_CLICK = 1;
+
+>>>>>>> refs/remotes/origin/ui
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
+<<<<<<< HEAD
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         MainFragment mainFragment = new MainFragment();
         ft.replace(R.id.container, mainFragment);
@@ -43,6 +60,11 @@ public class MainActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
+=======
+        switchFragment(MainFragment.newInstance());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+>>>>>>> refs/remotes/origin/ui
     }
 
     @Override
@@ -67,5 +89,23 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void switchFragment(Fragment f)
+    {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, f).addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(int transition)
+    {
+        switch (transition)
+        {
+            case HOME_SCREEN_CLICK:
+                switchFragment(SpeakFragment.newInstance());
+                break;
+        }
     }
 }
