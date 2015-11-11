@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class SpeechFragment extends Fragment{
     private ArrayList voiceInput;
     private boolean isListening = false;
     @Bind(R.id.speech) Button speechButton;
+    @Bind(R.id.text) TextView textView;
 
     public SpeechFragment() {
     }
@@ -43,7 +45,7 @@ public class SpeechFragment extends Fragment{
             @Override
             public void callback(ArrayList voiceResult) {
                 voiceInput = voiceResult;
-                Log.d(TAG, "" + voiceInput);
+                textView.setText(voiceInput.get(0).toString());
                 isListening = false;
             }
 
@@ -58,9 +60,16 @@ public class SpeechFragment extends Fragment{
                     Toast.makeText(getActivity().getApplicationContext(), "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void partialCallback(ArrayList partialResult) {
+                textView.setText(partialResult.get(0).toString());
+            }
         });
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1000); //is this part working?
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
         sr.setRecognitionListener(listener);
 

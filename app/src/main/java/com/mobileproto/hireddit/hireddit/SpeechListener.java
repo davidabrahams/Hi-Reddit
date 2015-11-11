@@ -15,7 +15,7 @@ public class SpeechListener implements RecognitionListener {
     String TAG = "SpeechListener Debug";
     private String voiceInput;
     private ArrayList data;
-    private int flag = 0;
+    private ArrayList partial;
     private SpeechCallback speechCallback;
 
     public SpeechListener(SpeechCallback mSpeechCallback){
@@ -60,17 +60,16 @@ public class SpeechListener implements RecognitionListener {
 
         data = null;
         data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-        for (int i = 0; i < data.size(); i++) {
-            Log.d(TAG, "onResults - ArrayList: " +  data.get(i));
-        }
-
+        Log.d(TAG, "onResults: " +  data);
         speechCallback.callback(data);
     }
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-        Log.d(TAG, "onPartialResults " + partialResults);
+        partial = null;
+        partial = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        Log.d(TAG, "onPartialResults: " + partial);
+        speechCallback.partialCallback(partial);
     }
 
     @Override
