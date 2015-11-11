@@ -3,26 +3,15 @@ package com.mobileproto.hireddit.hireddit;
 
 import android.app.Activity;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-=======
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
->>>>>>> refs/remotes/origin/ui
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -33,11 +22,6 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends Fragment
 {
-    public String spokenString;
-    public String importantWords;
-    private View myFramentView;
-    public TextView commentText;
-
     private OnFragmentInteractionListener mListener;
 
     @Bind(R.id.alienImage) ImageView alienImage;
@@ -73,15 +57,8 @@ public class MainFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-<<<<<<< HEAD
-        myFramentView = inflater.inflate(R.layout.fragment_main, container, false);
-        commentText = (TextView) myFramentView.findViewById(R.id.commentText);
-        spokenString = "Why do my hands smell?";
 
-        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
-        Log.d("here!", "after Async");
-        return myFramentView;
-=======
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         alienImage.setImageResource(R.drawable.reddit_alien);
@@ -95,7 +72,6 @@ public class MainFragment extends Fragment
             }
         });
         return view;
->>>>>>> refs/remotes/origin/ui
     }
 
     @Override
