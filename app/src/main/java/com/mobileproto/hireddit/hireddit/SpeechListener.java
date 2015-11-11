@@ -1,12 +1,9 @@
 package com.mobileproto.hireddit.hireddit;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,9 +16,9 @@ public class SpeechListener implements RecognitionListener {
     private String voiceInput;
     private ArrayList data;
     private int flag = 0;
-    private SpeechCalback speechCallback;
+    private SpeechCallback speechCallback;
 
-    public SpeechListener(SpeechCalback mSpeechCallback){
+    public SpeechListener(SpeechCallback mSpeechCallback){
         speechCallback = mSpeechCallback;
     }
 
@@ -54,6 +51,7 @@ public class SpeechListener implements RecognitionListener {
     @Override
     public void onError(int error) {
         Log.d(TAG, "onError - Error occurred with voice recognition. Error code: " + error);
+        speechCallback.errorCallback(error);
     }
 
     @Override

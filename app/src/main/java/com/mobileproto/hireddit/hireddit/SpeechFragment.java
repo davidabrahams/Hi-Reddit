@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,12 +39,24 @@ public class SpeechFragment extends Fragment{
         ButterKnife.bind(this, view);
 
         // *~Speech stuff~* //
-        listener = new SpeechListener(new SpeechCalback() {
+        listener = new SpeechListener(new SpeechCallback() {
             @Override
             public void callback(ArrayList voiceResult) {
                 voiceInput = voiceResult;
                 Log.d(TAG, "" + voiceInput);
                 isListening = false;
+            }
+
+            @Override
+            public void errorCallback(int errorCode) {
+                if (errorCode == 7){
+                    //TODO: change this to saying out loud, "please try again"
+                    Toast.makeText(getActivity().getApplicationContext(), "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                }if (errorCode == 6){
+                    Toast.makeText(getActivity().getApplicationContext(), "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                } else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
