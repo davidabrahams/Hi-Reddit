@@ -33,8 +33,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     public ArrayList<String> allComments;
     public String postComment;
     public TextView commentText;
-    public GetWordsAsync(String postComment, String spokenString, String importantWords, Context context, TextView commentText){
-        this.postComment = postComment;
+    public GetWordsAsync(String spokenString, String importantWords, Context context, TextView commentText){
         this.spokenString = spokenString;
         this.importantWords = importantWords;
         this.context = context;
@@ -64,6 +63,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        String toeh = result;
         if (result.length() > 0) {
             importantWords = result.replace(",", "").replace("[", "").replace("]", "");
             GetComment getComment = new GetComment(context);

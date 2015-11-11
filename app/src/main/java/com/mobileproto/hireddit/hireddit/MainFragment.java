@@ -2,6 +2,7 @@ package com.mobileproto.hireddit.hireddit;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ public class MainFragment extends Fragment
 {
     public String spokenString;
     public String importantWords;
-    public String postComment;
     private View myFramentView;
     public TextView commentText;
 
@@ -33,8 +33,8 @@ public class MainFragment extends Fragment
         commentText = (TextView) myFramentView.findViewById(R.id.commentText);
         spokenString = "Why do my hands smell?";
 
-        new GetWordsAsync(postComment, spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
-
-    return myFramentView;
+        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
+        Log.d("here!", "after Async");
+        return myFramentView;
     }
 }
