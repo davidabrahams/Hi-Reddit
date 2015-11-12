@@ -10,7 +10,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="109dp">
+        android:layout_marginTop="109dp"
+        android:id="@+id/linearLayout">
 
 
         <View android:layout_width="0dp"
@@ -61,5 +62,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/speechTextDisplay"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

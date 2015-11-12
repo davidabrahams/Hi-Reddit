@@ -32,6 +32,7 @@ public class SpeakFragment extends Fragment
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
     @Bind(R.id.listenButton) Button listenButton;
+    @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
 
     /**
      * Use this factory method to create a new instance of
