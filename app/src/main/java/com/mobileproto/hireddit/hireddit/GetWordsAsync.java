@@ -56,6 +56,11 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                 }
             });
             Log.d("wordlist", wordList.toString());
+            try {
+                Thread.sleep(1500);
+            }catch (InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
             return wordList;
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
