@@ -55,15 +55,17 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                     }
                 }
             });
+            Log.d("wordlist", wordList.toString());
             return wordList;
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
         }
-        return wordList;
+        return null;
     }
 
     @Override
     protected void onPostExecute(ArrayList<String> result) {
+        Log.d("inpost","true");
         super.onPostExecute(result);
         if (! result.isEmpty()) {
             importantWords = result.toString();
