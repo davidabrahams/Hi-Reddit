@@ -9,12 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements
         MainFragment.OnFragmentInteractionListener, SpeakFragment.OnFragmentInteractionListener
 {
     public WordToSpeech speech;
 
     FragmentManager manager;
+    @Bind(R.id.toolbar) Toolbar toolbar;
 
     public static final int HOME_SCREEN_CLICK = 1;
 
@@ -24,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         switchFragment(MainFragment.newInstance());
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         speech = new WordToSpeech(this);
