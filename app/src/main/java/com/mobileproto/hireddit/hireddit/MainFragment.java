@@ -60,7 +60,6 @@ public class MainFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        alienImage.setImageResource(R.drawable.reddit_alien);
         view.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
