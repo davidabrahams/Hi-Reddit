@@ -12,6 +12,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements
         MainFragment.OnFragmentInteractionListener, SpeakFragment.OnFragmentInteractionListener
 {
+    public WordToSpeech speech;
 
     FragmentManager manager;
 
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements
         switchFragment(MainFragment.newInstance());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        speech = new WordToSpeech(this);
     }
 
     @Override
@@ -80,4 +83,5 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
     }
+
 }

@@ -1,6 +1,5 @@
 package com.mobileproto.hireddit.hireddit;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +21,7 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends Fragment
 {
+    String DEBUG_TAG = "MainFragment Debug";
 
     private OnFragmentInteractionListener mListener;
 
@@ -105,5 +105,4 @@ public class MainFragment extends Fragment
     {
         public void onFragmentInteraction(int transition);
     }
-
 }

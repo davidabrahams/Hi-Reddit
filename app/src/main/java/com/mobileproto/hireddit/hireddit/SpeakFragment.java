@@ -113,9 +113,9 @@ public class SpeakFragment extends Fragment
     private void updateListeningIndicator()
     {
         if (isListening)
-            listeningIndicator.setText("Listening!");
+            listeningIndicator.setText(R.string.listening_text_indicator);
         else
-            listeningIndicator.setText("not listening...");
+            listeningIndicator.setText(R.string.not_listening_text_indicator);
     }
 
     public void doListen()
@@ -145,7 +145,6 @@ public class SpeakFragment extends Fragment
      */
     public interface OnFragmentInteractionListener
     {
-//        public void onFragmentInteraction(Uri uri);
     }
 
 }
