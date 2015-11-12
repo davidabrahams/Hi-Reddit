@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
+    // We overload the switchFragment function to allow the user to customize the
+    // transition between two fragments on a switch if they want. The two functions
+    // have identical behavior outside of the animation.
     private void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut)
     {
         FragmentTransaction transaction = manager.beginTransaction();
