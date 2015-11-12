@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -24,8 +26,12 @@ import butterknife.ButterKnife;
 public class SpeakFragment extends Fragment
 {
     private OnFragmentInteractionListener mListener;
+    private static final String DEBUG_TAG = "SpeechFragment Debug";
+    private boolean isListening;
 
     @Bind(R.id.helloReddit) TextView helloReddit;
+    @Bind(R.id.listeningIndicator) TextView listeningIndicator;
+    @Bind(R.id.listenButton) Button listenButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -62,9 +68,21 @@ public class SpeakFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_speak, container, false);
         ButterKnife.bind(this, view);
 
+        doListen();
+
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/volkswagen-serial-bold.ttf");
-
+        listenButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (isListening)
+                    dontListen();
+                else
+                    doListen();
+            }
+        });
         helloReddit.setTypeface(tf);
 
         return view;
@@ -88,6 +106,31 @@ public class SpeakFragment extends Fragment
         super.onDetach();
         mListener = null;
     }
+
+
+    // TODO: CHANGE THIS WHEN WE HAVE A FANCY LISTENING INDICATOR
+    private void updateListeningIndicator()
+    {
+        if (isListening)
+            listeningIndicator.setText("Listening!");
+        else
+            listeningIndicator.setText("not listening...");
+    }
+
+    public void doListen()
+    {
+        Log.d(DEBUG_TAG, "Start listening");
+        isListening = true;
+        updateListeningIndicator();
+    }
+
+    public void dontListen()
+    {
+        Log.d(DEBUG_TAG, "Stop listening.");
+        isListening = false;
+        updateListeningIndicator();
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

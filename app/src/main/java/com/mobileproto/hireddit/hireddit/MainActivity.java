@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements
         switch (transition)
         {
             case HOME_SCREEN_CLICK:
-                switchFragment(SpeakFragment.newInstance(), FragmentTransaction.TRANSIT_NONE,
+                SpeakFragment f = SpeakFragment.newInstance();
+                switchFragment(f, FragmentTransaction.TRANSIT_NONE,
                         R.anim.slide_out_up);
                 break;
         }
