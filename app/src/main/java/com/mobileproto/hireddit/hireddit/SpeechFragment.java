@@ -14,71 +14,89 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Speech Fragment: Holds functionality for requesting and recieving voice input
  */
-public class SpeechFragment extends Fragment{
-    String TAG = "SpeechFragment Debug";
+public class SpeechFragment extends Fragment
+{
+    String DEBUG_TAG = "SpeechFragment Debug";
     private View view;
     private SpeechRecognizer sr;
     private SpeechListener listener;
     private Intent recognizerIntent;
     private ArrayList voiceInput;
     private boolean isListening = false;
-    @Bind(R.id.speech) Button speechButton;
-    @Bind(R.id.text) TextView textView;
+    @Bind(R.id.speech)
+    Button speechButton;
+    @Bind(R.id.text)
+    TextView textView;
 
-    public SpeechFragment() {
+    public SpeechFragment()
+    {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
+
         view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
-        // *~Speech stuff~* //
-        listener = new SpeechListener(new SpeechCallback() {
+        listener = new SpeechListener(new SpeechCallback()
+        {
             @Override
-            public void callback(ArrayList voiceResult) {
+            public void callback(ArrayList voiceResult)
+            {
                 voiceInput = voiceResult;
                 textView.setText(voiceInput.get(0).toString());
                 isListening = false;
             }
 
             @Override
-            public void errorCallback(int errorCode) {
-                if (errorCode == 7){
+            public void errorCallback(int errorCode)
+            {
+                if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) {
                     //TODO: change this to saying out loud, "please try again"
-                    Toast.makeText(getActivity().getApplicationContext(), "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
-                }if (errorCode == 6){
-                    Toast.makeText(getActivity().getApplicationContext(), "Error: Please say something.", Toast.LENGTH_SHORT).show();
-                } else{
-                    Toast.makeText(getActivity().getApplicationContext(), "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                }
+                if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void partialCallback(ArrayList partialResult) {
+            public void partialCallback(ArrayList partialResult)
+            {
                 textView.setText(partialResult.get(0).toString());
             }
         });
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1000); //is this part working?
+        recognizerIntent.putExtra(
+                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+                1000); // TODO: TEST THIS
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
         sr.setRecognitionListener(listener);
 
-        speechButton.setOnClickListener(new View.OnClickListener() {
+        speechButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if (!isListening) {
                     doListen();
-                } else{
+                } else {
                     //what you want to happen if you press the button an you're already listening for voice
                     dontListen(); //note that you don't need to press the button again to stop listening - it'll automatically stop
                 }
@@ -87,14 +105,16 @@ public class SpeechFragment extends Fragment{
         return view;
     }
 
-    public void doListen(){
-        Log.d(TAG, "Start listening.");
+    public void doListen()
+    {
+        Log.d(DEBUG_TAG, "Start listening.");
         isListening = true;
         sr.startListening(recognizerIntent);
     }
 
-    public void dontListen(){
-        Log.d(TAG, "Stop listening.");
+    public void dontListen()
+    {
+        Log.d(DEBUG_TAG, "Stop listening.");
         sr.stopListening();
         isListening = false;
     }
