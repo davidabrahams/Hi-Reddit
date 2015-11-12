@@ -1,8 +1,11 @@
 package com.mobileproto.hireddit.hireddit;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,6 +34,10 @@ public class SpeakFragment extends Fragment
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
+    private SpeechListener listener;
+    private ArrayList voiceInput;
+    private Intent recognizerIntent;
+    private SpeechRecognizer sr;
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
@@ -68,6 +78,49 @@ public class SpeakFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_speak, container, false);
         ButterKnife.bind(this, view);
+        listener = new SpeechListener(new SpeechCallback()
+        {
+            @Override
+            public void callback(ArrayList voiceResult)
+            {
+                voiceInput = voiceResult;
+                speechTextDisplay.setText(voiceInput.get(0).toString());
+                isListening = false;
+            }
+
+            @Override
+            public void errorCallback(int errorCode)
+            {
+                if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) {
+                    //TODO: change this to saying out loud, "please try again"
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                }
+                if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void partialCallback(ArrayList partialResult)
+            {
+                speechTextDisplay.setText(partialResult.get(0).toString());
+            }
+        });
+
+
+        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        recognizerIntent.putExtra(
+                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+                1000); // TODO: TEST THIS
+        sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
+        sr.setRecognitionListener(listener);
+
 
         doListen();
 
@@ -123,11 +176,13 @@ public class SpeakFragment extends Fragment
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
         updateListeningIndicator();
+        sr.startListening(recognizerIntent);
     }
 
     public void dontListen()
     {
         Log.d(DEBUG_TAG, "Stop listening.");
+        sr.stopListening();
         isListening = false;
         updateListeningIndicator();
     }
