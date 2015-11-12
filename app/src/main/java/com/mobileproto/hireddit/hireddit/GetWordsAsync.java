@@ -40,6 +40,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     }
     String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
     Indico indico = Indico.init(context, indicoApiKey, null);
+
     @Override
     protected ArrayList<String> doInBackground(Void... params) {
         try {
@@ -58,7 +59,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
         }
-        return null;
+        return wordList;
     }
 
     @Override
@@ -74,6 +75,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                     allComments = commentList;
                     ChooseComment chooseComment = new ChooseComment();
                     postComment = chooseComment.pickComment(allComments);
+                    Log.i("comment", postComment);
                     commentText.setText(postComment);
                 }
             });
