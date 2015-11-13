@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
 
 public class MainActivity extends AppCompatActivity implements
         MainFragment.OnFragmentInteractionListener, SpeakFragment.OnFragmentInteractionListener

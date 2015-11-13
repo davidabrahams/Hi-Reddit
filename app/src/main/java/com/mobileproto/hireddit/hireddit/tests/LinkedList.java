@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.tests;
 
 /**
  * A simple LinkedList class implementation

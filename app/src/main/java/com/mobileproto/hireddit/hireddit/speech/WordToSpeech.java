@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.speech;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
