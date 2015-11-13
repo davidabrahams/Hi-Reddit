@@ -1,5 +1,7 @@
 package com.mobileproto.hireddit.hireddit;
 
+import com.mobileproto.hireddit.hireddit.tests.LinkedList;
+
 import org.junit.Test;
 
 import java.lang.String;

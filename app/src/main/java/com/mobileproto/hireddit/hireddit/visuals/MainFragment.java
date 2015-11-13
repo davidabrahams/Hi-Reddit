@@ -1,5 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
-
+package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobileproto.hireddit.hireddit.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends Fragment
 {
+    String DEBUG_TAG = "MainFragment Debug";
     private OnFragmentInteractionListener mListener;
 
     @Bind(R.id.alienImage) ImageView alienImage;
@@ -61,7 +63,6 @@ public class MainFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        alienImage.setImageResource(R.drawable.reddit_alien);
         view.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
@@ -107,5 +108,4 @@ public class MainFragment extends Fragment
     {
         public void onFragmentInteraction(int transition);
     }
-
 }

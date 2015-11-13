@@ -2,5 +2,8 @@
     <string name="app_name">Hi Reddit</string>
     <string name="action_settings">Settings</string>
     <string name="hello_reddit">Hello, Reddit...</string>
-
+    <string name="listen_button_text">Toggle listening</string>
+    <string name="speech_button">Speech</string>
+    <string name="listening_text_indicator">Listening!</string>
+    <string name="not_listening_text_indicator">not listening...</string>
 </resources>
