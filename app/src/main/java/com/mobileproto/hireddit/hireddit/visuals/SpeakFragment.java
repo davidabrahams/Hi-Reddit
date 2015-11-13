@@ -146,7 +146,7 @@ public class SpeakFragment extends Fragment
         helloReddit.setTypeface(tf);
 
         spokenString = "why are my hands so smelly?";
-        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
+        new GetWordsAsync(spokenString, importantWords, getActivity(), commentText).execute();
 
         return view;
     }
