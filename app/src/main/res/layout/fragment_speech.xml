@@ -1,25 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivityFragment"
-    tools:showIn="@layout/activity_main">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.mobileproto.hireddit.hireddit.SpeechFragment"
+             android:background="@color/light_blue">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="109dp"
+        android:id="@+id/linearLayout">
+
+
+        <View android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_size_large"
+            android:text="@string/hello_reddit"
+            android:id="@+id/helloReddit"/>
+
+
+        <View android:layout_width="25dp"
+              android:layout_height="match_parent"/>
+
+        <ImageView
+            android:layout_width="74dp"
+            android:layout_height="62dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="right"
+            android:src="@drawable/reddit_head"/>
+
+        <View android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/speech"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/speech_button" />
+        android:text="@string/listen_button_text"
+        android:id="@+id/listenButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="90dp"
+        android:padding="20dp"/>
 
     <TextView
-        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/speech"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/listeningIndicator"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/speechTextDisplay"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
