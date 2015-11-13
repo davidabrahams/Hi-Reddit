@@ -65,7 +65,6 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
     protected ArrayList<String> doInBackground(Void... params)
     {
         try {
-
             //final ArrayList<String> wordList = new ArrayList<String>();
             indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>()
             {
@@ -91,8 +90,8 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
             return wordList;
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
