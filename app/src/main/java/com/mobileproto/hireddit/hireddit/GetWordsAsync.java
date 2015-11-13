@@ -42,21 +42,21 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
         this.commentText = commentText;
     }
     //AssetManager assetManager = context.getAssets();
-    //String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
+    String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
 
-    public static String getApi(Context context) {
-        try {
-            AssetManager assetManager = context.getAssets();
-            InputStream apikey = assetManager.open("indicoapitxt.txt");
-            String apiKeyString = apikey.toString();
-            Log.d("apikey", "apiKeyString");
-            return apiKeyString;
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public static String getApi(Context context) {
+//        try {
+//            AssetManager assetManager = context.getAssets();
+//            InputStream apikey = assetManager.open("indicoapitxt.txt");
+//            String apiKeyString = apikey.toString();
+//            Log.d("apikey", "apiKeyString");
+//            return apiKeyString;
+//        }
+//        catch (IOException e){
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 //    AssetManager assetManager = context.getAssets();
 //    try {
@@ -67,7 +67,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
 //
 //    String apiKeyString = apikey.toString();
 
-    String indicoApiKey = getApi(context);
+    //String indicoApiKey = getApi(context);
     Indico indico = Indico.init(context, indicoApiKey, null);
 
     @Override
