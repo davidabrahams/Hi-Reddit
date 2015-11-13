@@ -1,6 +1,8 @@
 package com.mobileproto.hireddit.hireddit;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
@@ -38,7 +41,33 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
         this.context = context;
         this.commentText = commentText;
     }
-    String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
+    //AssetManager assetManager = context.getAssets();
+    //String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
+
+    public static String getApi(Context context) {
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream apikey = assetManager.open("indicoapitxt.txt");
+            String apiKeyString = apikey.toString();
+            Log.d("apikey", "apiKeyString");
+            return apiKeyString;
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+//    AssetManager assetManager = context.getAssets();
+//    try {
+//        InputStream apikey = assetManager.open("indicoapitxt.txt");
+//    } catch (IOException e) {
+//        e.printStackTrace();
+//    }
+//
+//    String apiKeyString = apikey.toString();
+
+    String indicoApiKey = getApi(context);
     Indico indico = Indico.init(context, indicoApiKey, null);
 
     @Override
@@ -56,11 +85,15 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                 }
             });
             Log.d("wordlist", wordList.toString());
-            try {
-                Thread.sleep(1500);
-            }catch (InterruptedException ex){
-                Thread.currentThread().interrupt();
+            while (wordList.isEmpty()){
+                Log.d("wating", "true");
+                try {
+                    Thread.sleep(15);
+                }catch (InterruptedException ex){
+                    Thread.currentThread().interrupt();
+                }
             }
+            Log.d("wordList", wordList.toString());
             return wordList;
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
