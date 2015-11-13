@@ -92,10 +92,10 @@ public class SpeakFragment extends Fragment
             public void callback(ArrayList voiceResult)
             {
                 voiceInput = voiceResult;
-                speechTextDisplay.setText(voiceInput.get(0).toString());
+                String firstResult = voiceInput.get(0).toString();
+                speechTextDisplay.setText(firstResult);
                 isListening = false;
-                //spokenString = "why are my hands so smelly?";
-                new GetWordsAsync(voiceInput.get(0).toString(), importantWords, getActivity().getApplicationContext(), commentText).execute();
+                new GetWordsAsync(firstResult, importantWords, getActivity().getApplicationContext(), commentText).execute();
             }
 
             @Override
