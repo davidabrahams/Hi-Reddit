@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.speech;
 
 import android.os.Bundle;
 import android.speech.RecognitionListener;

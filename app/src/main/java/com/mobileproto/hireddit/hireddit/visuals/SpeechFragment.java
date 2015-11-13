@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,11 +15,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
+import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,14 +41,10 @@ public class SpeechFragment extends Fragment {
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
 
-    @Bind(R.id.helloReddit)
-    TextView helloReddit;
-    @Bind(R.id.listeningIndicator)
-    TextView listeningIndicator;
-    @Bind(R.id.listenButton)
-    Button listenButton;
-    @Bind(R.id.speechTextDisplay)
-    TextView speechTextDisplay;
+    @Bind(R.id.helloReddit) TextView helloReddit;
+    @Bind(R.id.listeningIndicator) TextView listeningIndicator;
+    @Bind(R.id.listenButton) Button listenButton;
+    @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
 
     /**
      * Use this factory method to create a new instance of

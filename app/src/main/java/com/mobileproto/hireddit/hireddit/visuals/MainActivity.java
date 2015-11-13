@@ -1,4 +1,7 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.visuals;
+
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
