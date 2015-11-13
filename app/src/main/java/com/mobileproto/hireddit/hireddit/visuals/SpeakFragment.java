@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobileproto.hireddit.hireddit.GetWordsAsync;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
@@ -42,11 +43,14 @@ public class SpeakFragment extends Fragment
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    public String spokenString;
+    public String importantWords;
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
     @Bind(R.id.listenButton) Button listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
+    @Bind(R.id.commentText) TextView commentText;
 
     /**
      * Use this factory method to create a new instance of
@@ -130,11 +134,9 @@ public class SpeakFragment extends Fragment
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/volkswagen-serial-bold.ttf");
-        listenButton.setOnClickListener(new View.OnClickListener()
-        {
+        listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (isListening)
                     dontListen();
                 else
@@ -142,6 +144,9 @@ public class SpeakFragment extends Fragment
             }
         });
         helloReddit.setTypeface(tf);
+
+        spokenString = "why are my hands so smelly?";
+        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
 
         return view;
     }
