@@ -6,5 +6,4 @@
     <string name="speech_button">Speech</string>
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
-    <color name="reddit_blue">#cee3f8</color>
 </resources>
