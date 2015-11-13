@@ -44,36 +44,11 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     //AssetManager assetManager = context.getAssets();
     String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
 
-//    public static String getApi(Context context) {
-//        try {
-//            AssetManager assetManager = context.getAssets();
-//            InputStream apikey = assetManager.open("indicoapitxt.txt");
-//            String apiKeyString = apikey.toString();
-//            Log.d("apikey", "apiKeyString");
-//            return apiKeyString;
-//        }
-//        catch (IOException e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    AssetManager assetManager = context.getAssets();
-//    try {
-//        InputStream apikey = assetManager.open("indicoapitxt.txt");
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
-//
-//    String apiKeyString = apikey.toString();
-
-    //String indicoApiKey = getApi(context);
     Indico indico = Indico.init(context, indicoApiKey, null);
 
     @Override
     protected ArrayList<String> doInBackground(Void... params) {
         try {
-
             //final ArrayList<String> wordList = new ArrayList<String>();
             indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
                 @Override
@@ -97,8 +72,8 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
             return wordList;
         } catch (IOException | IndicoException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override

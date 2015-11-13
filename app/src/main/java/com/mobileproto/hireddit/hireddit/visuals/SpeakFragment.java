@@ -94,6 +94,8 @@ public class SpeakFragment extends Fragment
                 voiceInput = voiceResult;
                 speechTextDisplay.setText(voiceInput.get(0).toString());
                 isListening = false;
+                //spokenString = "why are my hands so smelly?";
+                new GetWordsAsync(voiceInput.get(0).toString(), importantWords, getActivity().getApplicationContext(), commentText).execute();
             }
 
             @Override
@@ -144,9 +146,6 @@ public class SpeakFragment extends Fragment
             }
         });
         helloReddit.setTypeface(tf);
-
-        spokenString = "why are my hands so smelly?";
-        new GetWordsAsync(spokenString, importantWords, getActivity().getApplicationContext(), commentText).execute();
 
         return view;
     }
