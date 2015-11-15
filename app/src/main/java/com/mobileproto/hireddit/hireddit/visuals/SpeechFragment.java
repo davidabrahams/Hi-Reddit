@@ -24,17 +24,15 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SpeakFragment.OnFragmentInteractionListener} interface
+ * {@link SpeechFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SpeakFragment#newInstance} factory method to
+ * Use the {@link SpeechFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeakFragment extends Fragment
-{
+public class SpeechFragment extends Fragment implements SpeechCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
@@ -52,24 +50,21 @@ public class SpeakFragment extends Fragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment SpeakFragment.
+     * @return A new instance of fragment SpeechFragment.
      */
-    public static SpeakFragment newInstance()
-    {
-        SpeakFragment fragment = new SpeakFragment();
+    public static SpeechFragment newInstance() {
+        SpeechFragment fragment = new SpeechFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public SpeakFragment()
-    {
+    public SpeechFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
@@ -77,64 +72,22 @@ public class SpeakFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_speak, container, false);
+        View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-        listener = new SpeechListener(new SpeechCallback()
-        {
-            @Override
-            public void callback(ArrayList voiceResult)
-            {
-                voiceInput = voiceResult;
-                speechTextDisplay.setText(voiceInput.get(0).toString());
-                isListening = false;
-            }
-
-            @Override
-            public void errorCallback(int errorCode)
-            {
-                if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) {
-                    //TODO: change this to saying out loud, "please try again"
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
-                }
-                if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error: Please say something.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void partialCallback(ArrayList partialResult)
-            {
-                speechTextDisplay.setText(partialResult.get(0).toString());
-            }
-        });
-
+        listener = new SpeechListener(this);
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        recognizerIntent.putExtra(
-                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-                1000); // TODO: TEST THIS
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
         sr.setRecognitionListener(listener);
 
-
-        doListen();
-
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/volkswagen-serial-bold.ttf");
-        listenButton.setOnClickListener(new View.OnClickListener()
-        {
+        listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (isListening)
                     dontListen();
                 else
@@ -147,8 +100,7 @@ public class SpeakFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
@@ -159,36 +111,66 @@ public class SpeakFragment extends Fragment
     }
 
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
 
     // TODO: CHANGE THIS WHEN WE HAVE A FANCY LISTENING INDICATOR
-    private void updateListeningIndicator()
-    {
+    private void updateListeningIndicator() {
         if (isListening)
             listeningIndicator.setText(R.string.listening_text_indicator);
         else
             listeningIndicator.setText(R.string.not_listening_text_indicator);
     }
 
-    public void doListen()
-    {
+    public void doListen() {
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
         updateListeningIndicator();
         sr.startListening(recognizerIntent);
     }
 
-    public void dontListen()
-    {
+    public void dontListen() {
         Log.d(DEBUG_TAG, "Stop listening.");
         sr.stopListening();
         isListening = false;
         updateListeningIndicator();
+    }
+
+    public void callback(ArrayList voiceResult) {
+        voiceInput = voiceResult;
+        speechTextDisplay.setText(voiceInput.get(0).toString());
+        dontListen();
+        Log.d(DEBUG_TAG, "Got result, stopped listening.");
+    }
+
+    @Override
+    public void errorCallback(int errorCode, int numErrors)
+    {
+        dontListen();
+        if (numErrors <=1) {
+            Log.d(DEBUG_TAG, "Got error, stopped listening.");
+            if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
+                //numErrors is to check to make sure this is first time you get the error so you
+                //don't get a bunch of toasts from unrecognized partial results
+                //TODO: change this to saying out loud, "please try again"
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+            } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error: Please say something.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void partialCallback(ArrayList partialResult) {
+        speechTextDisplay.setText(partialResult.get(0).toString());
     }
 
 
@@ -202,8 +184,7 @@ public class SpeakFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener
-    {
+    public interface OnFragmentInteractionListener {
     }
 
 }

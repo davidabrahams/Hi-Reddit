@@ -8,83 +8,70 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * Voice Recognition: For speech to text input
+ * Voice Recognition: Listener for speech to text input
  */
 
-public class SpeechListener implements RecognitionListener
-{
+public class SpeechListener implements RecognitionListener {
     String DEBUG_TAG = "SpeechListener Debug";
-    private String voiceInput;
-    private ArrayList data;
-    private ArrayList partial;
     private SpeechCallback speechCallback;
+    private int numErrors;
 
-    public SpeechListener(SpeechCallback mSpeechCallback)
-    {
+    public SpeechListener(SpeechCallback mSpeechCallback) {
         speechCallback = mSpeechCallback;
+        numErrors = 0;
     }
 
 
     @Override
-    public void onReadyForSpeech(Bundle params)
-    {
+    public void onReadyForSpeech(Bundle params) {
         Log.d(DEBUG_TAG, "onReadyForSpeech " + params);
     }
 
     @Override
-    public void onBeginningOfSpeech()
-    {
+    public void onBeginningOfSpeech() {
         Log.d(DEBUG_TAG, "oneBeginningOfSpeech - Start talking!");
     }
 
     @Override
-    public void onRmsChanged(float rmsdB)
-    {
+    public void onRmsChanged(float rmsdB) {
         //Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
     }
 
     @Override
-    public void onBufferReceived(byte[] buffer)
-    {
+    public void onBufferReceived(byte[] buffer) {
         Log.d(DEBUG_TAG, "onBuffer Received");
     }
 
     @Override
-    public void onEndOfSpeech()
-    {
+    public void onEndOfSpeech() {
         Log.d(DEBUG_TAG, "onEndOfSpeech - Finished talking.");
+        numErrors = 0;
     }
 
     @Override
-    public void onError(int error)
-    {
+    public void onError(int error) {
         Log.d(DEBUG_TAG, "onError - Error occurred with voice recognition. Error code: " + error);
-        speechCallback.errorCallback(error);
+        numErrors += 1;
+        speechCallback.errorCallback(error, numErrors);
     }
 
     @Override
-    public void onResults(Bundle results)
-    {
-        Log.d(DEBUG_TAG, "onResults " + results);
-
-        data = null;
-        data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+    public void onResults(Bundle results) {
+        ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(DEBUG_TAG, "onResults: " + data);
         speechCallback.callback(data);
     }
 
     @Override
-    public void onPartialResults(Bundle partialResults)
-    {
-        partial = null;
-        partial = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+    public void onPartialResults(Bundle partialResults) {
+        ArrayList<String> partial = partialResults.getStringArrayList(
+                SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(DEBUG_TAG, "onPartialResults: " + partial);
         speechCallback.partialCallback(partial);
     }
 
     @Override
-    public void onEvent(int eventType, Bundle params)
-    {
+    public void onEvent(int eventType, Bundle params) {
         Log.d(DEBUG_TAG, "onEvent " + eventType + ", " + params);
     }
 }

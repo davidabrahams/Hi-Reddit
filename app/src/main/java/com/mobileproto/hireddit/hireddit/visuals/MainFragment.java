@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends Fragment
 {
-    String DEBUG_TAG = "MainFragment Debug";
+    private static final String DEBUG_TAG = "MainFragment Debug";
 
     private OnFragmentInteractionListener mListener;
 
