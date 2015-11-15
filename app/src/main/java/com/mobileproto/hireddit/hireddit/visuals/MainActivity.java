@@ -20,8 +20,7 @@ public class MainActivity extends AppCompatActivity implements
     public WordToSpeech speech;
 
     FragmentManager manager;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    @Bind(R.id.toolbar) Toolbar toolbar;
 
     public static final int HOME_SCREEN_CLICK = 1;
 

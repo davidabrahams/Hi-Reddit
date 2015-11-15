@@ -12,13 +12,13 @@ import java.util.ArrayList;
  */
 
 public class SpeechListener implements RecognitionListener {
-    String DEBUG_TAG = "myDebug";
-    private ArrayList data;
-    private ArrayList partial;
+    String DEBUG_TAG = "SpeechListener Debug";
     private SpeechCallback speechCallback;
-    private int numErrors = 0;
+    private int numErrors;
+
     public SpeechListener(SpeechCallback mSpeechCallback) {
         speechCallback = mSpeechCallback;
+        numErrors = 0;
     }
 
 
@@ -57,14 +57,15 @@ public class SpeechListener implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-        data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(DEBUG_TAG, "onResults: " + data);
         speechCallback.callback(data);
     }
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-        partial = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        ArrayList<String> partial = partialResults.getStringArrayList(
+                SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(DEBUG_TAG, "onPartialResults: " + partial);
         speechCallback.partialCallback(partial);
     }
