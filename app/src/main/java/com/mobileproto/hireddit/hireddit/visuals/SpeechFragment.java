@@ -32,9 +32,9 @@ import butterknife.ButterKnife;
  * Use the {@link SpeechFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeechFragment extends Fragment {
+public class SpeechFragment extends Fragment implements SpeechCallback {
     private OnFragmentInteractionListener mListener;
-    private static final String DEBUG_TAG = "myDebug";
+    private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private SpeechListener listener;
     private ArrayList voiceInput;
@@ -76,39 +76,7 @@ public class SpeechFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-        listener = new SpeechListener(new SpeechCallback() {
-            @Override
-            public void callback(ArrayList voiceResult) {
-                voiceInput = voiceResult;
-                speechTextDisplay.setText(voiceInput.get(0).toString());
-                isListening = false;
-                Log.d(DEBUG_TAG, "Got result, stopped listening.");
-            }
-
-            @Override
-            public void errorCallback(int errorCode, int numErrors) {
-                isListening = false;
-                Log.d(DEBUG_TAG, "Got error, stopped listening.");
-                if (errorCode == SpeechRecognizer.ERROR_NO_MATCH && numErrors == 1) { // error 7
-                    //numErrors is to check to make sure this is first time you get the error so you
-                    //don't get a bunch of toasts from unrecognized partial results
-                    //TODO: change this to saying out loud, "please try again"
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
-                } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error: Please say something.", Toast.LENGTH_SHORT).show();
-                } else if (numErrors == 1) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void partialCallback(ArrayList partialResult) {
-                speechTextDisplay.setText(partialResult.get(0).toString());
-            }
-        });
+        listener = new SpeechListener(this);
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
@@ -169,6 +137,40 @@ public class SpeechFragment extends Fragment {
         sr.stopListening();
         isListening = false;
         updateListeningIndicator();
+    }
+
+    public void callback(ArrayList voiceResult) {
+        voiceInput = voiceResult;
+        speechTextDisplay.setText(voiceInput.get(0).toString());
+        dontListen();
+        Log.d(DEBUG_TAG, "Got result, stopped listening.");
+    }
+
+    @Override
+    public void errorCallback(int errorCode, int numErrors)
+    {
+        dontListen();
+        if (numErrors <=1) {
+            Log.d(DEBUG_TAG, "Got error, stopped listening.");
+            if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
+                //numErrors is to check to make sure this is first time you get the error so you
+                //don't get a bunch of toasts from unrecognized partial results
+                //TODO: change this to saying out loud, "please try again"
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+            } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error: Please say something.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void partialCallback(ArrayList partialResult) {
+        speechTextDisplay.setText(partialResult.get(0).toString());
     }
 
 
