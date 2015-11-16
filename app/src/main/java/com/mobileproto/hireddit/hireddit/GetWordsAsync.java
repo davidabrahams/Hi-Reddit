@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.mobileproto.hireddit.hireddit.visuals.MainActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -92,6 +94,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                     postComment = chooseComment.pickComment(allComments);
                     Log.i("comment", postComment);
                     commentText.setText(postComment);
+                    MainActivity.speech.speak(postComment);
                 }
             });
         }

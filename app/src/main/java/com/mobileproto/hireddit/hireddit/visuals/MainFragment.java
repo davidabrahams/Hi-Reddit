@@ -23,7 +23,8 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends Fragment
 {
-    String DEBUG_TAG = "MainFragment Debug";
+    private static final String DEBUG_TAG = "MainFragment Debug";
+
     private OnFragmentInteractionListener mListener;
 
     @Bind(R.id.alienImage) ImageView alienImage;
@@ -63,13 +64,12 @@ public class MainFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        view.setOnLongClickListener(new View.OnLongClickListener()
+        view.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public boolean onLongClick(View v)
+            public void onClick(View v)
             {
                 mListener.onFragmentInteraction(MainActivity.HOME_SCREEN_CLICK);
-                return true;
             }
         });
         return view;
