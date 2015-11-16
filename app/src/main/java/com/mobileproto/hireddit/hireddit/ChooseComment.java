@@ -14,8 +14,8 @@ public class ChooseComment {
 
     public String pickComment(ArrayList<String> allComments){
         for (int i = 0; i < allComments.size(); i++) {
-            if (allComments.get(i).length() < 300) {
-                if (!allComments.get(i).toLowerCase().contains("http")) {
+            if (allComments.get(i).length() < 200) {
+                if (!allComments.get(i).toLowerCase().contains("http") && !allComments.get(i).toLowerCase().contains("?")) {
                     return allComments.get(i);
                 }
             }
