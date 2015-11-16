@@ -116,7 +116,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         mListener = null;
     }
 
-
     // TODO: CHANGE THIS WHEN WE HAVE A FANCY LISTENING INDICATOR
     private void updateListeningIndicator() {
         if (isListening)
