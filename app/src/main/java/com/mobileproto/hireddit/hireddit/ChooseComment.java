@@ -1,9 +1,4 @@
 package com.mobileproto.hireddit.hireddit;
-
-import android.os.Bundle;
-import android.util.Log;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -22,6 +17,5 @@ public class ChooseComment {
         }
         return allComments.get(0);
     }
-
 }
 
