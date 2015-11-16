@@ -142,6 +142,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         voiceInput = voiceResult;
         speechTextDisplay.setText(voiceInput.get(0).toString());
         isListening = false;
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
 
@@ -153,8 +154,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     @Override
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
-        if (numErrors ==1) { // to prevent showing multiple toasts
+        if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
