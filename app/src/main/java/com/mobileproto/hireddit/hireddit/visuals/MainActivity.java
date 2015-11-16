@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void switchFragment(Fragment f) {
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, f).addToBackStack(null);
+        transaction.replace(R.id.container, f);
         transaction.commit();
     }
 
