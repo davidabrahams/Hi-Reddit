@@ -116,7 +116,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         mListener = null;
     }
 
-
     // TODO: CHANGE THIS WHEN WE HAVE A FANCY LISTENING INDICATOR
     private void updateListeningIndicator() {
         if (isListening)
@@ -142,19 +141,21 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     public void callback(ArrayList voiceResult) {
         voiceInput = voiceResult;
         speechTextDisplay.setText(voiceInput.get(0).toString());
-        dontListen();
+        isListening = false;
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
 
     @Override
-    public void errorCallback(int errorCode, int numErrors)
-    {
-        dontListen();
-        if (numErrors <=1) {
-            Log.d(DEBUG_TAG, "Got error, stopped listening.");
+    public void partialCallback(ArrayList partialResult) {
+        speechTextDisplay.setText(partialResult.get(0).toString());
+    }
+
+    @Override
+    public void errorCallback(int errorCode, int numErrors) {
+        isListening = false;
+        Log.d(DEBUG_TAG, "Got error, stopped listening.");
+        if (numErrors ==1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
-                //numErrors is to check to make sure this is first time you get the error so you
-                //don't get a bunch of toasts from unrecognized partial results
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
@@ -167,12 +168,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
             }
         }
     }
-
-    @Override
-    public void partialCallback(ArrayList partialResult) {
-        speechTextDisplay.setText(partialResult.get(0).toString());
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this
