@@ -1,5 +1,6 @@
 package com.mobileproto.hireddit.hireddit;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,12 +35,18 @@ public class GetComment {
     }
     public void commentSearch(String searchQuery, final CommentCallback callback) {
         String query = searchQuery.replaceAll(" ", "+");
-        String URL = "https://api.pushshift.io/reddit/search?q=%22";
-        URL = URL + query + "%22~5&fields=body";
-        Log.d("redditapicall", URL);
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("api.pushshift.io")
+                .appendPath("reddit")
+                .appendPath("search")
+                .appendQueryParameter("q",query)
+                .appendQueryParameter("fields","body");
+        String Url = builder.build().toString();
+        Log.d("redditapicall", Url);
         JsonObjectRequest getRequest = new JsonObjectRequest(
             Request.Method.GET,
-            URL,
+            Url,
             new JSONObject(),
             new Response.Listener<JSONObject>() {
                 @Override
@@ -73,8 +80,8 @@ public class GetComment {
             }
         );
         getRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                10000, //earlier I was having issues with this api taking more than the 5 seconds it takes Volley to time out
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, //now the time is 10 seconds, the api seems faster now
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(getRequest);
     }

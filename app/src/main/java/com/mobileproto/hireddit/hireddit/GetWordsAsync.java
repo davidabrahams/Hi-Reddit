@@ -101,7 +101,7 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
         super.onPostExecute(result);
         if (!result.isEmpty()) {
             importantWords = result.toString();
-            importantWords = importantWords.replace(",", "").replace("[", "").replace("]", "");
+            importantWords = importantWords.replaceAll("[^A-Za-z0-9]", "");;
             GetComment getComment = new GetComment(context);
             getComment.commentSearch(importantWords, new CommentCallback()
             {
