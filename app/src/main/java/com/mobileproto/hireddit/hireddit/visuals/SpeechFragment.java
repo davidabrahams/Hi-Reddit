@@ -146,8 +146,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
         new GetWordsAsync(firstResult, importantWords, getActivity().getApplicationContext(), commentText).execute();
-        //String readAloud = commentText.getText().toString();
-        //MainActivity.speech.speak(readAloud);
         isListening = false;
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }

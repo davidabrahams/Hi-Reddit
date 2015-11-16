@@ -1,35 +1,31 @@
 package com.mobileproto.hireddit.hireddit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mobileproto.hireddit.hireddit.visuals.MainActivity;
+import com.google.common.io.CharStreams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Set;
 
 import io.indico.Indico;
-import io.indico.enums.TextTag;
-import io.indico.results.IndicoResult;
-import io.indico.api.Api;
 import io.indico.network.IndicoCallback;
-import io.indico.clients.TextApi;
-import io.indico.utils.IndicoException;;
+import io.indico.results.IndicoResult;
+import io.indico.utils.IndicoException;
+
+;
 
 /**
  * Created by lwilcox on 11/5/2015.
  */
-public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
+public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
+{
     private String spokenString;
     private String importantWords;
     private Context context;
@@ -37,24 +33,45 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     public ArrayList<String> allComments;
     public String postComment;
     public TextView commentText;
-    public GetWordsAsync(String spokenString, String importantWords, Context context, TextView commentText){
+    public Indico indico;
+
+
+    public GetWordsAsync(String spokenString, String importantWords, Context context, TextView commentText)
+    {
+
         this.spokenString = spokenString;
         this.importantWords = importantWords;
         this.context = context;
         this.commentText = commentText;
-    }
-    //AssetManager assetManager = context.getAssets();
-    String indicoApiKey = "7a8f16edc7a58c8a7773ba95c6d2241b";
+        String indicoApiKey = getApi(context);
+        this.indico = Indico.init(context, indicoApiKey, null);
 
-    Indico indico = Indico.init(context, indicoApiKey, null);
+    }
+
+    public static String getApi(Context context)
+    {
+        try {
+            AssetManager assetManager = context.getAssets();
+            InputStream apikey = assetManager.open("indicoapitxt.txt");
+            String apiKeyString = CharStreams.toString(new InputStreamReader(apikey, "UTF-8"));
+            Log.d("apikey", apiKeyString);
+            return apiKeyString;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Override
-    protected ArrayList<String> doInBackground(Void... params) {
+    protected ArrayList<String> doInBackground(Void... params)
+    {
         try {
             //final ArrayList<String> wordList = new ArrayList<String>();
-            indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>() {
+            indico.keywords.predict(spokenString, new IndicoCallback<IndicoResult>()
+            {
                 @Override
-                public void handle(IndicoResult result) throws IndicoException {
+                public void handle(IndicoResult result) throws IndicoException
+                {
                     Log.i("Indico Keywords", "keywords: " + result.getKeywords());
                     if (result.getKeywords() != null) {
                         wordList.add(result.getKeywords().keySet().toString());
@@ -62,11 +79,11 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
                 }
             });
             Log.d("wordlist", wordList.toString());
-            while (wordList.isEmpty()){
+            while (wordList.isEmpty()) {
                 Log.d("wating", "true");
                 try {
                     Thread.sleep(15);
-                }catch (InterruptedException ex){
+                } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
             }
@@ -79,16 +96,19 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>{
     }
 
     @Override
-    protected void onPostExecute(ArrayList<String> result) {
-        Log.d("inpost","true");
+    protected void onPostExecute(ArrayList<String> result)
+    {
+        Log.d("inpost", "true");
         super.onPostExecute(result);
-        if (! result.isEmpty()) {
+        if (!result.isEmpty()) {
             importantWords = result.toString();
             importantWords = importantWords.replace(",", "").replace("[", "").replace("]", "");
             GetComment getComment = new GetComment(context);
-            getComment.commentSearch(importantWords, new CommentCallback() {
+            getComment.commentSearch(importantWords, new CommentCallback()
+            {
                 @Override
-                public void callback(ArrayList<String> commentList) {
+                public void callback(ArrayList<String> commentList)
+                {
                     allComments = commentList;
                     ChooseComment chooseComment = new ChooseComment();
                     postComment = chooseComment.pickComment(allComments);
