@@ -2,7 +2,7 @@ package com.mobileproto.hireddit.hireddit;
 import java.util.ArrayList;
 
 /**
- * Created by lwilcox on 11/7/2015.
+ * Chooses a reasonable comment from the set of comments provided
  */
 
 public class ChooseComment {

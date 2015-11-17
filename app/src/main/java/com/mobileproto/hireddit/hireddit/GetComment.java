@@ -33,7 +33,8 @@ public class GetComment {
     public GetComment(Context context) {
         queue = Volley.newRequestQueue(context);
     }
-    public void commentSearch(String searchQuery, final CommentCallback callback) {
+    public void commentSearch(String searchQuery, final Context context, final CommentCallback callback) {
+
         String query = searchQuery.replaceAll(" ", "+");
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
@@ -62,7 +63,7 @@ public class GetComment {
                         callback.callback(allComments);
                     } catch (Exception e)
                     {
-                        Log.d("Failure", "No comments available");
+                        Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
                     }
                 }
             },
@@ -79,7 +80,7 @@ public class GetComment {
                 }
             }
         );
-        getRequest.setRetryPolicy(new DefaultRetryPolicy(
+        getRequest.setRetryPolicy(new DefaultRetryPolicy( //changes Volley settings
                 10000, //earlier I was having issues with this api taking more than the 5 seconds it takes Volley to time out
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, //now the time is 10 seconds, the api seems faster now
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

@@ -41,8 +41,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
-    public String spokenString;
-    public String importantWords;
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
@@ -145,7 +143,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
-        new GetWordsAsync(firstResult, importantWords, getActivity().getApplicationContext(), commentText).execute();
+        new GetWordsAsync(firstResult, getActivity().getApplicationContext(), commentText).execute();
         isListening = false;
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
