@@ -1,4 +1,4 @@
-package com.mobileproto.hireddit.hireddit;
+package com.mobileproto.hireddit.hireddit.reddit;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -26,6 +26,7 @@ import io.indico.utils.IndicoException;
  * Calls ChooseComment to get the best comment
  */
 public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
+        implements CommentCallback
 {
     private String spokenString;
     private String importantWords;
@@ -94,20 +95,30 @@ public class GetWordsAsync extends AsyncTask<Void, Void, ArrayList<String>>
         if (!result.isEmpty()) {
             importantWords = result.toString();
             importantWords = importantWords.replace(",", "").replace("[", "").replace("]", ""); // do not change to .replaceAll("[^A-Za-z0-9]", "");
-            GetComment getComment = new GetComment(context);
-            getComment.commentSearch(importantWords, context, new CommentCallback()
-            {
-                @Override
-                public void callback(ArrayList<String> commentList)
-                {
-                    allComments = commentList;
-                    ChooseComment chooseComment = new ChooseComment();
-                    postComment = chooseComment.pickComment(allComments);
-                    Log.d(DEBUG_TAG, "postComment:" + postComment);
-                    commentText.setText(postComment);
-                    MainActivity.speech.speak(postComment);
-                }
-            });
+            GetComment getComment = new GetComment(context, this);
+            getComment.commentSearch(importantWords);
         }
+    }
+
+    @Override
+    public void callback(ArrayList<String> commentList)
+    {
+        allComments = commentList;
+        postComment = pickComment(allComments);
+        Log.d(DEBUG_TAG, "postComment:" + postComment);
+        commentText.setText(postComment);
+        MainActivity.speech.speak(postComment);
+    }
+
+
+    public String pickComment(ArrayList<String> allComments){
+        for (int i = 0; i < allComments.size(); i++) {
+            if (allComments.get(i).length() < 300) {
+                if (!allComments.get(i).toLowerCase().contains("http")) {
+                    return allComments.get(i);
+                }
+            }
+        }
+        return allComments.get(0);
     }
 }

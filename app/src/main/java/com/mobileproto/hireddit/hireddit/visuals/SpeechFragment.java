@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobileproto.hireddit.hireddit.GetWordsAsync;
 import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.reddit.GetWordsAsync;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
@@ -139,6 +139,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         updateListeningIndicator();
     }
 
+    @Override
     public void callback(ArrayList voiceResult) {
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
