@@ -138,7 +138,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         updateListeningIndicator();
     }
 
-    public void callback(ArrayList voiceResult) {
+    public void resultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
         speechTextDisplay.setText(voiceInput.get(0).toString());
         isListening = false;
