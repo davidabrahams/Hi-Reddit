@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.app.ActionBarActivity;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
@@ -40,11 +44,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private MediaPlayer mMediaPlayer;
+    private Visualizer mVisualizer;
+
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
     @Bind(R.id.listenButton) Button listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
+    @Bind(R.id.myvisualizerview) VisualizerView mVisualizerView;
 
     /**
      * Use this factory method to create a new instance of
@@ -129,6 +137,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         isListening = true;
         updateListeningIndicator();
         sr.startListening(recognizerIntent);
+        setupVisualizerFxAndUI();
+        mVisualizer.setEnabled(true);
     }
 
     public void dontListen() {
@@ -136,6 +146,25 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         sr.stopListening();
         isListening = false;
         updateListeningIndicator();
+        mVisualizer.release();
+    }
+
+    private void setupVisualizerFxAndUI() {
+
+        // Create the Visualizer object and attach it to our media player.
+        mVisualizer = new Visualizer(mMediaPlayer.getAudioSessionId());
+        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        mVisualizer.setDataCaptureListener(
+                new Visualizer.OnDataCaptureListener() {
+                    public void onWaveFormDataCapture(Visualizer visualizer,
+                                                      byte[] bytes, int samplingRate) {
+                        mVisualizerView.updateVisualizer(bytes);
+                    }
+
+                    public void onFftDataCapture(Visualizer visualizer,
+                                                 byte[] bytes, int samplingRate) {
+                    }
+                }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 
     public void callback(ArrayList voiceResult) {

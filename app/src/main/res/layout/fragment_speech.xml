@@ -43,6 +43,12 @@
 
     </LinearLayout>
 
+    <com.mobileproto.hireddit.hireddit.visuals.VisualizerView
+        android:id="@+id/myvisualizerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/listenButton"/>
+
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
