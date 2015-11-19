@@ -99,7 +99,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("api.pushshift.io")
-                .appendPath("com/mobileproto/hireddit/hireddit/reddit")
+                .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", searchQuery)
                 .appendQueryParameter("fields","body");
