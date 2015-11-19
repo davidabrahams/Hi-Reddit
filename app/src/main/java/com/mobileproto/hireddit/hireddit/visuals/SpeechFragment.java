@@ -177,8 +177,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void commentCallback(String comment) {
-        commentText.setText(comment);
-        mListener.speak(comment);
+        if (comment == null) {
+            Log.d(DEBUG_TAG, "No valid comments found");
+            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            commentText.setText(comment);
+            mListener.speak(comment);
+        }
     }
 
 

@@ -87,17 +87,12 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     private void getCommentFromKeywords(Set<String> keywords) {
         String importantWords = StringUtils.join(keywords, " ");
-        commentSearch(importantWords);
-    }
-
-
-    public void commentSearch(String searchQuery) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("api.pushshift.io")
                 .appendPath("reddit")
                 .appendPath("search")
-                .appendQueryParameter("q", searchQuery)
+                .appendQueryParameter("q", importantWords)
                 .appendQueryParameter("fields", "body");
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
@@ -112,7 +107,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
 
-    // TODO: IMPROVE THIS
     public String pickComment(ArrayList<String> allComments) {
         for (int i = 0; i < allComments.size(); i++) {
             if (allComments.get(i).length() < 300) {
@@ -121,7 +115,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 }
             }
         }
-        return allComments.get(0);
+        return null;
     }
 
     @Override
