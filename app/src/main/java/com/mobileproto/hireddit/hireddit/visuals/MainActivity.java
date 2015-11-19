@@ -18,7 +18,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
         MainFragment.OnFragmentInteractionListener, SpeechFragment.OnFragmentInteractionListener {
-    public static WordToSpeech speech;
+
+    private WordToSpeech speech;
 
     FragmentManager manager;
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -85,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements
                         R.anim.slide_out_up);
                 break;
         }
+    }
+
+
+    public void speak(String words)
+    {
+        speech.speak(words);
     }
 
 }

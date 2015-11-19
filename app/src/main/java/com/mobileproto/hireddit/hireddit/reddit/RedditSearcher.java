@@ -3,9 +3,7 @@ package com.mobileproto.hireddit.hireddit.reddit;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -16,7 +14,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.mobileproto.hireddit.hireddit.visuals.MainActivity;
 import com.google.common.io.CharStreams;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +37,7 @@ import io.indico.utils.IndicoException;
  * Calls GetComment to get Reddit comments with key words
  * Calls ChooseComment to get the best comment
  */
-public class RedditSearcher implements RedditSearchCallback, Response.Listener<JSONObject>, Response.ErrorListener
+public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener
 {
     private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
@@ -93,8 +90,6 @@ public class RedditSearcher implements RedditSearchCallback, Response.Listener<J
 
     private void getCommentFromKeywords(Set<String> keywords)
     {
-
-//        String importantWords = keywords.toString();
         String importantWords = StringUtils.join(keywords, " ");
         commentSearch(importantWords);
     }
@@ -121,16 +116,6 @@ public class RedditSearcher implements RedditSearchCallback, Response.Listener<J
         queue.add(getRequest);
     }
 
-    @Override
-    public void callback(ArrayList<String> commentList)
-    {
-        ArrayList<String> allComments = commentList;
-        String postComment = pickComment(allComments);
-        Log.d(DEBUG_TAG, "postComment:" + postComment);
-        MainActivity.speech.speak(postComment);
-    }
-
-
     public String pickComment(ArrayList<String> allComments){
         for (int i = 0; i < allComments.size(); i++) {
             if (allComments.get(i).length() < 300) {
@@ -152,7 +137,9 @@ public class RedditSearcher implements RedditSearchCallback, Response.Listener<J
                 String comment = body.getString("body");
                 allComments.add(comment);
             }
-            this.callback(allComments);
+            String postComment = pickComment(allComments);
+            Log.d(DEBUG_TAG, "postComment:" + postComment);
+            myCommentCallback.commentCallback(postComment);
         } catch (Exception e)
         {
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();

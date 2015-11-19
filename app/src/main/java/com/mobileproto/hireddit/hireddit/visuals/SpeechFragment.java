@@ -146,8 +146,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback, CommentC
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
-        new RedditSearcher(firstResult, getActivity().getApplicationContext(), commentText).execute();
+        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
         isListening = false;
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
 
@@ -179,6 +180,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback, CommentC
     public void commentCallback(String comment)
     {
         commentText.setText(comment);
+        ((MainActivity) getActivity()).speak(comment);
     }
 
 
