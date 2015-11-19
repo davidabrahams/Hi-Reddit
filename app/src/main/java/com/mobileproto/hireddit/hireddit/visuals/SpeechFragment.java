@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobileproto.hireddit.hireddit.R;
-import com.mobileproto.hireddit.hireddit.reddit.CommentCallback;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
@@ -34,8 +33,8 @@ import butterknife.ButterKnife;
  * Use the {@link SpeechFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeechFragment extends Fragment implements SpeechCallback, CommentCallback
-{
+public class SpeechFragment extends Fragment implements SpeechCallback,
+        RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
@@ -161,7 +160,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback, CommentC
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
-        if (numErrors ==1) { // to prevent showing multiple toasts
+        if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
@@ -177,10 +176,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback, CommentC
     }
 
     @Override
-    public void commentCallback(String comment)
-    {
+    public void commentCallback(String comment) {
         commentText.setText(comment);
-        ((MainActivity) getActivity()).speak(comment);
+        mListener.speak(comment);
     }
 
 
@@ -195,6 +193,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback, CommentC
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        void speak(String comment);
     }
 
 }

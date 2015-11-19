@@ -18,6 +18,7 @@ import com.google.common.io.CharStreams;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -37,27 +38,25 @@ import io.indico.utils.IndicoException;
  * Calls GetComment to get Reddit comments with key words
  * Calls ChooseComment to get the best comment
  */
-public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener
-{
+public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener {
+
     private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
+    private static final String ERROR_TAG = "RedditSearcher Error";
+
     private Context context;
-    private ArrayList<String> wordList = new ArrayList<>();
     private Indico indico;
     private CommentCallback myCommentCallback;
     private RequestQueue queue;
 
-    private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>()
-    {
+    private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
-        public void handle(IndicoResult result) throws IndicoException
-        {
+        public void handle(IndicoResult result) throws IndicoException {
             getCommentFromKeywords(result.getKeywords().keySet());
         }
     };
 
-    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context)
-    {
+    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
         this.myCommentCallback = myCommentCallback;
         this.spokenString = spokenString;
         this.context = context;
@@ -66,12 +65,11 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         this.queue = Volley.newRequestQueue(context);
     }
 
-    public static String getApi(Context context)
-    {
+    public static String getApi(Context context) {
         try {
             AssetManager assetManager = context.getAssets();
-            InputStream apikey = assetManager.open("indicoapitxt.txt");
-            String apiKeyString = CharStreams.toString(new InputStreamReader(apikey, "UTF-8"));
+            InputStream apiKey = assetManager.open("indicoapitxt.txt");
+            String apiKeyString = CharStreams.toString(new InputStreamReader(apiKey, "UTF-8"));
             return apiKeyString;
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,8 +77,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         }
     }
 
-    public void getRedditComment()
-    {
+    public void getRedditComment() {
         try {
             indico.keywords.predict(spokenString, indicoCallback);
         } catch (IOException | IndicoException e) {
@@ -88,8 +85,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         }
     }
 
-    private void getCommentFromKeywords(Set<String> keywords)
-    {
+    private void getCommentFromKeywords(Set<String> keywords) {
         String importantWords = StringUtils.join(keywords, " ");
         commentSearch(importantWords);
     }
@@ -102,9 +98,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", searchQuery)
-                .appendQueryParameter("fields","body");
+                .appendQueryParameter("fields", "body");
         String Url = builder.build().toString();
-        Log.d("redditapicall", Url);
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
 
@@ -116,7 +111,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         queue.add(getRequest);
     }
 
-    public String pickComment(ArrayList<String> allComments){
+
+    // TODO: IMPROVE THIS
+    public String pickComment(ArrayList<String> allComments) {
         for (int i = 0; i < allComments.size(); i++) {
             if (allComments.get(i).length() < 300) {
                 if (!allComments.get(i).toLowerCase().contains("http")) {
@@ -128,7 +125,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     @Override
-    public void onResponse(JSONObject response){
+    public void onResponse(JSONObject response) {
         ArrayList<String> allComments = new ArrayList<>();
         try {
             JSONArray items = response.getJSONArray("data");
@@ -138,22 +135,26 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 allComments.add(comment);
             }
             String postComment = pickComment(allComments);
-            Log.d(DEBUG_TAG, "postComment:" + postComment);
             myCommentCallback.commentCallback(postComment);
-        } catch (Exception e)
-        {
+        } catch (JSONException e) {
+            Log.e(ERROR_TAG, "JSON Exception");
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onErrorResponse(VolleyError error)  {
+    public void onErrorResponse(VolleyError error) {
+        Log.e(ERROR_TAG, "Volley experienced an error");
         if (error.networkResponse == null) {
             if (error.getClass().equals(TimeoutError.class)) {
-                Log.d("Error","timeout");
+                Log.e(ERROR_TAG, "A timeout error occurred");
             }
         }
-        Log.e("Error", "volleyfail");
     }
+
+    public interface CommentCallback {
+        void commentCallback(String comment);
+    }
+
 
 }

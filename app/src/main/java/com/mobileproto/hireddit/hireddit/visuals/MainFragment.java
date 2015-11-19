@@ -12,6 +12,7 @@ import com.mobileproto.hireddit.hireddit.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -20,8 +21,7 @@ import butterknife.ButterKnife;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment
-{
+public class MainFragment extends Fragment {
     private static final String DEBUG_TAG = "MainFragment Debug";
 
     private OnFragmentInteractionListener mListener;
@@ -34,22 +34,19 @@ public class MainFragment extends Fragment
      *
      * @return A new instance of fragment MainFragment.
      */
-    public static MainFragment newInstance()
-    {
+    public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MainFragment()
-    {
+    public MainFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
@@ -57,17 +54,14 @@ public class MainFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
 
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        view.setOnClickListener(new View.OnClickListener()
-        {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mListener.onFragmentInteraction(MainActivity.HOME_SCREEN_CLICK);
             }
         });
@@ -75,8 +69,7 @@ public class MainFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
@@ -87,8 +80,7 @@ public class MainFragment extends Fragment
     }
 
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         mListener = null;
     }
@@ -104,8 +96,7 @@ public class MainFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener
-    {
-        public void onFragmentInteraction(int transition);
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(int transition);
     }
 }
