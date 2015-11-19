@@ -3,6 +3,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
         MainFragment.OnFragmentInteractionListener, SpeechFragment.OnFragmentInteractionListener {
-    public WordToSpeech speech;
+    public static WordToSpeech speech;
 
     FragmentManager manager;
     @Bind(R.id.toolbar) Toolbar toolbar;

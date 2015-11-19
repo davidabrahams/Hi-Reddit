@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobileproto.hireddit.hireddit.GetWordsAsync;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
@@ -45,6 +46,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
     @Bind(R.id.listenButton) Button listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
+    @Bind(R.id.commentText) TextView commentText;
 
     /**
      * Use this factory method to create a new instance of
@@ -77,7 +79,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
         listener = new SpeechListener(this);
-
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
@@ -140,7 +141,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
 
     public void resultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
-        speechTextDisplay.setText(voiceInput.get(0).toString());
+        String firstResult = voiceInput.get(0).toString();
+        speechTextDisplay.setText(firstResult);
+        new GetWordsAsync(firstResult, getActivity().getApplicationContext(), commentText).execute();
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
