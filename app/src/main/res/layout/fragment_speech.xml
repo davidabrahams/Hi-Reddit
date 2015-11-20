@@ -41,6 +41,7 @@
               android:layout_height="match_parent"
               android:layout_weight="1" />
 
+
     </LinearLayout>
 
     <Button
@@ -70,5 +71,12 @@
         android:id="@+id/speechTextDisplay"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/commentText"
+        android:layout_below="@id/speechTextDisplay"/>
 
 </RelativeLayout>
