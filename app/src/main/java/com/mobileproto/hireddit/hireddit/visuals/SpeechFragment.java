@@ -139,6 +139,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = true;
         updateListeningIndicator();
         sr.startListening(recognizerIntent);
+
+
+
         setupVisualizerFxAndUI();
         mVisualizer.setEnabled(true);
     }
@@ -155,6 +158,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         // Create the Visualizer object and attach it to our media player.
         mVisualizer = new Visualizer(mMediaPlayer.getAudioSessionId());
+        //mVisualizer = new Visualizer()
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
         mVisualizer.setDataCaptureListener(
                 new Visualizer.OnDataCaptureListener() {
