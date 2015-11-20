@@ -1,5 +1,5 @@
 #Hi Reddit
-![enter image description here](https://lh3.googleusercontent.com/-9fvosbrxwos/VjvUE7ati4I/AAAAAAAAAIg/aWjkpVAVlBo/s0/reddit-logo-01-674x5011.jpg "reddit-logo-01-674x5011.jpg")
+![enter image description here](https://lh3.googleusercontent.com/-9fvosbrxwos/VjvUE7ati4I/AAAAAAAAAIg/aWjkpVAVlBo/s0/com.mobileproto.hireddit.hireddit.reddit-logo-01-674x5011.jpg "com.mobileproto.hireddit.hireddit.reddit-logo-01-674x5011.jpg")
 
 ####David Abrahams, Yuzhong Huang, Nora Mohamed, Lucy Wilcox
 
@@ -33,7 +33,7 @@ Here are some technologies that we would use to create our app:
  - An API that lets us search through Reddit comments. Or possibly using
    a database of comments.
     - [jReddit](https://github.com/jReddit/jReddit)
-    - [An API from Reddit](https://www.reddit.com/r/redditdev/comments/3fv8vv/new_api_endpoint_now_you_can_search_comments/)
+    - [An API from Reddit](https://www.com.mobileproto.hireddit.hireddit.reddit.com/r/redditdev/comments/3fv8vv/new_api_endpoint_now_you_can_search_comments/)
  - Do HTTP requests in order to search Reddit
     - [Volley](http://developer.android.com/training/volley/index.html)
  - Voice recognition library/SDK that turns speech to text, and also
@@ -52,11 +52,11 @@ Here are some technologies that we would use to create our app:
  3. We have voice recognition functioning
  4. The app should be able to speak (perhaps just saying back what you
     said)
- 5. Be able to search reddit for what the user said.
+ 5. Be able to search com.mobileproto.hireddit.hireddit.reddit for what the user said.
 
 ##Checkin 2: December 1st
 
- 1. Be able to search reddit for response.
+ 1. Be able to search com.mobileproto.hireddit.hireddit.reddit for response.
  2. Have method created for figuring out what words we should or should
     not be searching for based on the user’s input.
  3. Improve algorithm for finding the best comment to read back (up

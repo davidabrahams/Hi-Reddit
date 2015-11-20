@@ -1,3 +1,5 @@
+# api key
+app/src/main/assets/indicoapitxt.txt
 
 #built application files
 *.apk
@@ -35,3 +37,4 @@ build/
 
 #NDK
 obj/
+app/src/main/assets/indicoapitxt.txt

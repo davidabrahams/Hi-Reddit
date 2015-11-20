@@ -17,4 +17,5 @@
         android:src="@drawable/reddit_alien"
         android:id="@+id/alienImage"/>
 
+
 </RelativeLayout>

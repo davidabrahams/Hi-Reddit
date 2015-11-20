@@ -20,6 +20,7 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
 
 import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
@@ -36,7 +37,8 @@ import butterknife.ButterKnife;
  * Use the {@link SpeechFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeechFragment extends Fragment implements SpeechCallback {
+public class SpeechFragment extends Fragment implements SpeechCallback,
+        RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
@@ -53,6 +55,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
     @Bind(R.id.listenButton) Button listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.myvisualizerview) VisualizerView mVisualizerView;
+    @Bind(R.id.commentText) TextView commentText;
 
     /**
      * Use this factory method to create a new instance of
@@ -85,7 +88,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
         listener = new SpeechListener(this);
-
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
@@ -167,9 +169,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
                 }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 
-    public void callback(ArrayList voiceResult) {
+    @Override
+    public void speechResultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
-        speechTextDisplay.setText(voiceInput.get(0).toString());
+        String firstResult = voiceInput.get(0).toString();
+        speechTextDisplay.setText(firstResult);
+        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -200,6 +205,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         }
     }
 
+    @Override
+    public void commentCallback(String comment) {
+        if (comment == null) {
+            Log.d(DEBUG_TAG, "No valid comments found");
+            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            commentText.setText(comment);
+            mListener.speak(comment);
+        }
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -211,6 +229,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        void speak(String comment);
     }
 
 }
