@@ -141,7 +141,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void callback(ArrayList voiceResult) {
+    public void speechResultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
@@ -159,6 +159,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7

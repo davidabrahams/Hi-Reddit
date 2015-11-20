@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public interface SpeechCallback {
 
-    void callback(ArrayList voiceResult);
+    void speechResultCallback(ArrayList voiceResult);
     void errorCallback(int errorCode, int numErrors);
     void partialCallback(ArrayList partialResult);
 

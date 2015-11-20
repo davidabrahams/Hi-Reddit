@@ -37,3 +37,4 @@ build/
 
 #NDK
 obj/
+app/src/main/assets/indicoapitxt.txt
