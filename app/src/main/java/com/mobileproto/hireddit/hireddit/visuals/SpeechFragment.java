@@ -3,6 +3,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +47,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
-    @Bind(R.id.listenButton) Button listenButton;
+    @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
 
@@ -79,6 +81,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
+        listenButton.setImageDrawable(R.drawable.no_mic);
         listener = new SpeechListener(this);
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
@@ -131,6 +134,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = true;
         updateListeningIndicator();
         sr.startListening(recognizerIntent);
+        listenButton.setImageDrawable(yes_mic);
     }
 
     public void dontListen() {
@@ -138,6 +142,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         sr.stopListening();
         isListening = false;
         updateListeningIndicator();
+        listenButton.setImageDrawable(no_mic);
     }
 
     @Override
@@ -148,6 +153,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
         isListening = false;
         updateListeningIndicator();
+        listenButton.setImageResource(R.drawable.no_mic);
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
 
@@ -160,6 +166,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
+        listenButton.setImageDrawable(no_mic);
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
