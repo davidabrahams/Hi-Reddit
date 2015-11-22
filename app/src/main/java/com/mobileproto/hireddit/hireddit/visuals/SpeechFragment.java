@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobileproto.hireddit.hireddit.GetWordsAsync;
 import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
@@ -33,7 +33,8 @@ import butterknife.ButterKnife;
  * Use the {@link SpeechFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SpeechFragment extends Fragment implements SpeechCallback {
+public class SpeechFragment extends Fragment implements SpeechCallback,
+        RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
@@ -139,11 +140,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         updateListeningIndicator();
     }
 
-    public void resultCallback(ArrayList voiceResult) {
+    @Override
+    public void speechResultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
-        new GetWordsAsync(firstResult, getActivity().getApplicationContext(), commentText).execute();
+        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -174,6 +176,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
         }
     }
 
+    @Override
+    public void commentCallback(String comment) {
+        if (comment == null) {
+            Log.d(DEBUG_TAG, "No valid comments found");
+            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            commentText.setText(comment);
+            mListener.speak(comment);
+        }
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -185,6 +200,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        void speak(String comment);
     }
 
 }

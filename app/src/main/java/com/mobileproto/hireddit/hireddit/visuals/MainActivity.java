@@ -2,6 +2,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +18,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
-        MainFragment.OnFragmentInteractionListener, SpeechFragment.OnFragmentInteractionListener {
-    public static WordToSpeech speech;
+        MainFragment.OnFragmentInteractionListener, OnFragmentInteractionListener {
+
+    private WordToSpeech speech;
 
     FragmentManager manager;
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -85,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements
                         R.anim.slide_out_up);
                 break;
         }
+    }
+
+    @Override
+    public void speak(String words) {
+        speech.speak(words);
     }
 
 }

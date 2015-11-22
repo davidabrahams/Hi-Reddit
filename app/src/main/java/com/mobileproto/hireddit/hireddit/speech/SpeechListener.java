@@ -59,7 +59,7 @@ public class SpeechListener implements RecognitionListener {
     public void onResults(Bundle results) {
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(DEBUG_TAG, "onResults: " + data);
-        speechCallback.resultCallback(data);
+        speechCallback.speechResultCallback(data);
     }
 
     @Override
