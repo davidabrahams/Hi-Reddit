@@ -111,12 +111,13 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         for (int i = 0; i < allComments.size(); i++) {
             if (allComments.get(i).length() > 300 || allComments.get(i).toLowerCase().contains("http")) {
                 allComments.remove(i);
+                i--;
             }
         }
     }
 
     public String pickComment(ArrayList<String> allComments) {
-        if (allComments.size() == 0) {
+        if (allComments.size() <= 0) {
             return null;
         } else {
             filterComment(allComments);
