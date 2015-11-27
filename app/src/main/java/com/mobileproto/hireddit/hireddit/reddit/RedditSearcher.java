@@ -119,9 +119,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         if (allComments.size() == 0) {
             return null;
         } else {
+            filterComment(allComments);
             Random mRandom = new Random();
             int index = mRandom.nextInt(allComments.size());
-            filterComment(allComments);
             return allComments.get(index);
         }
     }
