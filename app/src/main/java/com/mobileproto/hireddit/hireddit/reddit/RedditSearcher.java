@@ -117,10 +117,12 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     public String pickComment(ArrayList<String> allComments) {
+
+        filterComment(allComments);
+
         if (allComments.size() <= 0) {
             return null;
         } else {
-            filterComment(allComments);
             Random mRandom = new Random();
             int index = mRandom.nextInt(allComments.size());
             return allComments.get(index);
