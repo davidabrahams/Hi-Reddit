@@ -5,6 +5,8 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment;
+
 import java.util.ArrayList;
 
 /**
@@ -34,7 +36,9 @@ public class SpeechListener implements RecognitionListener {
 
     @Override
     public void onRmsChanged(float rmsdB) {
-        //Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
+//        Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
+        SpeechFragment.circleChange(rmsdB);
+
     }
 
     @Override
