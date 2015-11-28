@@ -97,19 +97,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onPause() {
         super.onPause();
-        speech.pause();
+        speech.stop();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        speech.pause();
+        speech.stop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        speech.stop();
+        speech.destroy();
     }
 
 }
