@@ -44,9 +44,11 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listen_button_text"
         android:id="@+id/listenButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
