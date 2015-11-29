@@ -94,4 +94,22 @@ public class MainActivity extends AppCompatActivity implements
         speech.speak(words);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        speech.stop();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        speech.stop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        speech.destroy();
+    }
+
 }
