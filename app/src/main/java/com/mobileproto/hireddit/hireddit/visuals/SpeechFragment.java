@@ -43,6 +43,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private ViewGroup.LayoutParams cParams = new ViewGroup.LayoutParams(50, 50);
+    private Integer radius;
 
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.listeningIndicator) TextView listeningIndicator;
@@ -142,13 +144,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         updateListeningIndicator();
     }
 
-    public static void circleChange(float rad) {
-        ViewGroup.LayoutParams params= circle.getLayoutParams();
-        params.width = (int)rad;
-        params.height = (int)rad;
-        circle.setLayoutParams(params);
-    }
-
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
         voiceInput = voiceResult;
@@ -163,6 +158,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void partialCallback(ArrayList partialResult) {
         speechTextDisplay.setText(partialResult.get(0).toString());
+    }
+
+    @Override
+    public void rmsCallback(float rmsdB){
+        radius = 25 + (int)rmsdB;
+        cParams = circle.getLayoutParams();
+        cParams.width = radius;
+        cParams.height = radius;
+        circle.setLayoutParams(cParams);
     }
 
     @Override
