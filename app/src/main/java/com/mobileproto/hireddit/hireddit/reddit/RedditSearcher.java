@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Set;
 
 import io.indico.Indico;
@@ -106,16 +107,26 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         queue.add(getRequest);
     }
 
-
-    public String pickComment(ArrayList<String> allComments) {
+    public void filterComment(ArrayList<String> allComments) {
         for (int i = 0; i < allComments.size(); i++) {
-            if (allComments.get(i).length() < 300) {
-                if (!allComments.get(i).toLowerCase().contains("http")) {
-                    return allComments.get(i);
-                }
+            if (allComments.get(i).length() > 300 || allComments.get(i).toLowerCase().contains("http")) {
+                allComments.remove(i);
+                i--;
             }
         }
-        return null;
+    }
+
+    public String pickComment(ArrayList<String> allComments) {
+
+        filterComment(allComments);
+
+        if (allComments.size() <= 0) {
+            return null;
+        } else {
+            Random mRandom = new Random();
+            int index = mRandom.nextInt(allComments.size());
+            return allComments.get(index);
+        }
     }
 
     @Override
