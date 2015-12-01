@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -53,7 +56,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
         public void handle(IndicoResult result) throws IndicoException {
-            getCommentFromKeywords(result.getKeywords().keySet());
+            Set<String> indicoWords = result.getKeywords().keySet();
+            if (indicoWords.size() != 0) {
+                getCommentFromKeywords(indicoWords);
+            }
+            else {
+                String[] spokenArray = spokenString.split(" ");
+                Set<String> spokenSet = new HashSet<String>(Arrays.asList(spokenArray));
+                getCommentFromKeywords(spokenSet);
+            }
         }
     };
 
