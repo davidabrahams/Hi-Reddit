@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void stopSpeaking() {
+        speech.stop();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         speech.stop();
