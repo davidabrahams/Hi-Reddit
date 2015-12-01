@@ -41,7 +41,13 @@ public class WordToSpeech
         }
     }
 
-    public void stop()
+    public void stop() {
+        if (mTtobj.isSpeaking()) {
+            mTtobj.stop();
+        }
+    }
+
+    public void destroy()
     {
         mTtobj.stop();
         mTtobj.shutdown();
