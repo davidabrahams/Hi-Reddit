@@ -38,7 +38,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
-    private boolean isListening;
+    private boolean isListening = false;
     private SpeechListener listener;
     private ArrayList voiceInput;
     private Intent recognizerIntent;
@@ -123,21 +123,28 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void doListen() {
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
-        listenButton.setImageResource(R.drawable.yes_mic);
+        updateListeningIndicator();
         sr.startListening(recognizerIntent);
     }
 
     public void dontListen() {
         Log.d(DEBUG_TAG, "Stop listening.");
         sr.stopListening();
-        listenButton.setImageResource(R.drawable.no_mic);
+        updateListeningIndicator();
         isListening = false;
     }
+
+    private void updateListeningIndicator() {
+                if (isListening)
+                    listenButton.setImageResource(R.drawable.yes_mic);
+                else
+                    listenButton.setImageResource(R.drawable.no_mic);
+            }
 
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
         isListening = false;
-        listenButton.setImageResource(R.drawable.no_mic);
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
 
         voiceInput = voiceResult;
@@ -154,7 +161,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
-        listenButton.setImageResource(R.drawable.no_mic);
+        updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
         if (numErrors == 1) { // to prevent showing multiple toasts
