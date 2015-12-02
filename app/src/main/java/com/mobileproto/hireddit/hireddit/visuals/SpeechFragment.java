@@ -11,7 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.app.ActionBarActivity;
@@ -46,12 +47,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ViewGroup.LayoutParams cParams = new ViewGroup.LayoutParams(50, 50);
     private Integer radius;
 
+    @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
-    @Bind(R.id.listeningIndicator) TextView listeningIndicator;
-    @Bind(R.id.listenButton) Button listenButton;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
-    @Bind(R.id.circle) View circle;
+//    @Bind(R.id.circle) View circle;
+    @Bind(R.id.settingsButton) ImageView settingsButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -83,9 +84,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
+
         listener = new SpeechListener(this);
+
+        isListening = false;
+        updateListeningIndicator();
+
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
         sr.setRecognitionListener(listener);
 
@@ -122,37 +129,38 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         mListener = null;
     }
 
-    // TODO: CHANGE THIS WHEN WE HAVE A FANCY LISTENING INDICATOR
-    private void updateListeningIndicator() {
-        if (isListening)
-            listeningIndicator.setText(R.string.listening_text_indicator);
-        else
-            listeningIndicator.setText(R.string.not_listening_text_indicator);
-    }
-
     public void doListen() {
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
         updateListeningIndicator();
+        mListener.stopSpeaking();
         sr.startListening(recognizerIntent);
     }
 
     public void dontListen() {
         Log.d(DEBUG_TAG, "Stop listening.");
-        sr.stopListening();
         isListening = false;
         updateListeningIndicator();
+        sr.stopListening();
+    }
+
+    private void updateListeningIndicator() {
+        if (isListening)
+            listenButton.setImageResource(R.drawable.yes_mic);
+        else
+            listenButton.setImageResource(R.drawable.no_mic);
     }
 
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
+        isListening = false;
+        updateListeningIndicator();
+        Log.d(DEBUG_TAG, "Got result, stopped listening.");
+
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
-        isListening = false;
-        updateListeningIndicator();
-        Log.d(DEBUG_TAG, "Got result, stopped listening.");
     }
 
     @Override
@@ -162,11 +170,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB){
-        radius = 25 + (int)rmsdB;
-        cParams = circle.getLayoutParams();
-        cParams.width = radius;
-        cParams.height = radius;
-        circle.setLayoutParams(cParams);
+//        radius = 25 + (int)rmsdB;
+//        cParams = circle.getLayoutParams();
+//        cParams.width = radius;
+//        cParams.height = radius;
+//        circle.setLayoutParams(cParams);
     }
 
     @Override
@@ -174,6 +182,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
+
         if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
@@ -194,8 +203,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             commentText.setText(comment);
             mListener.speak(comment);
         }
@@ -214,6 +222,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      */
     public interface OnFragmentInteractionListener {
         void speak(String comment);
+        void stopSpeaking();
     }
 
 }

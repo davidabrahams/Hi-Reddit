@@ -66,7 +66,7 @@ public class MainFragment extends Fragment {
             }
         });
         return view;
-    }
+    } //TODO: you should get rid of status bar if you get rid of action bar, so do that.
 
     @Override
     public void onAttach(Activity activity) {
