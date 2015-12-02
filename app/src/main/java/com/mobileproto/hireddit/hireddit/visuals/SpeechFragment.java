@@ -129,6 +129,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
         updateListeningIndicator();
+        mListener.stopSpeaking();
         sr.startListening(recognizerIntent);
     }
 
@@ -208,6 +209,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      */
     public interface OnFragmentInteractionListener {
         void speak(String comment);
+        void stopSpeaking();
     }
 
 }
