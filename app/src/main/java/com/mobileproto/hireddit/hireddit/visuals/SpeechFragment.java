@@ -38,7 +38,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
-    private boolean isListening = false;
+    private boolean isListening;
     private SpeechListener listener;
     private ArrayList voiceInput;
     private Intent recognizerIntent;
@@ -80,10 +80,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-        listenButton.setImageResource(R.drawable.no_mic);
+
         listener = new SpeechListener(this);
+
+        isListening = false;
+        updateListeningIndicator();
+
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+
         sr = SpeechRecognizer.createSpeechRecognizer(getActivity().getApplicationContext());
         sr.setRecognitionListener(listener);
 
