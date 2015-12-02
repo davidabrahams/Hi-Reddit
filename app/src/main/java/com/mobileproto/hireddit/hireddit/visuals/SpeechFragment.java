@@ -51,7 +51,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
-//    @Bind(R.id.circle) View circle;
     @Bind(R.id.settingsButton) ImageView settingsButton;
 
     /**
@@ -170,11 +169,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB){
-//        radius = 25 + (int)rmsdB;
-//        cParams = circle.getLayoutParams();
-//        cParams.width = radius;
-//        cParams.height = radius;
-//        circle.setLayoutParams(cParams);
+        radius = 120 + (int)rmsdB;
+        cParams = listenButton.getLayoutParams();
+        cParams.width = 74 + radius;
+        cParams.height = 62 + radius;
+        listenButton.setLayoutParams(cParams);
     }
 
     @Override
