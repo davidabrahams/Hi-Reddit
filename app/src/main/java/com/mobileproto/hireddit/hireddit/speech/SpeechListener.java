@@ -38,10 +38,6 @@ public class SpeechListener implements RecognitionListener {
     public void onRmsChanged(float rmsdB) {
 //        Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
         speechCallback.rmsCallback(rmsdB);
-//        if (rmsdB > 0) {
-//            speechFragment.circleChange(rmsdB);
-//        }
-
     }
 
     @Override
