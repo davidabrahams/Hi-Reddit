@@ -134,17 +134,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void dontListen() {
         Log.d(DEBUG_TAG, "Stop listening.");
-        sr.stopListening();
-        updateListeningIndicator();
         isListening = false;
+        updateListeningIndicator();
+        sr.stopListening();
     }
 
     private void updateListeningIndicator() {
-                if (isListening)
-                    listenButton.setImageResource(R.drawable.yes_mic);
-                else
-                    listenButton.setImageResource(R.drawable.no_mic);
-            }
+        if (isListening)
+            listenButton.setImageResource(R.drawable.yes_mic);
+        else
+            listenButton.setImageResource(R.drawable.no_mic);
+    }
 
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
@@ -189,8 +189,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             commentText.setText(comment);
             mListener.speak(comment);
         }
