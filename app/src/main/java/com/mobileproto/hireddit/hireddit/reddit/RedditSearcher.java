@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -56,13 +57,13 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
         public void handle(IndicoResult result) throws IndicoException {
-            Set<String> indicoWords = result.getKeywords().keySet();
+            List<String> indicoWords = new ArrayList<>(result.getKeywords().keySet());
             if (indicoWords.size() != 0) {
                 getCommentFromKeywords(indicoWords);
             }
             else {
                 String[] spokenArray = spokenString.split(" ");
-                Set<String> spokenSet = new HashSet<String>(Arrays.asList(spokenArray));
+                List<String> spokenSet = Arrays.asList(spokenArray);
                 getCommentFromKeywords(spokenSet);
             }
         }
@@ -97,7 +98,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         }
     }
 
-    private void getCommentFromKeywords(Set<String> keywords) {
+    private void getCommentFromKeywords(List<String> keywords) {
         String importantWords = StringUtils.join(keywords, " ");
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
