@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements
     private WordToSpeech speech;
 
     FragmentManager manager;
-    @Bind(R.id.toolbar) Toolbar toolbar;
 
     public static final int HOME_SCREEN_CLICK = 1;
 
@@ -33,8 +32,7 @@ public class MainActivity extends AppCompatActivity implements
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        switchFragment(MainFragment.newInstance());
-        setSupportActionBar(toolbar);
+        switchFragment(SpeechFragment.newInstance());
 
         speech = new WordToSpeech(this);
     }

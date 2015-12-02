@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="light_blue">#b3d5d9</color>
-    <color name="reddit_blue">#cee3f8</color>
+    <color name="colorBlue">#cee3f8</color>
+    <color name="colorBackground">#000000</color>
+    <color name="colorOrange">#ff5700</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>
