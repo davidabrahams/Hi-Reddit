@@ -169,11 +169,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB){
-        radius = 120 + (int)rmsdB; // 120 is the initial radius
-        cParams = listenButton.getLayoutParams();
-        cParams.width = radius;
-        cParams.height = radius;
-        listenButton.setLayoutParams(cParams);
+        if (rmsdB > 0) {
+            radius = 180 + (int) rmsdB; // 120 is the initial radius
+            cParams = listenButton.getLayoutParams();
+            Log.d(",ueou", cParams.width);
+            cParams.width = radius;
+            cParams.height = radius;
+            listenButton.setLayoutParams(cParams);
+        }
     }
 
     @Override

@@ -64,8 +64,8 @@
         android:layout_gravity="center_vertical|center_horizontal">
         <ImageView
             android:layout_width="120dp"
-            android:id="@+id/listenButton"
             android:layout_height="120dp"
+            android:id="@+id/listenButton"
             android:layout_gravity="center_vertical|center_horizontal"
             android:foregroundGravity="center"/>
     </FrameLayout>
