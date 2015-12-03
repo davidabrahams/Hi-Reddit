@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -100,13 +101,14 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     private void getCommentFromKeywords(List<String> keywords) {
         String importantWords = StringUtils.join(keywords, " ");
+        String fields = "body,link_id";
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("api.pushshift.io")
                 .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", importantWords)
-                .appendQueryParameter("fields", "body");
+                .appendQueryParameter("fields", fields);
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
@@ -128,7 +130,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         }
     }
 
-    public String pickComment(ArrayList<String> allComments) {
+    public String pickComment(Hashtable<String, String> allCommentsHash) {
+        Set<String> commentSet = allCommentsHash.keySet();
+        ArrayList<String> allComments = new ArrayList<String>(commentSet);
 
         filterComment(allComments);
 
@@ -143,16 +147,18 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     @Override
     public void onResponse(JSONObject response) {
-        ArrayList<String> allComments = new ArrayList<>();
+        Hashtable<String, String> allComments = new Hashtable<String, String>();
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
                 JSONObject body = items.getJSONObject(i);
                 String comment = body.getString("body");
-                allComments.add(comment);
+                String linkId = body.getString("link_id");
+                allComments.put(comment, linkId);
             }
             String postComment = pickComment(allComments);
-            myCommentCallback.commentCallback(postComment);
+            String linkId = allComments.get(postComment);
+            myCommentCallback.commentCallback(postComment, linkId);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
@@ -170,7 +176,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     public interface CommentCallback {
-        void commentCallback(String comment);
+        void commentCallback(String comment, String linkId);
     }
 
 

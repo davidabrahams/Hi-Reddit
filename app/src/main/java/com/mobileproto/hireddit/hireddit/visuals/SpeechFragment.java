@@ -3,6 +3,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -43,6 +44,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private String link;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -104,6 +106,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
         helloReddit.setTypeface(tf);
+
+        commentText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(browserIntent);
+            }
+        });
 
         return view;
     }
@@ -186,11 +196,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void commentCallback(String comment) {
+    public void commentCallback(String comment, String linkId) {
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
+            link = "https://www.reddit.com/" + linkId;
             commentText.setText(comment);
             mListener.speak(comment);
         }
