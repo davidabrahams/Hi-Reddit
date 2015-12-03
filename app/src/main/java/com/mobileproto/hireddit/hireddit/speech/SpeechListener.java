@@ -5,8 +5,6 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
-import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment;
-
 import java.util.ArrayList;
 
 /**
