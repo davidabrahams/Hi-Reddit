@@ -201,7 +201,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
-            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1);
+            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
             commentText.setText(comment);
             mListener.speak(comment);
         }

@@ -152,13 +152,14 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
+                ArrayList<String> linksInfo = new ArrayList<>();
                 JSONObject body = items.getJSONObject(i);
                 String comment = body.getString("body");
                 String linkId = body.getString("link_id").substring(3); //removing first 3 removes t1_
                 String commentId = body.getString("id");
-                linkInfo.add(linkId);
-                linkInfo.add(commentId);
-                allComments.put(comment, linkInfo);
+                linksInfo.add(linkId);
+                linksInfo.add(commentId);
+                allComments.put(comment, linksInfo);
             }
             String postComment = pickComment(allComments);
             linkInfo = allComments.get(postComment);
