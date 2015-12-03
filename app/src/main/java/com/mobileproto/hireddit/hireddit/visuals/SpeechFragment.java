@@ -196,17 +196,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void commentCallback(String comment, String linkId) {
+    public void commentCallback(String comment, ArrayList<String> linkInfo) {
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
-            link = "https://www.reddit.com/" + linkId;
+            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1);
             commentText.setText(comment);
             mListener.speak(comment);
         }
     }
-
 
     /**
      * This interface must be implemented by activities that contain this
