@@ -112,7 +112,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
-
         getRequest.setRetryPolicy(new DefaultRetryPolicy( //changes Volley settings
                 10000, //earlier I was having issues with this api taking more than the 5 seconds it takes Volley to time out
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, //now the time is 10 seconds, the api seems faster now
@@ -148,21 +147,20 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     @Override
     public void onResponse(JSONObject response) {
         Hashtable<String, ArrayList<String>> allComments = new Hashtable<>();
-        ArrayList<String> linkInfo = new ArrayList<String>();
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
-                ArrayList<String> linksInfo = new ArrayList<>();
+                ArrayList<String> eachLinkInfo = new ArrayList<>();
                 JSONObject body = items.getJSONObject(i);
                 String comment = body.getString("body");
                 String linkId = body.getString("link_id").substring(3); //removing first 3 removes t1_
                 String commentId = body.getString("id");
-                linksInfo.add(linkId);
-                linksInfo.add(commentId);
-                allComments.put(comment, linksInfo);
+                eachLinkInfo.add(linkId);
+                eachLinkInfo.add(commentId);
+                allComments.put(comment, eachLinkInfo);
             }
             String postComment = pickComment(allComments);
-            linkInfo = allComments.get(postComment);
+            ArrayList<String> linkInfo = allComments.get(postComment);
             myCommentCallback.commentCallback(postComment, linkInfo);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
