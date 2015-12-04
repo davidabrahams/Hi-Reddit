@@ -112,7 +112,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("lalalal: ", "asdf");
                 if (!mode) {
                     quietMode();
                     mode = true;
@@ -129,10 +128,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void quietMode() {
+        Log.v("lalalal: ", "asdf");
         String preQuestion;
         preQuestion = speechTextDisplay.getText().toString();
         TexInputDisplay.setText(preQuestion);
-        speechTextDisplay.setVisibility(View.GONE);
+        speechTextDisplay.setVisibility(View.INVISIBLE);
         TexInputDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -140,7 +140,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         String preQuestion;
         preQuestion = speechTextDisplay.getText().toString();
         TexInputDisplay.setText(preQuestion);
-        TexInputDisplay.setVisibility(View.GONE);
+        TexInputDisplay.setVisibility(View.INVISIBLE);
         speechTextDisplay.setVisibility(View.VISIBLE);
     }
 
