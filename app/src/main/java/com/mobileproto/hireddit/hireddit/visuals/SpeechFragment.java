@@ -1,19 +1,21 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,15 +47,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
-    private boolean mode = false;
+    private boolean TypingMode = false;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
-    @Bind(R.id.TexInputDisplay) EditText TexInputDisplay;
-
+    @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
 
     /**
      * Use this factory method to create a new instance of
@@ -109,18 +110,29 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
-        settingsButton.setOnClickListener(new View.OnClickListener() {
+        speechTextDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mode) {
-                    quietMode();
-                    mode = true;
-                } else {
-                    voiceMode();
-                    mode = false;
-                }
+                if (!TypingMode) quietMode();
             }
         });
+
+        TextInputDisplay.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            mgr.hideSoftInputFromWindow(TextInputDisplay.getWindowToken(), 0);
+                            ArrayList<String> TextInput = new ArrayList<String>();
+                            TextInput.add(0, TextInputDisplay.getText().toString());
+                            speechResultCallback(TextInput);
+                            voiceMode();
+                            return true; // consume.
+                        }
+                        return false; // pass on to other listeners.
+                    }
+                });
 
         helloReddit.setTypeface(tf);
 
@@ -128,20 +140,26 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void quietMode() {
-        Log.v("lalalal: ", "asdf");
-        String preQuestion;
-        preQuestion = speechTextDisplay.getText().toString();
-        TexInputDisplay.setText(preQuestion);
+        if (TypingMode) return;
+
+        mListener.stopSpeaking();
+        TextInputDisplay.setText(speechTextDisplay.getText().toString());
         speechTextDisplay.setVisibility(View.INVISIBLE);
-        TexInputDisplay.setVisibility(View.VISIBLE);
+        TextInputDisplay.setVisibility(View.VISIBLE);
+        TextInputDisplay.requestFocus();
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.showSoftInput(TextInputDisplay, InputMethodManager.SHOW_IMPLICIT);
+        TypingMode = true;
     }
 
     public void voiceMode() {
-        String preQuestion;
-        preQuestion = speechTextDisplay.getText().toString();
-        TexInputDisplay.setText(preQuestion);
-        TexInputDisplay.setVisibility(View.INVISIBLE);
+        if (!TypingMode) return;
+        
+        mListener.stopSpeaking();
+        TextInputDisplay.setText(TextInputDisplay.getText().toString());
+        TextInputDisplay.setVisibility(View.INVISIBLE);
         speechTextDisplay.setVisibility(View.VISIBLE);
+        TypingMode = false;
     }
 
     @Override
