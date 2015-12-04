@@ -98,6 +98,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void flipMute() {
+        speech.flipMute();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         speech.stop();

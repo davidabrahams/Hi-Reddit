@@ -14,6 +14,7 @@ import java.util.Locale;
 public class WordToSpeech
 {
     private TextToSpeech mTtobj;
+    private boolean mute;
 
     public WordToSpeech(Context appContext)
     {
@@ -28,10 +29,13 @@ public class WordToSpeech
                 }
             }
         });
+
+        mute = false;
     }
 
     public void speak(String toSpeak)
     {
+        if (mute) return;
         // version check, if SDK is newer than 21, use the update speak method
         // if not, use the deprecated one
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -45,6 +49,10 @@ public class WordToSpeech
         if (mTtobj.isSpeaking()) {
             mTtobj.stop();
         }
+    }
+
+    public void flipMute() {
+            mute = !mute;
     }
 
     public void destroy()

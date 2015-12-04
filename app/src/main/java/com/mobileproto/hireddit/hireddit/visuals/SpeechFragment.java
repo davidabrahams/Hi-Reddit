@@ -47,13 +47,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
-    private boolean TypingMode = false;
+    private boolean typeMode = false;
+    private boolean quietMode = false;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
+    @Bind(R.id.muteButton) ImageView muteButton;
+    @Bind(R.id.volumeOnButton) ImageView volumeOnButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
 
     /**
@@ -110,10 +113,24 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
-        speechTextDisplay.setOnClickListener(new View.OnClickListener() {
+        muteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 quietMode();
+            }
+        });
+
+        volumeOnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voiceMode();
+            }
+        });
+
+        speechTextDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                typeMode();
             }
         });
 
@@ -127,7 +144,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                             ArrayList<String> TextInput = new ArrayList<String>();
                             TextInput.add(0, TextInputDisplay.getText().toString());
                             speechResultCallback(TextInput);
-                            voiceMode();
+                            SpeakMode();
                             return true;
                         }
                         return false;
@@ -140,7 +157,25 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void quietMode() {
-        if (TypingMode) return;
+        if (quietMode) return;
+        mListener.stopSpeaking();
+        mListener.flipMute();
+        muteButton.setVisibility(View.GONE);
+        volumeOnButton.setVisibility(View.VISIBLE);
+        quietMode = true;
+    }
+
+    public void voiceMode() {
+        if (!quietMode) return;
+        mListener.flipMute();
+        mListener.speak(commentText.getText().toString());
+        volumeOnButton.setVisibility(View.GONE);
+        muteButton.setVisibility(View.VISIBLE);
+        quietMode = false;
+    }
+
+    public void typeMode() {
+        if (typeMode) return;
         mListener.stopSpeaking();
         TextInputDisplay.setText(speechTextDisplay.getText().toString());
         speechTextDisplay.setVisibility(View.INVISIBLE);
@@ -148,16 +183,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         TextInputDisplay.requestFocus();
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.showSoftInput(TextInputDisplay, InputMethodManager.SHOW_IMPLICIT);
-        TypingMode = true;
+        typeMode = true;
     }
 
-    public void voiceMode() {
-        if (!TypingMode) return;
+    public void SpeakMode() {
+        if (!typeMode) return;
         mListener.stopSpeaking();
         TextInputDisplay.setText(TextInputDisplay.getText().toString());
         TextInputDisplay.setVisibility(View.INVISIBLE);
         speechTextDisplay.setVisibility(View.VISIBLE);
-        TypingMode = false;
+        typeMode = false;
     }
 
     @Override
@@ -262,6 +297,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public interface OnFragmentInteractionListener {
         void speak(String comment);
         void stopSpeaking();
+        void flipMute();
     }
 
 }
