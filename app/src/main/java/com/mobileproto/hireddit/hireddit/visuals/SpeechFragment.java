@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,12 +44,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private boolean mode;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
+    @Bind(R.id.TexInputDisplay) EditText TexInputDisplay;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -103,9 +107,35 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                     doListen();
             }
         });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View v) {
+                if (mode) {
+                    quietMode();
+                } else {
+                    voiceMode();
+                }
+            }
+        });
+
         helloReddit.setTypeface(tf);
 
         return view;
+    }
+
+    public void quietMode() {
+        String preQuestion;
+        preQuestion = speechTextDisplay.getText().toString();
+        TexInputDisplay.setText(preQuestion);
+        TexInputDisplay.setVisibility(View.VISIBLE);
+    }
+
+    public void voiceMode() {
+        String preQuestion;
+        preQuestion = speechTextDisplay.getText().toString();
+        TexInputDisplay.setText(preQuestion);
+        TexInputDisplay.setVisibility(View.GONE);
     }
 
     @Override
