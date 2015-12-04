@@ -3,6 +3,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -44,7 +45,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
-    private boolean mode;
+    private boolean mode = false;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -110,11 +111,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-        public void onClick(View v) {
-                if (mode) {
+            public void onClick(View v) {
+                Log.v("lalalal: ", "asdf");
+                if (!mode) {
                     quietMode();
+                    mode = true;
                 } else {
                     voiceMode();
+                    mode = false;
                 }
             }
         });
@@ -128,6 +132,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         String preQuestion;
         preQuestion = speechTextDisplay.getText().toString();
         TexInputDisplay.setText(preQuestion);
+        speechTextDisplay.setVisibility(View.GONE);
         TexInputDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -136,6 +141,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         preQuestion = speechTextDisplay.getText().toString();
         TexInputDisplay.setText(preQuestion);
         TexInputDisplay.setVisibility(View.GONE);
+        speechTextDisplay.setVisibility(View.VISIBLE);
     }
 
     @Override
