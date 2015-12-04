@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements
         ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
             @Override
             public void OnShake() {
+                SpeechFragment.shake();
                 Toast.makeText(getApplicationContext(), "Device shaken!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,5 +134,4 @@ public class MainActivity extends AppCompatActivity implements
         speech.destroy();
         ShakeDetector.destroy();
     }
-
 }
