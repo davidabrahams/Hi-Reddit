@@ -113,7 +113,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         speechTextDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TypingMode) quietMode();
+                quietMode();
             }
         });
 
@@ -128,9 +128,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                             TextInput.add(0, TextInputDisplay.getText().toString());
                             speechResultCallback(TextInput);
                             voiceMode();
-                            return true; // consume.
+                            return true;
                         }
-                        return false; // pass on to other listeners.
+                        return false;
                     }
                 });
 
@@ -141,7 +141,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void quietMode() {
         if (TypingMode) return;
-
         mListener.stopSpeaking();
         TextInputDisplay.setText(speechTextDisplay.getText().toString());
         speechTextDisplay.setVisibility(View.INVISIBLE);
@@ -154,7 +153,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void voiceMode() {
         if (!TypingMode) return;
-        
         mListener.stopSpeaking();
         TextInputDisplay.setText(TextInputDisplay.getText().toString());
         TextInputDisplay.setVisibility(View.INVISIBLE);
