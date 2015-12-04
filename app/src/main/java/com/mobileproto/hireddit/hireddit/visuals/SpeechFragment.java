@@ -22,6 +22,8 @@ import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -138,6 +140,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         sr.stopListening();
+    }
+
+    public void shake(){
+        List<String> x = new ArrayList<>(Arrays.asList("abductee", "anime", "app", "backslash", "barista", "bling", "blog", "blogger", "broadband", "buckyball", "burka", "carbs", "ciabatta", "colonoscopy", "cybersex", "detainee", "dotcom", "earbud", "ecotourism", "eldercare", "electronica", "flipflop", "globalization", "google", "handheld", "hazmat", "helpline", "hoodie", "hummus", "hyperlink", "inbox", "intranet", "jihadist", "latte", "login", "logoff", "logon", "logout", "loonie", "madrassah", "malware", " manga", "mashup", "microloan", "multiplayer", "nanotechnology", "neocon", "neoconservative", "nigga", "offload", "offshoring", "orc", "paragliding", "parasailing", "pecs", "phishing", "playlist", "podcast", "polyamory", "prenup", "quesadilla", "remortgage", "reorg", "ringtone", "rugrat", "sampling", "satay", "scrunchie", "selloff", "semiotics", "semiretired", "sharia", "shiitake", "shopaholic", "sim", "simulcast", "slideshow", "smoothie", "snarky", "snowblower", "soulmate", "spam", "spammer", "spellcheck", "spellchecker", "spyware", "startup", "stoner", "supermodel", "supersize", "tealight", "techno", "uninstall", "unsubscribe", "username", "voicemail", "wack", "webcam", "webcast", "webmaster", "webpage", "widescreen", " wiki", "wishlist", "zapper", "acid reflux", "al-Qaeda", "asymmetric warfare", "bird flu", "black box", "bling-bling", "body piercing", "bok choy", "booty call", "Botox", "break-dance", "break-dancer", "break-dancing", "caller ID", "call waiting", "cargo pants", "chat room", "civil union", "clip art", "closed-captioned", "control freak", "crash diet", "data mining", "DHS", "dialog box", "digital camera", "dim sum", "dirty bomb", "double-click", "drama queen", "e-commerce", "end product", "ethnic cleansing", "FAQ", "feng shui", "flight recorder", "greenhouse gas", "ground zero", "guest worker", "gut-wrenching", "hard-wired", "HDTV", "hedge fund", "help desk", "home fries", "Homeland Security", "HTML", "hybrid car", "identity theft", "IED", "insider trading", "instant message", "Internet cafe", "IPO", "iPod", "ISP", "IVF", "jet ski", "jet skiing", "lap dance", "live-in", "low-carb", "market share", "memory stick", "model home", "MP3", "MP3 player", "open-plan", "par-per-view", "personal trainer", "plug-in", "pop culture", "pop-up", "prenuptial agreement", "pro bono", "Prozac", "pump and dump", "Rasta", "Rastafarian", "Rastafarianism", "RDA", "reality TV", "refried beans", "restraining order", "road trip", "same-sex", "SARS", "satellite radio", "screen saver", "search engine", "sex worker", "shock jock", "SIDS", "smart bomb", "snake oil", "soccer mom", "social networking", "special needs", "speed dial", "spring roll", "squeaky clean", "starter home", "stretch limo", "strip search", "Sudoku", "suicide bomber", "suicide bombing", "SUV", "tailgate party", "talk radio", "Tex-Mex", "text message", "top-of-the-line", "trans fat", "urban myth", "Viagra", "weapon of mass destruction", "wine cooler", "win-win", "WMD", "Ziploc bag"));
     }
 
     private void updateListeningIndicator() {

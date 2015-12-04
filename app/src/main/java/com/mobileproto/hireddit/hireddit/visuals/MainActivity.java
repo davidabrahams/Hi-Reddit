@@ -1,5 +1,6 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
+import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
 import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +38,13 @@ public class MainActivity extends AppCompatActivity implements
         switchFragment(SpeechFragment.newInstance());
 
         speech = new WordToSpeech(this);
+
+        ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
+            @Override
+            public void OnShake() {
+                Toast.makeText(getApplicationContext(), "Device shaken!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -98,21 +108,30 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        ShakeDetector.start();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         speech.stop();
+        //ShakeDetector.stop();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         speech.stop();
+        ShakeDetector.stop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         speech.destroy();
+        ShakeDetector.destroy();
     }
 
 }
