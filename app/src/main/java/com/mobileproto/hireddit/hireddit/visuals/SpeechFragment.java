@@ -116,14 +116,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         muteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                quietMode();
+                voiceMode();
             }
         });
 
         volumeOnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                voiceMode();
+                quietMode();
             }
         });
 
@@ -160,8 +160,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (quietMode) return;
         mListener.stopSpeaking();
         mListener.flipMute();
-        muteButton.setVisibility(View.GONE);
-        volumeOnButton.setVisibility(View.VISIBLE);
+        muteButton.setVisibility(View.VISIBLE);
+        volumeOnButton.setVisibility(View.GONE);
         quietMode = true;
     }
 
@@ -169,8 +169,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (!quietMode) return;
         mListener.flipMute();
         mListener.speak(commentText.getText().toString());
-        volumeOnButton.setVisibility(View.GONE);
-        muteButton.setVisibility(View.VISIBLE);
+        volumeOnButton.setVisibility(View.VISIBLE);
+        muteButton.setVisibility(View.GONE);
         quietMode = false;
     }
 
