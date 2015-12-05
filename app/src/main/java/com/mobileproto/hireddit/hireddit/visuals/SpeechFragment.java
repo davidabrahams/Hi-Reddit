@@ -233,14 +233,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
     }
 
-<<<<<<< HEAD
     @Override
     public void shakeCallback(String shakeWord) {
         new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
     }
 
-=======
->>>>>>> refs/remotes/origin/master
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
