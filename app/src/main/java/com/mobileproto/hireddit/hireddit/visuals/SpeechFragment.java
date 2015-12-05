@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -40,13 +42,18 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private SpeechListener listener;
-    private ArrayList voiceInput;
+    private ArrayList<String> voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
 
+    private ArrayList<String> allRequests = new ArrayList<String>();
+    private ArrayList<String> allResponses = new ArrayList<String>();
+    private ListViewAdapter listViewAdapter;
+
+    @Bind(R.id.listView) ListView listView;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
-    @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
+    @Bind(R.id.speechText) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
 
@@ -81,8 +88,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
-        listener = new SpeechListener(this);
+        listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
+        listView.setAdapter(listViewAdapter);
 
+        listener = new SpeechListener(this);
         isListening = false;
         updateListeningIndicator();
 
@@ -193,6 +202,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         } else {
             commentText.setText(comment);
             mListener.speak(comment);
+            //only if you get the full request and response, add to history:
+            allRequests.add(voiceInput.get(0).toString());
+            allResponses.add(comment);
+            listViewAdapter.notifyDataSetChanged();
         }
     }
 
