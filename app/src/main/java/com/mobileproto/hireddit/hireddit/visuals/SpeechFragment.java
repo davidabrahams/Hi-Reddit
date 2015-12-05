@@ -43,7 +43,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
-    private ViewGroup.LayoutParams cParams = new ViewGroup.LayoutParams(50, 50);
+    private ViewGroup.LayoutParams cParams;
     private Integer radius;
 
     @Bind(R.id.listenButton) ImageView listenButton;
