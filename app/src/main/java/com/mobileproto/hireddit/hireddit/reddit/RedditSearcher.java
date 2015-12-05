@@ -108,7 +108,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", importantWords)
-                .appendQueryParameter("fields", fields);
+                .appendQueryParameter("fields", fields)
+                .appendQueryParameter("limit", "100");
+        
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
@@ -138,8 +140,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         if (allComments.size() <= 0) {
             return null;
         } else {
-            Random mRandom = new Random();
-            int index = mRandom.nextInt(allComments.size());
+            Random random = new Random();
+            int index = random.nextInt(allComments.size());
             return allComments.get(index);
         }
     }
