@@ -201,6 +201,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
+            //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
             link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
             commentText.setText(comment);
             mListener.speak(comment);
