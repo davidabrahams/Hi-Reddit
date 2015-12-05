@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -49,6 +50,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private SpeechRecognizer sr;
     private boolean typeMode = false;
     private boolean quietMode = false;
+    private String link;
+    private ViewGroup.LayoutParams cParams;
+    private Integer radius;
+
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -153,6 +158,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         helloReddit.setTypeface(tf);
 
+        commentText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(browserIntent);
+            }
+        });
+
         return view;
     }
 
@@ -252,6 +265,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
+    public void rmsCallback(float rmsdB){
+            radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
+            cParams = listenButton.getLayoutParams();
+            cParams.width = radius;
+            cParams.height = radius;
+            listenButton.setLayoutParams(cParams);
+    }
+
+    @Override
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
@@ -273,16 +295,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void commentCallback(String comment) {
+    public void commentCallback(String comment, ArrayList<String> linkInfo) {
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
+            //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
+            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
             commentText.setText(comment);
             mListener.speak(comment);
         }
     }
-
 
     /**
      * This interface must be implemented by activities that contain this

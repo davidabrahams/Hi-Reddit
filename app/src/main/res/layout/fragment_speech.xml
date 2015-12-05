@@ -30,10 +30,9 @@
         <ImageView
             android:layout_width="74dp"
             android:layout_height="62dp"
-            android:id="@+id/imageView"
+            android:id="@+id/snooHead"
             android:layout_gravity="right"
             android:src="@drawable/snoo_head"/>
-
     </LinearLayout>
 
     <TextView
@@ -69,13 +68,20 @@
         android:paddingRight="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"/>
-
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:id="@+id/listenButton"
+    //FrameLayout is 135 so that any expansion from the microphone button will not appear chopped off
+    <FrameLayout
+        android:layout_width="135dp"
+        android:layout_height="135dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical|center_horizontal">
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/listenButton"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:foregroundGravity="center"/>
+    </FrameLayout>
 
     <ImageView
         android:layout_width="40dp"
@@ -85,6 +91,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"/>
+<<<<<<< HEAD
 
     <ImageView
         android:layout_width="40dp"
@@ -107,4 +114,6 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="80dp"/>
 
+=======
+>>>>>>> 0082d50d369878a79c3c54946f4646fed976ffe2
 </RelativeLayout>

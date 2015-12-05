@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -100,17 +101,17 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     private void getCommentFromKeywords(List<String> keywords) {
         String importantWords = StringUtils.join(keywords, " ");
+        String fields = "body,link_id,id";
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("api.pushshift.io")
                 .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", importantWords)
-                .appendQueryParameter("fields", "body");
+                .appendQueryParameter("fields", fields);
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
-
         getRequest.setRetryPolicy(new DefaultRetryPolicy( //changes Volley settings
                 10000, //earlier I was having issues with this api taking more than the 5 seconds it takes Volley to time out
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, //now the time is 10 seconds, the api seems faster now
@@ -128,7 +129,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         }
     }
 
-    public String pickComment(ArrayList<String> allComments) {
+    public String pickComment(Hashtable<String, ArrayList<String>> allCommentsHash) {
+        Set<String> commentSet = allCommentsHash.keySet();
+        ArrayList<String> allComments = new ArrayList<String>(commentSet);
 
         filterComment(allComments);
 
@@ -143,16 +146,22 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     @Override
     public void onResponse(JSONObject response) {
-        ArrayList<String> allComments = new ArrayList<>();
+        Hashtable<String, ArrayList<String>> allComments = new Hashtable<>();
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
+                ArrayList<String> eachLinkInfo = new ArrayList<>();
                 JSONObject body = items.getJSONObject(i);
                 String comment = body.getString("body");
-                allComments.add(comment);
+                String linkId = body.getString("link_id").substring(3); //removing first 3 removes t1_
+                String commentId = body.getString("id");
+                eachLinkInfo.add(linkId);
+                eachLinkInfo.add(commentId);
+                allComments.put(comment, eachLinkInfo);
             }
             String postComment = pickComment(allComments);
-            myCommentCallback.commentCallback(postComment);
+            ArrayList<String> linkInfo = allComments.get(postComment);
+            myCommentCallback.commentCallback(postComment, linkInfo);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
@@ -170,7 +179,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     public interface CommentCallback {
-        void commentCallback(String comment);
+        void commentCallback(String comment, ArrayList<String> linkInfo);
     }
 
 
