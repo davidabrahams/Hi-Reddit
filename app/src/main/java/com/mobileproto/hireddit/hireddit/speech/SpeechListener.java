@@ -35,6 +35,7 @@ public class SpeechListener implements RecognitionListener {
     @Override
     public void onRmsChanged(float rmsdB) {
         //Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
+        speechCallback.rmsCallback(rmsdB);
     }
 
     @Override
