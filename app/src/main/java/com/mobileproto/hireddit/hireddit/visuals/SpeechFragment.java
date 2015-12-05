@@ -43,6 +43,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private ViewGroup.LayoutParams cParams;
+    private Integer radius;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -162,6 +164,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void partialCallback(ArrayList partialResult) {
         speechTextDisplay.setText(partialResult.get(0).toString());
+    }
+
+    @Override
+    public void rmsCallback(float rmsdB){
+            radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
+            cParams = listenButton.getLayoutParams();
+            cParams.width = radius;
+            cParams.height = radius;
+            listenButton.setLayoutParams(cParams);
     }
 
     @Override
