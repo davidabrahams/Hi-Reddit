@@ -91,7 +91,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"/>
-<<<<<<< HEAD
 
     <ImageView
         android:layout_width="40dp"
@@ -113,7 +112,4 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="80dp"/>
-
-=======
->>>>>>> 0082d50d369878a79c3c54946f4646fed976ffe2
 </RelativeLayout>
