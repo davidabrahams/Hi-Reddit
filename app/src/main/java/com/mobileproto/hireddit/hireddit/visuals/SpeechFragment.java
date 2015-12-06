@@ -181,7 +181,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void voiceMode() {
         if (!quietMode) return;
         mListener.flipMute();
-        mListener.speak(commentText.getText().toString());
+        if (!isListening) mListener.speak(commentText.getText().toString());
         volumeOnButton.setVisibility(View.VISIBLE);
         muteButton.setVisibility(View.GONE);
         quietMode = false;
