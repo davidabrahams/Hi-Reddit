@@ -38,14 +38,6 @@ public class MainActivity extends AppCompatActivity implements
         switchFragment(SpeechFragment.newInstance());
 
         speech = new WordToSpeech(this);
-
-        ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
-            @Override
-            public void OnShake() {
-                SpeechFragment.shake();
-                Toast.makeText(getApplicationContext(), "Device shaken!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
