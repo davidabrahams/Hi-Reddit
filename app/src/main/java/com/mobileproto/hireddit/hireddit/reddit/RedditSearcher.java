@@ -115,8 +115,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         queue.add(getRequest);
     }
 
-    // allComments is an ArrayList of Arrays. It looks like this:
-    // {["This is a comment", "linkId", "id"], ["This is another comment", "linkId", "id"]}
     private void filterComment(ArrayList<String[]> allComments) {
         for (int i = 0; i < allComments.size(); i++) {
             String comment = allComments.get(i)[0];
@@ -134,6 +132,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         if (allComments.size() <= 0) {
             myCommentCallback.commentCallback(null, null);
         } else {
+            //  search the last 10 comments for upvotes. This is because the most recent comments
+            // often don't have upvote info.
             List<String[]> commentRange = allComments.subList(Math.max(allComments.size() - 10, 0),
                     allComments.size());
             HighestUpvoteCommentAsync t = new HighestUpvoteCommentAsync(myCommentCallback,
@@ -143,7 +143,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     private String getRedditUrl(String linkId, String id, int context) {
-//        return "https://www.reddit.com/comments/3vp264/_/cxpk5io";
         return "https://www.reddit.com/comments/" + linkId + "/_/" + id + "?context=" +
                 Integer.toString(context);
     }
