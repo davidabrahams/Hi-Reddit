@@ -28,5 +28,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'org.jsoup:jsoup:1.8.3'
+
 
 }
