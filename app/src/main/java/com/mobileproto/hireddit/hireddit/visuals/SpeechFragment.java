@@ -20,8 +20,9 @@ import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,6 +47,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private String link;
     private ViewGroup.LayoutParams cParams;
     private Integer radius;
+
+    private static ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<String>(
+            Arrays.asList(
+                    "You know, life without Wi-Fi is hard.",
+                    "maybe you should move to Canada, we have really good internet here :o)",
+                    "Pay me $50 and I will get you Wi-Fi",
+                    "I agree that free Wi-Fi shouldn't be forbidden",
+                    "Keep Looking on the internet. Surely there must be a good forecast somewhere out there.",
+                    "I won't work until you provide me with life-long free Wi-Fi"
+            )
+    );
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -167,7 +179,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
-        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        if (mListener.isNetworkConnectionAvailable()) {
+            new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        } else {
+            Random mRandom = new Random();
+            int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+            mListener.speak(NETWORK_UNAVAILABLE.get(index));
+            commentText.setText(NETWORK_UNAVAILABLE.get(index));
+        }
     }
 
     @Override
@@ -212,7 +231,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
             //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
-            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
+            if (linkInfo != null) {
+                link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
+            } else {
+                link = null;
+            }
             commentText.setText(comment);
             mListener.speak(comment);
         }
@@ -231,6 +254,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public interface OnFragmentInteractionListener {
         void speak(String comment);
         void stopSpeaking();
+        boolean isNetworkConnectionAvailable();
     }
 
 }

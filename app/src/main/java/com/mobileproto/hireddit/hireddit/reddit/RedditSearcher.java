@@ -49,6 +49,14 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
+    private static final ArrayList<String> NO_RESPONSE = new ArrayList<String>(
+            Arrays.asList(
+                    "Umm..This question is pretty hard since no one on Reddit knows how to respond.",
+                    "Sorry, blame the developers, they didn't manage to make me smart enough to respond to this",
+                    "Shhhhhhhhh, no one in Reddit talks about this",
+                    "There is no response available in the Reddit, but I will tell you a secrete about the developing team.\n\n Next time."
+            )
+    );
 
     private Context context;
     private Indico indico;
@@ -160,8 +168,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 allComments.put(comment, eachLinkInfo);
             }
             String postComment = pickComment(allComments);
-            ArrayList<String> linkInfo = allComments.get(postComment);
-            myCommentCallback.commentCallback(postComment, linkInfo);
+            if (postComment != null) {
+                ArrayList<String> linkInfo = allComments.get(postComment);
+                myCommentCallback.commentCallback(postComment, linkInfo);
+            } else {
+                Random mRandom = new Random();
+                int index = mRandom.nextInt(NO_RESPONSE.size());
+                myCommentCallback.commentCallback(NO_RESPONSE.get(index), null);
+            }
+
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
@@ -181,6 +196,4 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     public interface CommentCallback {
         void commentCallback(String comment, ArrayList<String> linkInfo);
     }
-
-
 }
