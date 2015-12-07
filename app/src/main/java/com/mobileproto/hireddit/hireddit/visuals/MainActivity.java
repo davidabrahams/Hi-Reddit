@@ -73,27 +73,22 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onResume(){
         super.onResume();
-        ShakeDetector.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         speech.stop();
-        ShakeDetector.stop();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         speech.stop();
-        ShakeDetector.stop();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        speech.destroy();
-        ShakeDetector.destroy();
     }
 }
