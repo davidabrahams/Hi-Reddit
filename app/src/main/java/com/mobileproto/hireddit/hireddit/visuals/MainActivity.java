@@ -1,10 +1,5 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
-import com.github.tbouron.shakedetector.library.ShakeDetector;
-import com.mobileproto.hireddit.hireddit.R;
-import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
-import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
 
 import butterknife.ButterKnife;
 
@@ -60,6 +59,17 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         transaction.commit();
     }
 
+    //We overload the switchFragment function to allow the user to customize the
+    // transition between two fragments on a switch if they want. The two functions
+    // have identical behavior outside of the animation.
+    private void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(customAnimationIn, customAnimationOut);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, f);
+        transaction.commit();
+    }
+
     @Override
     public void speak(String words) {
         speech.speak(words);
@@ -71,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
