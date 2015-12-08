@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
-import com.google.common.io.CharStreams;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -48,6 +46,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
+    private boolean shakeOn = true;
     private SpeechListener listener;
     private ArrayList voiceInput;
     private Intent recognizerIntent;
@@ -60,7 +59,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
-    @Bind(R.id.settingsButton) ImageView settingsButton;
+    @Bind(R.id.shakeOn) ImageView shakeButton;
+//    @Bind(R.id.shakeOff) ImageView shakeOff;
 
     /**
      * Use this factory method to create a new instance of
@@ -112,6 +112,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/volkswagen-serial-bold.ttf");
+        helloReddit.setTypeface(tf);
+
         listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,13 +123,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                     doListen();
             }
         });
-        helloReddit.setTypeface(tf);
 
         commentText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                 startActivity(browserIntent);
+            }
+        });
+
+        shakeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateShake();
             }
         });
 
@@ -167,11 +175,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void shake(){
-        if (isListening = true){
-            dontListen();
-        }
         speechTextDisplay.setText("**Shake Shake**");
-        //ArrayList<String> possibleWords = new ArrayList<>(Arrays.asList("abductee", "anime", "app", "backslash", "barista", "bling", "blogger", "broadband", "buckyball", "burka", "carbs", "ciabatta", "colonoscopy", "cybersex", "detainee", "dotcom", "earbud", "ecotourism", "eldercare", "electronica", "flipflop", "globalization", "google", "handheld", "hazmat", "helpline", "hoodie", "hummus", "hyperlink", "inbox", "intranet", "jihadist", "latte", "login", "logoff", "logon", "logout", "loonie", "malware", " manga", "mashup", "microloan", "multiplayer", "nanotechnology", "neocon", "neoconservative", "nigga", "offload", "offshoring", "orc", "paragliding", "parasailing", "pecs", "phishing", "playlist", "podcast", "polyamory", "prenup", "quesadilla", "remortgage", "reorg", "ringtone", "rugrat", "sampling", "satay", "scrunchie", "selloff", "semiotics", "semiretired", "sharia", "shiitake", "shopaholic", "sim", "simulcast", "slideshow", "smoothie", "snarky", "snowblower", "soulmate", "spam", "spammer", "spellcheck", "spellchecker", "spyware", "startup", "stoner", "supermodel", "supersize", "tealight", "techno", "uninstall", "unsubscribe", "username", "voicemail", "wack", "webcam", "webcast", "webmaster", "webpage", "widescreen", " wiki", "wishlist", "zapper", "acid reflux", "al-Qaeda", "asymmetric warfare", "bird flu", "black box", "bling-bling", "body piercing", "bok choy", "booty call", "Botox", "break-dance", "break-dancer", "break-dancing", "caller ID", "call waiting", "cargo pants", "chat room", "civil union", "clip art", "closed-captioned", "control freak", "crash diet", "data mining", "DHS", "dialog box", "digital camera", "dim sum", "dirty bomb", "double-click", "drama queen", "e-commerce", "end product", "ethnic cleansing", "feng shui", "flight recorder", "greenhouse gas", "ground zero", "guest worker", "gut-wrenching", "hard-wired", "HDTV", "hedge fund", "help desk", "home fries", "Homeland Security", "HTML", "hybrid car", "identity theft", "IED", "insider trading", "instant message", "Internet cafe", "IPO", "iPod", "ISP", "IVF", "jet ski", "jet skiing", "lap dance", "live-in", "low-carb", "market share", "memory stick", "model home", "MP3", "MP3 player", "open-plan", "par-per-view", "personal trainer", "plug-in", "pop culture", "pop-up", "prenuptial agreement", "pro bono", "Prozac", "pump and dump", "Rasta", "Rastafarian", "Rastafarianism", "RDA", "reality TV", "refried beans", "restraining order", "road trip", "same-sex", "SARS", "satellite radio", "screen saver", "search engine", "sex worker", "shock jock", "SIDS", "smart bomb", "snake oil", "soccer mom", "social networking", "special needs", "speed dial", "spring roll", "squeaky clean", "starter home", "stretch limo", "strip search", "Sudoku", "suicide bomber", "suicide bombing", "SUV", "tailgate party", "talk radio", "Tex-Mex", "text message", "top-of-the-line", "trans fat", "urban myth", "Viagra", "weapon of mass destruction", "wine cooler", "win-win", "WMD", "Ziploc bag"));
         try {
             ArrayList<String> possibleWords = new ArrayList<>();
             AssetManager assetManager = getContext().getAssets();
@@ -187,6 +191,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateShake() {
+        if (shakeOn) {
+            shakeButton.setImageResource(R.drawable.no_shake);
+            ShakeDetector.stop();
+            shakeOn = false;
+        }
+        else {
+            shakeButton.setImageResource(R.drawable.yes_shake);
+            ShakeDetector.start();
+            shakeOn = true;
         }
     }
 

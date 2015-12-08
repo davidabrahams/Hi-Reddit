@@ -73,8 +73,17 @@
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/menu_icon"
-        android:id="@+id/settingsButton"
+        android:src="@drawable/yes_shake"
+        android:id="@+id/shakeOn"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/no_shake"
+        android:id="@+id/shakeOff"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"/>
