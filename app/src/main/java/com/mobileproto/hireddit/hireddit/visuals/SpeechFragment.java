@@ -59,8 +59,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
-    @Bind(R.id.shakeOn) ImageView shakeButton;
-//    @Bind(R.id.shakeOff) ImageView shakeOff;
+    @Bind(R.id.shakeButton) ImageView shakeButton;
 
     /**
      * Use this factory method to create a new instance of
