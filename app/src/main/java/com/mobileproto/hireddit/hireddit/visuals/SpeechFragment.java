@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,7 +50,6 @@ import butterknife.ButterKnife;
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
-//    private FragmentManager manager = getActivity().getSupportFragmentManager();
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private boolean shakeOn = true;
