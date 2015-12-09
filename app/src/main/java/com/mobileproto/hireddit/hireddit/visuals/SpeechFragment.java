@@ -186,18 +186,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchFragment();
+                mListener.switchFragment(InfoFragment.newInstance());
             }
         });
 
         return view;
-    }
-
-    private void switchFragment() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.container, InfoFragment.newInstance());
-        transaction.commit();
     }
 
     public void quietMode() {
@@ -402,6 +395,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+
+        void switchFragment(Fragment f);
+
         void speak(String comment);
 
         void stopSpeaking();

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         return super.onOptionsItemSelected(item);
     }
 
-    private void switchFragment(Fragment f) {
+    public void switchFragment(Fragment f) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addToBackStack(null);
         transaction.replace(R.id.container, f);
