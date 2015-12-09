@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,6 +51,7 @@ import butterknife.ButterKnife;
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
+//    private FragmentManager manager = getActivity().getSupportFragmentManager();
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private boolean shakeOn = true;
@@ -69,6 +72,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.shakeButton) ImageView shakeButton;
+    @Bind(R.id.infoButton) ImageView infoButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,8 +94,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
         ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
             @Override
             public void OnShake() {
@@ -183,7 +185,21 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFragment();
+            }
+        });
+
         return view;
+    }
+
+    private void switchFragment() {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, InfoFragment.newInstance());
+        transaction.commit();
     }
 
     public void quietMode() {

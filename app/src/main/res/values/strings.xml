@@ -6,6 +6,6 @@
     <string name="speech_button">Speech</string>
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
-    <string name="what">What is this and what do I do with it?</string>
-    <string name="info_text">Want to hear what some random Redditor thinks about something- just ask Snoo about your topic! Ask Snoo Anything returns Reddit comments related to what you ask.</string>
+    <string name="what">Confused?</string>
+    <string name="info_text">Want to hear what some random Redditor thinks about something- just ask Snoo about your topic! Ask Snoo Anything returns Reddit comments related to what you say.</string>
 </resources>

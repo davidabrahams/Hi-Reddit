@@ -26,9 +26,10 @@ android:paddingBottom="50dp">
         android:layout_gravity="center_vertical"
         android:text="@string/what"
         android:id="@+id/whatTitle"
-        android:layout_below="@+id/snooHead"
         android:textColor="@color/colorOrange"
-        android:paddingTop="15dp"/>
+        android:paddingTop="15dp"
+        android:layout_below="@+id/snooHead"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
