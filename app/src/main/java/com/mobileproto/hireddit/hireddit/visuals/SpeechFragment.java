@@ -1,6 +1,7 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,20 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -53,8 +49,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.listView) ListView listView;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
-    @Bind(R.id.speechText) TextView speechTextDisplay;
-    @Bind(R.id.commentText) TextView commentText;
+    //@Bind(R.id.speechText) TextView speechTextDisplay;
+    //@Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
 
     /**
@@ -88,9 +84,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
+        // listView
+        View footerView = ((LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
+        listView.addFooterView(footerView);
+
+        //allResponses.add("\nempty\n\n\n\nemp\n\n\nty\n\n\n\nhi\n\n\n\n\nwee\n\n\nyaaa\ncool");
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
         listView.setAdapter(listViewAdapter);
 
+        // voice recognition
         listener = new SpeechListener(this);
         isListening = false;
         updateListeningIndicator();
@@ -164,13 +166,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
-        speechTextDisplay.setText(firstResult);
+        //speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
     @Override
     public void partialCallback(ArrayList partialResult) {
-        speechTextDisplay.setText(partialResult.get(0).toString());
+        //speechTextDisplay.setText(partialResult.get(0).toString());
     }
 
     @Override
@@ -200,12 +202,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
-            commentText.setText(comment);
+            //commentText.setText(comment);
             mListener.speak(comment);
             //only if you get the full request and response, add to history:
             allRequests.add(voiceInput.get(0).toString());
             allResponses.add(comment);
             listViewAdapter.notifyDataSetChanged();
+            //go to end of list to see only current response
+            listView.smoothScrollToPosition(listViewAdapter.getCount() - 1);
+
         }
     }
 
@@ -214,9 +219,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
+     * activity. See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */

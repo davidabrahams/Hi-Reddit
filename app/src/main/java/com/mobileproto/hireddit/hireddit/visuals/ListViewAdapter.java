@@ -1,22 +1,18 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.mobileproto.hireddit.hireddit.R;
-
 import java.util.ArrayList;
 
 /**
- * Created by nmohamed on 12/5/2015.
- */
-public class ListViewAdapter extends ArrayAdapter {
+ * ListViewAdapter: A custom adapter for list views that displays two text views.
+ **/
+public class ListViewAdapter extends BaseAdapter {
 
     Activity context;
     ArrayList<String> requests;
@@ -31,17 +27,20 @@ public class ListViewAdapter extends ArrayAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return requests.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        ArrayList<String> items = new ArrayList<>(2);
+        items.add(requests.get(position));
+        items.add(responses.get(position));
+        return items;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -49,21 +48,21 @@ public class ListViewAdapter extends ArrayAdapter {
         ViewHolder holder;
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
             holder.speech = (TextView) convertView.findViewById(R.id.speechText);
             holder.comment = (TextView) convertView.findViewById(R.id.commentText);
+            //holder.emptyspace = (TextView) convertView.findViewById(R.id.emptySpace);
             convertView.setTag(holder);
         }
-        else
-        {
+        else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.speech.setText(requests.get(position));
         holder.comment.setText(responses.get(position));
+        //holder.emptyspace.setText("p\np\np\np\np\np\np");
 
         return convertView;
     }
@@ -71,5 +70,6 @@ public class ListViewAdapter extends ArrayAdapter {
     private class ViewHolder {
         TextView speech;
         TextView comment;
+        //TextView emptyspace;
     }
 }
