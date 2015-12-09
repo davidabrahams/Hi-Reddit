@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mobileproto.hireddit.hireddit.R;
@@ -23,6 +25,8 @@ import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import android.widget.ListView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +41,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
+    private boolean firstResponse = true;
     private SpeechListener listener;
     private ArrayList<String> voiceInput;
     private Intent recognizerIntent;
@@ -49,9 +54,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.listView) ListView listView;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
-    //@Bind(R.id.speechText) TextView speechTextDisplay;
+    @Bind(R.id.speechText) TextView speechTextDisplay;
     //@Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -87,8 +93,32 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         // listView
         View footerView = ((LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
         listView.addFooterView(footerView);
+//        listView.setOnDetectScrollListener(new OnDetectScrollListener() {
+//            @Override
+//            public void onUpScrolling() {
+//                Log.d(DEBUG_TAG, "Scrolling up");
+//            }
+//
+//            @Override
+//            public void onDownScrolling() {
+//                Log.d(DEBUG_TAG, "Scrolling down");
+//            }
+//        });
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                if (scrollState == 0) Log.d(DEBUG_TAG, "Not scrolling.");
+//                if (view.getId() == listView.getId()) {
+//                    int currentFirstVisibileItem = listView.get
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//            }
+//        });
 
-        //allResponses.add("\nempty\n\n\n\nemp\n\n\nty\n\n\n\nhi\n\n\n\n\nwee\n\n\nyaaa\ncool");
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
         listView.setAdapter(listViewAdapter);
 
@@ -136,6 +166,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         mListener = null;
     }
 
+    private int getTotalHeightofListView() {
+        return listView.getHeight();     //<-- gives you height as it changes
+    }
+
+    private int getHeightofLastListViewElement() {
+        View mView = listViewAdapter.getView(listViewAdapter.getCount() - 1, null, listView);
+        mView.measure(0, 0);
+        int itemHeight = mView.getMeasuredHeight() + listView.getDividerHeight();
+        return itemHeight; // mView.getHeight();
+    }
+
     public void doListen() {
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
@@ -166,13 +207,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
-        //speechTextDisplay.setText(firstResult);
+        speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
     @Override
     public void partialCallback(ArrayList partialResult) {
-        //speechTextDisplay.setText(partialResult.get(0).toString());
+        speechTextDisplay.setText(partialResult.get(0).toString());
     }
 
     @Override
@@ -208,13 +249,24 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             allRequests.add(voiceInput.get(0).toString());
             allResponses.add(comment);
             listViewAdapter.notifyDataSetChanged();
+
+            if(firstResponse == true) firstResponse = false;
+            else{
+                int lastHeight = getHeightofLastListViewElement();
+                int totalHeight = getTotalHeightofListView();
+                Log.d(DEBUG_TAG, "lastHeight: " + lastHeight + ", totalHeight: " + totalHeight);
+                //setFooterHeight = totalHeight - lastHeight;
+            }
+
             //go to end of list to see only current response
             listView.smoothScrollToPosition(listViewAdapter.getCount() - 1);
 
         }
     }
 
-
+    //D/SpeechFragment Debug: lastHeight: 288, totalHeight: 1920
+    //D/SpeechFragment Debug: lastHeight: 204, totalHeight: 1920
+    //D/SpeechFragment Debug: lastHeight: 288, totalHeight: 1920
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

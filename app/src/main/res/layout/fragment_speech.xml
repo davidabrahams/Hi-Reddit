@@ -38,20 +38,21 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:id="@+id/listView"
         android:layout_below="@+id/linearLayout"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:background="@color/colorPrimaryDark">
     </ListView>
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-        <!--android:id="@+id/speechText"-->
-        <!--android:textColor="@color/colorOrange"-->
-        <!--android:layout_below="@+id/linearLayout"-->
-        <!--android:layout_centerHorizontal="true" />-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/speechText"
+        android:textColor="@color/colorOrange"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
 
     <!--<TextView-->
         <!--android:layout_width="wrap_content"-->

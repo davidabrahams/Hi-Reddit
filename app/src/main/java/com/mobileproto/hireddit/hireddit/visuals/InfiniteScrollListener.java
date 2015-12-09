@@ -1,10 +1,13 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
+import android.content.Context;
+
 /**
  * InfiniteScrollListener: A listener that allows you to scroll forever.
  * Used to add extra space at the end, but you won't be allowed to scroll past a certain item
  **/
 public class InfiniteScrollListener {
+
 }
 
 
