@@ -86,8 +86,8 @@
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/menu_icon"
-        android:id="@+id/settingsButton"
+        android:src="@drawable/yes_shake"
+        android:id="@+id/shakeButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

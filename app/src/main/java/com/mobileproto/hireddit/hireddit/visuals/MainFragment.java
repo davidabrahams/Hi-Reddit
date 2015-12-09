@@ -60,12 +60,6 @@ public class MainFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onFragmentInteraction(MainActivity.HOME_SCREEN_CLICK);
-            }
-        });
         return view;
     } //TODO: you should get rid of status bar if you get rid of action bar, so do that.
 

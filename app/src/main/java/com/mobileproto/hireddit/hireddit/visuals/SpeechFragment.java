@@ -3,6 +3,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +22,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +51,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
+    private boolean shakeOn = true;
     private SpeechListener listener;
     private ArrayList voiceInput;
     private Intent recognizerIntent;
@@ -54,21 +62,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ViewGroup.LayoutParams cParams;
     private Integer radius;
 
-
-    @Bind(R.id.listenButton)
-    ImageView listenButton;
-    @Bind(R.id.helloReddit)
-    TextView helloReddit;
-    @Bind(R.id.speechTextDisplay)
-    TextView speechTextDisplay;
-    @Bind(R.id.commentText)
-    TextView commentText;
-    @Bind(R.id.settingsButton)
-    ImageView settingsButton;
-    @Bind(R.id.volumeOnButton)
-    ImageView quietModeButton;
-    @Bind(R.id.TextInputDisplay)
-    EditText TextInputDisplay;
+    @Bind(R.id.volumeOnButton) ImageView quietModeButton;
+    @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
+    @Bind(R.id.listenButton) ImageView listenButton;
+    @Bind(R.id.helloReddit) TextView helloReddit;
+    @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
+    @Bind(R.id.commentText) TextView commentText;
+    @Bind(R.id.shakeButton) ImageView shakeButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -92,6 +92,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
+            @Override
+            public void OnShake() {
+                shake();
+            }
+        });
     }
 
     @Override
@@ -114,6 +120,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/volkswagen-serial-bold.ttf");
+        helloReddit.setTypeface(tf);
+
         listenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +173,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                 startActivity(browserIntent);
+            }
+        });
+
+        shakeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateShake();
             }
         });
 
@@ -238,6 +253,39 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         sr.stopListening();
     }
 
+    public void shake(){
+        speechTextDisplay.setText("**Shake Shake**");
+        try {
+            ArrayList<String> possibleWords = new ArrayList<>();
+            AssetManager assetManager = getContext().getAssets();
+            InputStream shakeStream = assetManager.open("randomwords.txt");
+            BufferedReader shakeReader = new BufferedReader(new InputStreamReader(shakeStream, "UTF-8"));
+            String str;
+            while((str = shakeReader.readLine()) != null){
+                possibleWords.add(str);
+            }
+            Random mRandom = new Random();
+            int index = mRandom.nextInt(possibleWords.size());
+            String shakeWord = possibleWords.get(index);
+            new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateShake() {
+        if (shakeOn) {
+            shakeButton.setImageResource(R.drawable.no_shake);
+            ShakeDetector.stop();
+            shakeOn = false;
+        }
+        else {
+            shakeButton.setImageResource(R.drawable.yes_shake);
+            ShakeDetector.start();
+            shakeOn = true;
+        }
+    }
+
     private void updateListeningIndicator() {
         if (isListening)
             listenButton.setImageResource(R.drawable.yes_mic);
@@ -306,6 +354,29 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        ShakeDetector.start();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        ShakeDetector.stop();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        ShakeDetector.stop();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        ShakeDetector.destroy();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
