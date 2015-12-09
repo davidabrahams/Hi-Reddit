@@ -1,20 +1,17 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
-import com.mobileproto.hireddit.hireddit.R;
-import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
-import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.Bind;
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
+
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements

@@ -48,7 +48,7 @@ public class WordToSpeech
     }
 
     public void destroy()
-    {
+/**/    {
         mTtobj.stop();
         mTtobj.shutdown();
     }

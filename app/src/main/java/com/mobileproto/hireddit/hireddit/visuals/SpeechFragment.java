@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +21,6 @@ import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -46,13 +40,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
-    private SpeechListener listener;
-    private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
     private String link;
-    private ViewGroup.LayoutParams cParams;
-    private Integer radius;
 
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
@@ -91,7 +81,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
-        listener = new SpeechListener(this);
+        SpeechListener listener = new SpeechListener(this);
 
         isListening = false;
         updateListeningIndicator();
@@ -171,7 +161,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
 
-        voiceInput = voiceResult;
+        ArrayList voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
@@ -183,12 +173,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void rmsCallback(float rmsdB){
-            radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
-            cParams = listenButton.getLayoutParams();
-            cParams.width = radius;
-            cParams.height = radius;
-            listenButton.setLayoutParams(cParams);
+    public void rmsCallback(float rmsdB) {
+        int radius = 180 + (int) rmsdB * 2;
+        ViewGroup.LayoutParams cParams = listenButton.getLayoutParams();
+        cParams.width = radius;
+        cParams.height = radius;
+        listenButton.setLayoutParams(cParams);
     }
 
     @Override
@@ -238,6 +228,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      */
     public interface OnFragmentInteractionListener {
         void speak(String comment);
+
         void stopSpeaking();
     }
 

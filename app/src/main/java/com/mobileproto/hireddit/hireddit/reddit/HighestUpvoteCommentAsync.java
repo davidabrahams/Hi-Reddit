@@ -22,13 +22,11 @@ public class HighestUpvoteCommentAsync {
     private List<String[]> allComments;
     private Integer[] scores;
 
-    private class SingleCommentSearch extends AsyncTask<Void, Void, Integer>
-    {
+    private class SingleCommentSearch extends AsyncTask<Void, Void, Integer> {
         String url;
         int index;
 
-        public SingleCommentSearch(String url, int index)
-        {
+        public SingleCommentSearch(String url, int index) {
             this.url = url;
             this.index = index;
         }
@@ -61,30 +59,25 @@ public class HighestUpvoteCommentAsync {
         }
     }
 
-    public HighestUpvoteCommentAsync(RedditSearcher.CommentCallback cc, List<String[]> allComments)
-    {
+    public HighestUpvoteCommentAsync(RedditSearcher.CommentCallback cc, List<String[]> allComments) {
         myCommentCallback = cc;
         this.allComments = allComments;
         scores = new Integer[allComments.size()];
     }
 
     protected void searchComments() {
-        for (int i = 0; i < allComments.size(); i++)
-        {
+        for (int i = 0; i < allComments.size(); i++) {
             String[] comment = allComments.get(i);
             SingleCommentSearch single = new SingleCommentSearch(comment[1], i);
             single.execute();
         }
     }
 
-    private int getHighestScoringIndex()
-    {
+    private int getHighestScoringIndex() {
         int returnIndex = -1;
         int commentScore = Integer.MIN_VALUE;
-        for (int i = 0; i < scores.length; i++)
-        {
-            if (scores[i] > commentScore)
-            {
+        for (int i = 0; i < scores.length; i++) {
+            if (scores[i] > commentScore) {
                 commentScore = scores[i];
                 returnIndex = i;
             }
@@ -95,12 +88,10 @@ public class HighestUpvoteCommentAsync {
         return returnIndex;
     }
 
-    private void scoreCallback(int index, int score)
-    {
+    private void scoreCallback(int index, int score) {
         scores[index] = score;
         boolean isLast = true;
-        for (Integer i : scores)
-        {
+        for (Integer i : scores) {
             if (i == null) {
                 isLast = false;
                 break;
