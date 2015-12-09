@@ -12,21 +12,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.Bind;
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        MainFragment.OnFragmentInteractionListener, OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     private WordToSpeech speech;
 
     FragmentManager manager;
-
-    public static final int HOME_SCREEN_CLICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,17 +77,6 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(int transition) {
-        switch (transition) {
-            case HOME_SCREEN_CLICK:
-                SpeechFragment f = SpeechFragment.newInstance();
-                switchFragment(f, FragmentTransaction.TRANSIT_NONE,
-                        R.anim.slide_out_up);
-                break;
-        }
-    }
-
     public boolean isNetworkConnectionAvailable() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -108,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void flipMute() {
+        speech.flipMute();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         speech.stop();
@@ -124,5 +117,4 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         speech.destroy();
     }
-
 }
