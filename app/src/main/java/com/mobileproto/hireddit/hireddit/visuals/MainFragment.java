@@ -26,7 +26,8 @@ public class MainFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    @Bind(R.id.alienImage) ImageView alienImage;
+    @Bind(R.id.alienImage)
+    ImageView alienImage;
 
     /**
      * Use this factory method to create a new instance of

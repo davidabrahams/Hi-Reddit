@@ -11,19 +11,15 @@ import java.util.Locale;
  * Speak() takes a String to generate an audio output
  * WordToSpeech is able to speak out different languages, but for this project, we set it to English
  */
-public class WordToSpeech
-{
+public class WordToSpeech {
     private TextToSpeech mTtobj;
     private boolean mute;
 
-    public WordToSpeech(Context appContext)
-    {
+    public WordToSpeech(Context appContext) {
 
-        mTtobj = new TextToSpeech(appContext, new TextToSpeech.OnInitListener()
-        {
+        mTtobj = new TextToSpeech(appContext, new TextToSpeech.OnInitListener() {
             @Override
-            public void onInit(int status)
-            {
+            public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
                     mTtobj.setLanguage(Locale.US);
                 }
@@ -33,8 +29,7 @@ public class WordToSpeech
         mute = false;
     }
 
-    public void speak(String toSpeak)
-    {
+    public void speak(String toSpeak) {
         if (mute) return;
         // version check, if SDK is newer than 21, use the update speak method
         // if not, use the deprecated one
@@ -52,11 +47,10 @@ public class WordToSpeech
     }
 
     public void flipMute() {
-            mute = !mute;
+        mute = !mute;
     }
 
-    public void destroy()
-    {
+    public void destroy() {
         mTtobj.stop();
         mTtobj.shutdown();
     }

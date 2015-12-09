@@ -89,19 +89,10 @@
         android:src="@drawable/menu_icon"
         android:id="@+id/settingsButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"/>
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/mute"
-        android:id="@+id/muteButton"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="80dp"/>
+        android:layout_marginEnd="5dp"/>
 
     <ImageView
         android:layout_width="40dp"
@@ -109,7 +100,9 @@
         android:src="@drawable/volume_on"
         android:id="@+id/volumeOnButton"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="80dp"/>
 </RelativeLayout>

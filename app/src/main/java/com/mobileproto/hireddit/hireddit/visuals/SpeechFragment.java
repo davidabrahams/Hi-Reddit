@@ -55,14 +55,20 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private Integer radius;
 
 
-    @Bind(R.id.listenButton) ImageView listenButton;
-    @Bind(R.id.helloReddit) TextView helloReddit;
-    @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
-    @Bind(R.id.commentText) TextView commentText;
-    @Bind(R.id.settingsButton) ImageView settingsButton;
-    @Bind(R.id.muteButton) ImageView muteButton;
-    @Bind(R.id.volumeOnButton) ImageView volumeOnButton;
-    @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
+    @Bind(R.id.listenButton)
+    ImageView listenButton;
+    @Bind(R.id.helloReddit)
+    TextView helloReddit;
+    @Bind(R.id.speechTextDisplay)
+    TextView speechTextDisplay;
+    @Bind(R.id.commentText)
+    TextView commentText;
+    @Bind(R.id.settingsButton)
+    ImageView settingsButton;
+    @Bind(R.id.volumeOnButton)
+    ImageView quietModeButton;
+    @Bind(R.id.TextInputDisplay)
+    EditText TextInputDisplay;
 
     /**
      * Use this factory method to create a new instance of
@@ -118,17 +124,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
-        muteButton.setOnClickListener(new View.OnClickListener() {
+        quietModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                voiceMode();
-            }
-        });
-
-        volumeOnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                quietMode();
+                if (quietMode)
+                    voiceMode();
+                else
+                    quietMode();
             }
         });
 
@@ -170,20 +172,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void quietMode() {
-        if (quietMode) return;
         mListener.stopSpeaking();
         mListener.flipMute();
-        muteButton.setVisibility(View.VISIBLE);
-        volumeOnButton.setVisibility(View.GONE);
+        quietModeButton.setImageResource(R.drawable.mute);
         quietMode = true;
     }
 
     public void voiceMode() {
-        if (!quietMode) return;
         mListener.flipMute();
         if (!isListening) mListener.speak(commentText.getText().toString());
-        volumeOnButton.setVisibility(View.VISIBLE);
-        muteButton.setVisibility(View.GONE);
+        quietModeButton.setImageResource(R.drawable.volume_on);
         quietMode = false;
     }
 
@@ -247,6 +245,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             listenButton.setImageResource(R.drawable.no_mic);
     }
 
+    // TODO: Make this function only take a String
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
         isListening = false;
@@ -265,12 +264,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void rmsCallback(float rmsdB){
-            radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
-            cParams = listenButton.getLayoutParams();
-            cParams.width = radius;
-            cParams.height = radius;
-            listenButton.setLayoutParams(cParams);
+    public void rmsCallback(float rmsdB) {
+        radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
+        cParams = listenButton.getLayoutParams();
+        cParams.width = radius;
+        cParams.height = radius;
+        listenButton.setLayoutParams(cParams);
     }
 
     @Override
@@ -319,7 +318,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      */
     public interface OnFragmentInteractionListener {
         void speak(String comment);
+
         void stopSpeaking();
+
         void flipMute();
     }
 
