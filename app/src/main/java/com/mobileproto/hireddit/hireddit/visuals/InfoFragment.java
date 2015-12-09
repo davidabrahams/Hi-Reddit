@@ -11,13 +11,11 @@ import com.mobileproto.hireddit.hireddit.R;
 import butterknife.ButterKnife;
 
 /**
- * Created by lwilcox on 12/6/2015.
+ * A simple {@link Fragment} subclass.
+ * Contains all information on the info page.
  */
 public class InfoFragment extends Fragment {
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
      * @return A new instance of fragment InfoFragment.
      */
     public static InfoFragment newInstance() {
