@@ -14,14 +14,11 @@ import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentIntera
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        MainFragment.OnFragmentInteractionListener, OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     private WordToSpeech speech;
 
     FragmentManager manager;
-
-    public static final int HOME_SCREEN_CLICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +71,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFragmentInteraction(int transition) {
-        switch (transition) {
-            case HOME_SCREEN_CLICK:
-                SpeechFragment f = SpeechFragment.newInstance();
-                switchFragment(f, FragmentTransaction.TRANSIT_NONE,
-                        R.anim.slide_out_up);
-                break;
-        }
-    }
-
-    @Override
     public void speak(String words) {
         speech.speak(words);
     }
@@ -92,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void stopSpeaking() {
         speech.stop();
+    }
+
+    @Override
+    public void flipMute() {
+        speech.flipMute();
     }
 
     @Override
@@ -111,5 +102,4 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         speech.destroy();
     }
-
 }
