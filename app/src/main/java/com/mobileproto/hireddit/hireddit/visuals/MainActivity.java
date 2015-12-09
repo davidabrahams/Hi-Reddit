@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void flipMute() {
+        speech.flipMute();
     }
 
     @Override

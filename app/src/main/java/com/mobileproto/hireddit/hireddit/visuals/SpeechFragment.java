@@ -1,6 +1,7 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -10,9 +11,13 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,10 +56,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
+    private boolean typeMode = false;
+    private boolean quietMode = false;
     private String link;
     private ViewGroup.LayoutParams cParams;
     private Integer radius;
 
+    @Bind(R.id.volumeOnButton) ImageView quietModeButton;
+    @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
@@ -123,6 +132,42 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
+        quietModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (quietMode)
+                    voiceMode();
+                else
+                    quietMode();
+            }
+        });
+
+        speechTextDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                typeMode();
+            }
+        });
+
+        TextInputDisplay.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            mgr.hideSoftInputFromWindow(TextInputDisplay.getWindowToken(), 0);
+                            ArrayList<String> TextInput = new ArrayList<String>();
+                            TextInput.add(0, TextInputDisplay.getText().toString());
+                            speechResultCallback(TextInput);
+                            SpeakMode();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+        helloReddit.setTypeface(tf);
+
         commentText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +184,41 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         });
 
         return view;
+    }
+
+    public void quietMode() {
+        mListener.stopSpeaking();
+        mListener.flipMute();
+        quietModeButton.setImageResource(R.drawable.mute);
+        quietMode = true;
+    }
+
+    public void voiceMode() {
+        mListener.flipMute();
+        if (!isListening) mListener.speak(commentText.getText().toString());
+        quietModeButton.setImageResource(R.drawable.volume_on);
+        quietMode = false;
+    }
+
+    public void typeMode() {
+        if (typeMode) return;
+        mListener.stopSpeaking();
+        TextInputDisplay.setText(speechTextDisplay.getText().toString());
+        speechTextDisplay.setVisibility(View.INVISIBLE);
+        TextInputDisplay.setVisibility(View.VISIBLE);
+        TextInputDisplay.requestFocus();
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.showSoftInput(TextInputDisplay, InputMethodManager.SHOW_IMPLICIT);
+        typeMode = true;
+    }
+
+    public void SpeakMode() {
+        if (!typeMode) return;
+        mListener.stopSpeaking();
+        TextInputDisplay.setText(TextInputDisplay.getText().toString());
+        TextInputDisplay.setVisibility(View.INVISIBLE);
+        speechTextDisplay.setVisibility(View.VISIBLE);
+        typeMode = false;
     }
 
     @Override
@@ -213,6 +293,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             listenButton.setImageResource(R.drawable.no_mic);
     }
 
+    // TODO: Make this function only take a String
     @Override
     public void speechResultCallback(ArrayList voiceResult) {
         isListening = false;
@@ -231,12 +312,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void rmsCallback(float rmsdB){
-            radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
-            cParams = listenButton.getLayoutParams();
-            cParams.width = radius;
-            cParams.height = radius;
-            listenButton.setLayoutParams(cParams);
+    public void rmsCallback(float rmsdB) {
+        radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
+        cParams = listenButton.getLayoutParams();
+        cParams.width = radius;
+        cParams.height = radius;
+        listenButton.setLayoutParams(cParams);
     }
 
     @Override
@@ -308,7 +389,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      */
     public interface OnFragmentInteractionListener {
         void speak(String comment);
+
         void stopSpeaking();
+
+        void flipMute();
     }
 
 }

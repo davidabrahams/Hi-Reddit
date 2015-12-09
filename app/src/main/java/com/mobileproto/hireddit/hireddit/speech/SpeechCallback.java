@@ -8,8 +8,11 @@ import java.util.ArrayList;
 public interface SpeechCallback {
 
     void speechResultCallback(ArrayList voiceResult);
+
     void errorCallback(int errorCode, int numErrors);
+
     void partialCallback(ArrayList partialResult);
+
     void rmsCallback(float rmsdB);
 
 }
