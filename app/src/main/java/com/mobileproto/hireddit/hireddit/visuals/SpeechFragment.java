@@ -61,6 +61,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private String link;
     private ViewGroup.LayoutParams cParams;
     private Integer radius;
+    private Integer initalParams;
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -313,8 +314,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB) {
-        radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
         cParams = listenButton.getLayoutParams();
+        if (initalParams == null){
+            initalParams = cParams.width;
+        }
+        radius = initalParams + (int) rmsdB * 2;
+        Log.d("cPrams", Integer.toString(cParams.width));
         cParams.width = radius;
         cParams.height = radius;
         listenButton.setLayoutParams(cParams);
