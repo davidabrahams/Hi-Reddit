@@ -1,9 +1,5 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
-import com.mobileproto.hireddit.hireddit.R;
-import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
-import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

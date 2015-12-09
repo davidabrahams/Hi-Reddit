@@ -49,10 +49,10 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private static final String ERROR_TAG = "RedditSearcher Error";
     private static final ArrayList<String> NO_RESPONSE = new ArrayList<String>(
             Arrays.asList(
-                    "Umm..This question is pretty hard since no one on Reddit knows how to respond.",
-                    "Sorry, blame the developers, they didn't manage to make me smart enough to respond to this",
-                    "Shhhhhhhhh, no one in Reddit talks about this",
-                    "There is no response available in the Reddit, but I will tell you a secrete about the developing team.\n\n Next time."
+                    "Umm..This question is pretty hard to answer since no one on Reddit knows how to respond.",
+                    "Sorry, blame the developers, they didn't manage to make me smart enough to answer this",
+                    "Shhhhhhhhh, no one on Reddit talks about this",
+                    "There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time."
             )
     );
 

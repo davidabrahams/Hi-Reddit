@@ -76,7 +76,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             )
     );
 
-    private static final String couldntHearYou = "Sorry, what was that? I didn't hear you.";
+    private static final String didntUnderstand = "Sorry, what was that? I didn't understand what you said.";
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -270,7 +270,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void shake() {
-        speechTextDisplay.setText("**Shake Shake**");
+        speechTextDisplay.setText(R.string.shake_string);
         try {
             ArrayList<String> possibleWords = new ArrayList<>();
             AssetManager assetManager = getContext().getAssets();
@@ -318,8 +318,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         voiceInput = voiceResult;
 
         if (voiceInput == null) {
-            mListener.speak(couldntHearYou);
-            commentText.setText(couldntHearYou);
+            mListener.speak(didntUnderstand);
+            commentText.setText(didntUnderstand);
         }
         else {
         String firstResult = voiceInput.get(0).toString();

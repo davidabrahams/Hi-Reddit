@@ -6,4 +6,5 @@
     <string name="speech_button">Speech</string>
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
+    <string name="shake_string">**Shake Shake**</string>
 </resources>
