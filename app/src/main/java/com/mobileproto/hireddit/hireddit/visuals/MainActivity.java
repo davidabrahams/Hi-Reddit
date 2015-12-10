@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, f);
         transaction.commit();
+
     }
 
     // We overload the switchFragment function to allow the user to customize the

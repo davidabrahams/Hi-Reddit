@@ -52,16 +52,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private boolean shakeOn = true;
-    private SpeechListener listener;
-    private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
     private boolean typeMode = false;
     private boolean quietMode = false;
     private String link;
     private ViewGroup.LayoutParams cParams;
-    private Integer radius;
-    private Integer initalParams;
+    private int initialParams;
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -108,7 +105,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
-        listener = new SpeechListener(this);
+        SpeechListener listener = new SpeechListener(this);
 
         isListening = false;
         updateListeningIndicator();
@@ -183,6 +180,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                 updateShake();
             }
         });
+
+        cParams = listenButton.getLayoutParams();
+        initialParams = cParams.width;
 
         return view;
     }
@@ -301,7 +301,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
 
-        voiceInput = voiceResult;
+        ArrayList voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
@@ -314,10 +314,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB) {
-        cParams = listenButton.getLayoutParams();
-        if (initalParams == null)
-            initalParams = cParams.width;
-        radius = initalParams + (int) rmsdB * 2;
+        int radius = initialParams + (int) rmsdB * 2;
         cParams.width = radius;
         cParams.height = radius;
         listenButton.setLayoutParams(cParams);
