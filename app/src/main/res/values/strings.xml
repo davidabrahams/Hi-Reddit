@@ -7,9 +7,10 @@
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
     <string name="what">Confused?</string>
-    <string name="info_text">Want to hear what some random Redditor thinks about something- just ask Snoo about your topic! Ask Snoo Anything returns Reddit comments related to what you say.</string>
-    <string name="more">Interested in trying out a feature we are working on? It optimizes by number of upvotes- but it is going to make things a bit slower.</string>
+    <string name="info_text">Want to hear what some random Redditor thinks about something? Just ask Snoo about your topic! <i>Ask Snoo Anything</i> returns Reddit comments related to what you say.</string>
+    <string name="more">Interested in trying out a feature we\'re working on? It optimizes by number of upvotes- but it is going to make things a bit slower.</string>
     <string name="fast">No Optimization - Fastest</string>
     <string name="medium">Some Optimization - Average</string>
     <string name="slow">Most Optimization - Slowest </string>
+    <string name="shake">Try shakin\' for a random response.</string>
 </resources>

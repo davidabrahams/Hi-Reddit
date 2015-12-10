@@ -49,18 +49,31 @@ android:paddingBottom="50dp">
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/colorWhite"
-        android:text="@string/more"
+        android:text="@string/shake"
         android:layout_below="@+id/infoText"
         android:paddingLeft="40dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:id="@+id/textView" />
+        android:id="@+id/shake" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/colorWhite"
+        android:text="@string/more"
+        android:layout_below="@+id/shake"
+        android:paddingLeft="40dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/more" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/more"
         android:layout_centerHorizontal="true"
         android:id="@+id/selectOptimization">
 
