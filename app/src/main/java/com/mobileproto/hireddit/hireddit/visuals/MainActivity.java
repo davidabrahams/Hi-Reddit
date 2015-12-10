@@ -60,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         transaction.commit();
     }
 
+    // We overload the switchFragment function to allow the user to customize the
+    // transition between two fragments on a switch if they want. The two functions
+    // have identical behavior outside of the animation.
+    public void switchFragment2(Fragment f, int customAnimationIn, int customAnimationOut) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(customAnimationIn, customAnimationOut);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.container, f);
+        transaction.commit();
+    }
+
     @Override
     public void speak(String words) {
         speech.speak(words);
