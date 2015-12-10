@@ -47,7 +47,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
-    private static final ArrayList<String> NO_RESPONSE = new ArrayList<String>(
+    private static final ArrayList<String> NO_RESPONSE = new ArrayList<>(
             Arrays.asList(
                     "Umm..This question is pretty hard to answer since no one on Reddit knows how to respond.",
                     "Sorry, blame the developers, they didn't manage to make me smart enough to answer this",
@@ -55,6 +55,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                     "There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time."
             )
     );
+
+    private static final String TOO_GENERAL = "The question is too general for me to answer, please be specific";
 
     private Context context;
     private Indico indico;
@@ -184,6 +186,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(ERROR_TAG, "Volley experienced an error");
+
+        myCommentCallback.commentCallback(TOO_GENERAL, null);
+
         if (error.networkResponse == null) {
             if (error.getClass().equals(TimeoutError.class)) {
                 Log.e(ERROR_TAG, "A timeout error occurred");
