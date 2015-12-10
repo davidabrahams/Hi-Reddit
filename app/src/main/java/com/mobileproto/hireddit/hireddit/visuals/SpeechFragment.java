@@ -39,7 +39,7 @@ import android.widget.ListView;
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
-    private static final String DEBUG_TAG = "SpeechFragment Debug";
+    private static final String DEBUG_TAG = "SpeechFragmentDebug";
     private boolean isListening;
     private boolean firstResponse = true;
     private SpeechListener listener;
@@ -50,6 +50,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList<String> allRequests = new ArrayList<String>();
     private ArrayList<String> allResponses = new ArrayList<String>();
     private ListViewAdapter listViewAdapter;
+    private int listViewHeight;
 
     @Bind(R.id.listView) ListView listView;
     @Bind(R.id.listenButton) ImageView listenButton;
@@ -118,7 +119,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 //
 //            }
 //        });
-
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
         listView.setAdapter(listViewAdapter);
 
@@ -167,14 +167,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     private int getTotalHeightofListView() {
-        return listView.getHeight();     //<-- gives you height as it changes
+        return listView.getHeight();     //<-- Gives you height in pixels, NORA tested for accuracy.
     }
 
     private int getHeightofLastListViewElement() {
+        Log.d(DEBUG_TAG, "element you're at: " + (listViewAdapter.getCount() - 1));
         View mView = listViewAdapter.getView(listViewAdapter.getCount() - 1, null, listView);
-        mView.measure(0, 0);
+        mView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                      View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         int itemHeight = mView.getMeasuredHeight() + listView.getDividerHeight();
-        return itemHeight; // mView.getHeight();
+        return itemHeight;
+        //return mView.getHeight();
     }
 
     public void doListen() {
@@ -250,12 +253,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             allResponses.add(comment);
             listViewAdapter.notifyDataSetChanged();
 
-            if(firstResponse == true) firstResponse = false;
-            else{
+            if(firstResponse == true) {
+                listViewHeight = getTotalHeightofListView();
+                firstResponse = false;
+            } else{
                 int lastHeight = getHeightofLastListViewElement();
-                int totalHeight = getTotalHeightofListView();
-                Log.d(DEBUG_TAG, "lastHeight: " + lastHeight + ", totalHeight: " + totalHeight);
-                //setFooterHeight = totalHeight - lastHeight;
+                Log.d(DEBUG_TAG, "lastHeight: " + lastHeight + ", totalHeight: " + listViewHeight);
+                //footerHeight = totalHeight - lastHeight;
+                //do magic footer making
+                //more finageling
             }
 
             //go to end of list to see only current response

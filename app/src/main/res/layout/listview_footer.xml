@@ -9,11 +9,5 @@
             android:layout_height="fill_parent"
             android:text="TESTING THERE'S A FOOTER HERE ;o)"
             android:textColor="@color/colorOrange" />
-        <!--<ImageView-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_width="20dp"-->
-            <!--android:src="@drawable/test" />-->
-
-
 
 </LinearLayout>
