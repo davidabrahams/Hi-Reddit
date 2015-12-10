@@ -186,7 +186,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.switchFragment2(InfoFragment.newInstance(), FragmentTransaction.TRANSIT_NONE,
+                mListener.switchFragment(InfoFragment.newInstance(), FragmentTransaction.TRANSIT_NONE,
                         R.anim.slide_out_up);
             }
         });
@@ -398,6 +398,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public interface OnFragmentInteractionListener {
 
         void switchFragment(Fragment f);
+
+        void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut);
 
         void speak(String comment);
 
