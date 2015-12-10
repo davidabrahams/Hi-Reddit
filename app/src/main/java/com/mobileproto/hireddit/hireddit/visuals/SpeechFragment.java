@@ -188,6 +188,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             public void onClick(View v) {
                 mListener.switchFragment(InfoFragment.newInstance(), FragmentTransaction.TRANSIT_NONE,
                         R.anim.slide_out_up);
+                mListener.stopSpeaking();
+                dontListen();
             }
         });
 
