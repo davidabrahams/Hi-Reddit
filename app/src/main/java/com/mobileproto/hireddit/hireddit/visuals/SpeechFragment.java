@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -353,19 +354,20 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
+        Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
         if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_not_recognized), Toast.LENGTH_SHORT).show();
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_say_something), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_try_again), Toast.LENGTH_SHORT).show();
             }
         }
     }

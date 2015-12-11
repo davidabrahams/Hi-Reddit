@@ -13,4 +13,7 @@
     <string name="nores4">There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time.</string>
     <string name="general">The question is too general for me to answer, please be specific</string>
     <string name="no_comments">No comments available</string>
+    <string name="error_not_recognized">Error: Speech was not recognized.</string>
+    <string name="error_say_something">Error: Please say something.</string>
+    <string name="error_try_again">Error occurred! Try again.</string>
 </resources>
