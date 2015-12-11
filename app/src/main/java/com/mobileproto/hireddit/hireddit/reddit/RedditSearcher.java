@@ -1,7 +1,9 @@
 package com.mobileproto.hireddit.hireddit.reddit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.io.CharStreams;
+import com.mobileproto.hireddit.hireddit.R;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -47,16 +50,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
-    private static final ArrayList<String> NO_RESPONSE = new ArrayList<>(
-            Arrays.asList(
-                    "Umm..This question is pretty hard to answer since no one on Reddit knows how to respond.",
-                    "Sorry, blame the developers, they didn't manage to make me smart enough to answer this",
-                    "Shhhhhhhhh, no one on Reddit talks about this",
-                    "There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time."
-            )
-    );
-
-    private static final String TOO_GENERAL = "The question is too general for me to answer, please be specific";
 
     private Context context;
     private Indico indico;
@@ -154,6 +147,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     @Override
     public void onResponse(JSONObject response) {
+        Resources res = context.getResources();
+        ArrayList<String> NO_RESPONSE = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.nores1),
+                        res.getString(R.string.nores2),
+                        res.getString(R.string.nores3),
+                        res.getString(R.string.nores4)
+                )
+        );
         Hashtable<String, ArrayList<String>> allComments = new Hashtable<>();
         try {
             JSONArray items = response.getJSONArray("data");
@@ -179,7 +181,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
-            Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, res.getString(R.string.no_comments), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -187,6 +189,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     public void onErrorResponse(VolleyError error) {
         Log.e(ERROR_TAG, "Volley experienced an error");
 
+        Resources res = context.getResources();
+        String TOO_GENERAL = res.getString(R.string.general);
         myCommentCallback.commentCallback(TOO_GENERAL, null);
 
         if (error.networkResponse == null) {

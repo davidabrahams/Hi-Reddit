@@ -7,4 +7,10 @@
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
     <string name="shake_string">**Shake Shake**</string>
+    <string name="nores1">Umm.. .This question is pretty hard to answer since no one on Reddit knows how to respond.</string>
+    <string name="nores2">Sorry, blame the developers, they didn\'t manage to make me smart enough to answer this.</string>
+    <string name="nores3">Shhhhhhhhh, no one on Reddit talks about this.</string>
+    <string name="nores4">There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time.</string>
+    <string name="general">The question is too general for me to answer, please be specific</string>
+    <string name="no_comments">No comments available</string>
 </resources>
