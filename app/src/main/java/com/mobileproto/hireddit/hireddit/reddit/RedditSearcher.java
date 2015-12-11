@@ -26,10 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 import io.indico.Indico;
 import io.indico.network.IndicoCallback;
@@ -44,10 +41,9 @@ import io.indico.utils.IndicoException;
  */
 public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener {
 
-    private String spokenString;
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
-
+    private String spokenString;
     private Context context;
     private Indico indico;
     private CommentCallback myCommentCallback;
@@ -59,8 +55,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             List<String> indicoWords = new ArrayList<>(result.getKeywords().keySet());
             if (indicoWords.size() != 0) {
                 getCommentFromKeywords(indicoWords);
-            }
-            else {
+            } else {
                 String[] spokenArray = spokenString.split(" ");
                 List<String> spokenSet = Arrays.asList(spokenArray);
                 getCommentFromKeywords(spokenSet);
@@ -77,7 +72,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         this.queue = Volley.newRequestQueue(context);
     }
 
-    public static String getApi(Context context) {
+    private static String getApi(Context context) {
         try {
             AssetManager assetManager = context.getAssets();
             InputStream apiKey = assetManager.open("indicoapitxt.txt");
@@ -106,7 +101,9 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 .appendPath("reddit")
                 .appendPath("search")
                 .appendQueryParameter("q", importantWords)
-                .appendQueryParameter("fields", fields);
+                .appendQueryParameter("fields", fields)
+                .appendQueryParameter("limit", "1000");
+
         String Url = builder.build().toString();
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, Url,
                 new JSONObject(), this, this);
@@ -118,48 +115,56 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         queue.add(getRequest);
     }
 
-    public void filterComment(ArrayList<String> allComments) {
+    private void filterComment(ArrayList<String[]> allComments) {
         for (int i = 0; i < allComments.size(); i++) {
-            if (allComments.get(i).length() > 300 || allComments.get(i).toLowerCase().contains("http")) {
+            String comment = allComments.get(i)[0];
+            if (comment.length() > 300 || comment.toLowerCase().contains("http")) {
                 allComments.remove(i);
                 i--;
             }
         }
     }
 
-    public String pickComment(Hashtable<String, ArrayList<String>> allCommentsHash) {
-        Set<String> commentSet = allCommentsHash.keySet();
-        ArrayList<String> allComments = new ArrayList<String>(commentSet);
+    private void pickComment(ArrayList<String[]> allComments) {
 
         filterComment(allComments);
 
         if (allComments.size() <= 0) {
-            return null;
+            myCommentCallback.commentCallback(null, null);
         } else {
-            Random mRandom = new Random();
-            int index = mRandom.nextInt(allComments.size());
-            return allComments.get(index);
+            //  search the last 10 comments for upvotes. This is because the most recent comments
+            // often don't have upvote info.
+            List<String[]> commentRange = allComments.subList(Math.max(allComments.size() - 10, 0),
+                    allComments.size());
+            HighestUpvoteCommentAsync t = new HighestUpvoteCommentAsync(myCommentCallback,
+                    commentRange);
+            t.searchComments();
         }
+    }
+
+    private String getRedditUrl(String linkId, String id, int context) {
+        return "https://www.reddit.com/comments/" + linkId + "/_/" + id + "?context=" +
+                Integer.toString(context);
     }
 
     @Override
     public void onResponse(JSONObject response) {
-        Hashtable<String, ArrayList<String>> allComments = new Hashtable<>();
+
+        ArrayList<String[]> allComments = new ArrayList<>();
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
-                ArrayList<String> eachLinkInfo = new ArrayList<>();
                 JSONObject body = items.getJSONObject(i);
                 String comment = body.getString("body");
-                String linkId = body.getString("link_id").substring(3); //removing first 3 removes t1_
+                //removing first 3 removes t1_
+                String linkId = body.getString("link_id").substring(3);
                 String commentId = body.getString("id");
-                eachLinkInfo.add(linkId);
-                eachLinkInfo.add(commentId);
-                allComments.put(comment, eachLinkInfo);
+
+                String commentLink = getRedditUrl(linkId, commentId, 0);
+                String[] eachLinkInfo = {comment, commentLink};
+                allComments.add(eachLinkInfo);
             }
-            String postComment = pickComment(allComments);
-            ArrayList<String> linkInfo = allComments.get(postComment);
-            myCommentCallback.commentCallback(postComment, linkInfo);
+            pickComment(allComments);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
             Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
@@ -177,7 +182,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     public interface CommentCallback {
-        void commentCallback(String comment, ArrayList<String> linkInfo);
+        void commentCallback(String comment, String link);
     }
 
 

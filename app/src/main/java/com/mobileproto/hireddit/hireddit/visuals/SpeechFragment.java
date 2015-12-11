@@ -50,18 +50,15 @@ import butterknife.ButterKnife;
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
+    private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private boolean isListening;
     private boolean shakeOn = true;
-    private SpeechListener listener;
-    private ArrayList voiceInput;
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
     private boolean typeMode = false;
     private boolean quietMode = false;
     private String link;
-    private ViewGroup.LayoutParams cParams;
-    private Integer radius;
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -107,7 +104,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
 
-        listener = new SpeechListener(this);
+        SpeechListener listener = new SpeechListener(this);
 
         isListening = false;
         updateListeningIndicator();
@@ -310,7 +307,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
 
-        voiceInput = voiceResult;
+        ArrayList voiceInput = voiceResult;
         String firstResult = voiceInput.get(0).toString();
         speechTextDisplay.setText(firstResult);
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
@@ -323,8 +320,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void rmsCallback(float rmsdB) {
-        radius = 180 + (int) rmsdB * 2; // 180 is the initial radius
-        cParams = listenButton.getLayoutParams();
+        int radius = 180 + (int) rmsdB * 2;
+        ViewGroup.LayoutParams cParams = listenButton.getLayoutParams();
         cParams.width = radius;
         cParams.height = radius;
         listenButton.setLayoutParams(cParams);
@@ -352,15 +349,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override
-    public void commentCallback(String comment, ArrayList<String> linkInfo) {
+    public void commentCallback(String comment, String link) {
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+
         } else {
-            //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
-            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
+            Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             commentText.setText(comment);
             mListener.speak(comment);
+            this.link = link;
         }
     }
 
