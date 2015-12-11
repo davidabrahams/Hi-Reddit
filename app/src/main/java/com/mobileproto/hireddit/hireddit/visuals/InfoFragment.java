@@ -33,6 +33,7 @@ public class InfoFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         fragment.setCallback(cb);
+        fragment.setSelection(cb.getCommentsToSearch());
         return fragment;
     }
 
@@ -69,7 +70,7 @@ public class InfoFragment extends Fragment {
             }
         });
 
-        mediumButton.setOnClickListener(new View.OnClickListener() {
+        slowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cb.setCommentsToSearch(10);
@@ -79,9 +80,26 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
+    private void setSelection(int c)
+    {
+        switch (c) {
+            case 1:
+                fastButton.setSelected(true);
+                break;
+            case 5:
+                mediumButton.setSelected(true);
+                break;
+            case 10:
+                slowButton.setSelected(true);
+                break;
+
+        }
+    }
+
 
     public interface NumberCommentsToSearchCallback {
         void setCommentsToSearch(int c);
+        int getCommentsToSearch();
     }
 
     public void setCallback(NumberCommentsToSearchCallback cb) {

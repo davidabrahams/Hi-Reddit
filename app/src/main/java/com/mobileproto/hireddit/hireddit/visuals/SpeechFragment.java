@@ -187,7 +187,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
-        commentsToSearch = 10;
+        commentsToSearch = 5;
 
         return view;
     }
