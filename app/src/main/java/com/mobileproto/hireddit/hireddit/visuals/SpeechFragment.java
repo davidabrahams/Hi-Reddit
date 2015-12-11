@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,11 +29,13 @@ import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -59,6 +62,20 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private String link;
     private ViewGroup.LayoutParams cParams;
     private int initialParams;
+
+    private static ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
+            Arrays.asList(
+                    "You know, life without Wi-Fi is hard.",
+                    "maybe you should move to Canada, we have really good internet here :o)",
+                    "Pay me $50 and I will get you Wi-Fi",
+                    "I agree that free Wi-Fi shouldn't be forbidden",
+                    "Keep Looking on the internet. Surely there must be a good forecast somewhere" +
+                            " out there.",
+                    "I won't work until you provide me with life-long free Wi-Fi"
+            )
+    );
+
+    private static final String didntUnderstand = "Sorry, what was that? I didn't understand what you said.";
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -254,15 +271,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         sr.stopListening();
     }
 
-    public void shake(){
-        speechTextDisplay.setText("**Shake Shake**");
+    public void shake() {
+        speechTextDisplay.setText(R.string.shake_string);
         try {
             ArrayList<String> possibleWords = new ArrayList<>();
             AssetManager assetManager = getContext().getAssets();
             InputStream shakeStream = assetManager.open("randomwords.txt");
             BufferedReader shakeReader = new BufferedReader(new InputStreamReader(shakeStream, "UTF-8"));
             String str;
-            while((str = shakeReader.readLine()) != null){
+            while ((str = shakeReader.readLine()) != null) {
                 possibleWords.add(str);
             }
             Random mRandom = new Random();
@@ -279,8 +296,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             shakeButton.setImageResource(R.drawable.no_shake);
             ShakeDetector.stop();
             shakeOn = false;
-        }
-        else {
+        } else {
             shakeButton.setImageResource(R.drawable.yes_shake);
             ShakeDetector.start();
             shakeOn = true;
@@ -300,11 +316,25 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
-
         ArrayList voiceInput = voiceResult;
+
+        if (voiceInput == null) {
+            mListener.speak(didntUnderstand);
+            commentText.setText(didntUnderstand);
+        }
+
+        else {
         String firstResult = voiceInput.get(0).toString();
-        speechTextDisplay.setText(firstResult);
-        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+            speechTextDisplay.setText(firstResult);
+            if (mListener.isNetworkConnectionAvailable()) {
+                new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+            } else {
+                Random mRandom = new Random();
+                int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+                mListener.speak(NETWORK_UNAVAILABLE.get(index));
+                commentText.setText(NETWORK_UNAVAILABLE.get(index));
+            }
+        }
     }
 
     @Override
@@ -324,59 +354,60 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
+        Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
         if (numErrors == 1) { // to prevent showing multiple toasts
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_not_recognized), Toast.LENGTH_SHORT).show();
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_say_something), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                        res.getString(R.string.error_try_again), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void commentCallback(String comment, ArrayList<String> linkInfo) {
-        if (comment == null) {
-            Log.d(DEBUG_TAG, "No valid comments found");
-            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-        } else {
-            //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
+        //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
+        if (linkInfo != null) {
             link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
-            commentText.setText(comment);
-            mListener.speak(comment);
+        } else {
+            link = null;
         }
+        commentText.setText(comment);
+        mListener.speak(comment);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         ShakeDetector.start();
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         ShakeDetector.stop();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         ShakeDetector.stop();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         ShakeDetector.destroy();
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -391,6 +422,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         void speak(String comment);
 
         void stopSpeaking();
+
+        boolean isNetworkConnectionAvailable();
 
         void flipMute();
     }

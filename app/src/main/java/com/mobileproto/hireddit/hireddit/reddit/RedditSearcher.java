@@ -1,7 +1,9 @@
 package com.mobileproto.hireddit.hireddit.reddit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.io.CharStreams;
+import com.mobileproto.hireddit.hireddit.R;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -144,6 +147,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     @Override
     public void onResponse(JSONObject response) {
+        Resources res = context.getResources();
+        ArrayList<String> NO_RESPONSE = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.nores1),
+                        res.getString(R.string.nores2),
+                        res.getString(R.string.nores3),
+                        res.getString(R.string.nores4)
+                )
+        );
         Hashtable<String, ArrayList<String>> allComments = new Hashtable<>();
         try {
             JSONArray items = response.getJSONArray("data");
@@ -158,17 +170,29 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
                 allComments.put(comment, eachLinkInfo);
             }
             String postComment = pickComment(allComments);
-            ArrayList<String> linkInfo = allComments.get(postComment);
-            myCommentCallback.commentCallback(postComment, linkInfo);
+            if (postComment != null) {
+                ArrayList<String> linkInfo = allComments.get(postComment);
+                myCommentCallback.commentCallback(postComment, linkInfo);
+            } else {
+                Random mRandom = new Random();
+                int index = mRandom.nextInt(NO_RESPONSE.size());
+                myCommentCallback.commentCallback(NO_RESPONSE.get(index), null);
+            }
+
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
-            Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, res.getString(R.string.no_comments), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(ERROR_TAG, "Volley experienced an error");
+
+        Resources res = context.getResources();
+        String TOO_GENERAL = res.getString(R.string.general);
+        myCommentCallback.commentCallback(TOO_GENERAL, null);
+
         if (error.networkResponse == null) {
             if (error.getClass().equals(TimeoutError.class)) {
                 Log.e(ERROR_TAG, "A timeout error occurred");
@@ -179,6 +203,4 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     public interface CommentCallback {
         void commentCallback(String comment, ArrayList<String> linkInfo);
     }
-
-
 }
