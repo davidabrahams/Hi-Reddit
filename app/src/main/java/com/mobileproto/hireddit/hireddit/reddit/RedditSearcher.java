@@ -41,6 +41,7 @@ import io.indico.utils.IndicoException;
  */
 public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener {
 
+
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
     private String spokenString;
@@ -64,12 +65,14 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     };
 
     public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
+
         this.myCommentCallback = myCommentCallback;
         this.spokenString = spokenString;
         this.context = context;
         String indicoApiKey = getApi(context);
         this.indico = Indico.init(context, indicoApiKey, null);
         this.queue = Volley.newRequestQueue(context);
+
     }
 
     private static String getApi(Context context) {
@@ -134,11 +137,17 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
         } else {
             //  search the last 10 comments for upvotes. This is because the most recent comments
             // often don't have upvote info.
-            List<String[]> commentRange = allComments.subList(Math.max(allComments.size() - 10, 0),
-                    allComments.size());
-            HighestUpvoteCommentAsync t = new HighestUpvoteCommentAsync(myCommentCallback,
-                    commentRange);
-            t.searchComments();
+
+            List<String[]> commentRange = allComments.subList(Math.max(allComments.size() -
+                            myCommentCallback.getCommentsToSearch(), 0), allComments.size());
+
+            if (commentRange.size() == 1)
+                myCommentCallback.commentCallback(commentRange.get(0)[0], commentRange.get(0)[1]);
+            else {
+                HighestUpvoteCommentAsync t = new HighestUpvoteCommentAsync(myCommentCallback,
+                        commentRange);
+                t.searchComments();
+            }
         }
     }
 
@@ -182,8 +191,8 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     }
 
     public interface CommentCallback {
+        int getCommentsToSearch();
         void commentCallback(String comment, String link);
     }
-
 
 }

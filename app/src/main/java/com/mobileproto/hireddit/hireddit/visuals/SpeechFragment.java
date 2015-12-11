@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class SpeechFragment extends Fragment implements SpeechCallback,
-        RedditSearcher.CommentCallback {
+        RedditSearcher.CommentCallback, InfoFragment.NumberCommentsToSearchCallback {
     private OnFragmentInteractionListener mListener;
     private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
@@ -59,6 +59,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private boolean typeMode = false;
     private boolean quietMode = false;
     private String link;
+    private int commentsToSearch;
 
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.TextInputDisplay) EditText TextInputDisplay;
@@ -83,7 +84,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public SpeechFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -183,12 +183,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.switchFragment(InfoFragment.newInstance(), FragmentTransaction.TRANSIT_NONE,
-                        R.anim.slide_out_up);
-                mListener.stopSpeaking();
-                dontListen();
+                switchToInfoFragment();
             }
         });
+
+        commentsToSearch = 10;
 
         return view;
     }
@@ -352,6 +351,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
     }
 
+    private void switchToInfoFragment()
+    {
+        mListener.switchFragment(InfoFragment.newInstance(this), FragmentTransaction.TRANSIT_NONE,
+                R.anim.slide_out_up);
+        mListener.stopSpeaking();
+        dontListen();
+    }
+
+    @Override
+    public int getCommentsToSearch() {
+        return commentsToSearch;
+    }
+
     @Override
     public void commentCallback(String comment, String link) {
         if (comment == null) {
@@ -389,6 +401,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         super.onDestroy();
         ShakeDetector.destroy();
     }
+
+    @Override
+    public void setCommentsToSearch(int c) {
+        this.commentsToSearch = c;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
