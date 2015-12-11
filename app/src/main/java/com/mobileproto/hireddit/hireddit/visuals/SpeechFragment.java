@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private ArrayList<String> allResponses = new ArrayList<String>();
     private ListViewAdapter listViewAdapter;
     private int listViewHeight;
+    private int itemHeight;
 
     @Bind(R.id.listView) ListView listView;
     @Bind(R.id.listenButton) ImageView listenButton;
@@ -58,6 +60,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.speechText) TextView speechTextDisplay;
     //@Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.settingsButton) ImageView settingsButton;
+    private View footerSpacing;
 
 
     /**
@@ -93,32 +96,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         // listView
         View footerView = ((LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
+        footerSpacing = (View) footerView.findViewById(R.id.footerSpace);
         listView.addFooterView(footerView);
-//        listView.setOnDetectScrollListener(new OnDetectScrollListener() {
-//            @Override
-//            public void onUpScrolling() {
-//                Log.d(DEBUG_TAG, "Scrolling up");
-//            }
-//
-//            @Override
-//            public void onDownScrolling() {
-//                Log.d(DEBUG_TAG, "Scrolling down");
-//            }
-//        });
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                if (scrollState == 0) Log.d(DEBUG_TAG, "Not scrolling.");
-//                if (view.getId() == listView.getId()) {
-//                    int currentFirstVisibileItem = listView.get
-//                }
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//            }
-//        });
+
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
         listView.setAdapter(listViewAdapter);
 
@@ -170,17 +150,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         return listView.getHeight();     //<-- Gives you height in pixels, NORA tested for accuracy.
     }
 
-    private int getHeightofLastListViewElement() {
-        Log.d(DEBUG_TAG, "element you're at: " + (listViewAdapter.getCount() - 1));
-        View mView = listViewAdapter.getView(listViewAdapter.getCount() - 1, null, listView);
-        mView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                      View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        int itemHeight = mView.getMeasuredHeight() + listView.getDividerHeight();
-        return itemHeight;
-        //return mView.getHeight();
-    }
-
     public void doListen() {
+        //TODO: make listView animate off page and set to not visible
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
         updateListeningIndicator();
@@ -246,33 +217,39 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
+            //show and speak final result:
+
+            //TODO: currently, listView is not visible. while it's invisible, ...
+            // add your comment to it, change the footer, scroll to the bottom (immediate),
+            // make listView visible again and overlayed textviews not visible. should only require
+            // you to use the voiceInput textview and not the comment one, as the voiceInput
+            // textview has partial making it animate and all that
+
             //commentText.setText(comment);
             mListener.speak(comment);
-            //only if you get the full request and response, add to history:
+
+            //add full result to history (aka listView):
             allRequests.add(voiceInput.get(0).toString());
             allResponses.add(comment);
             listViewAdapter.notifyDataSetChanged();
 
+            //make history visible
             if(firstResponse == true) {
                 listViewHeight = getTotalHeightofListView();
                 firstResponse = false;
             } else{
-                int lastHeight = getHeightofLastListViewElement();
-                Log.d(DEBUG_TAG, "lastHeight: " + lastHeight + ", totalHeight: " + listViewHeight);
-                //footerHeight = totalHeight - lastHeight;
-                //do magic footer making
-                //more finageling
+                //update footer height if you have multiple items:
+                itemHeight = listViewAdapter.getLastItemHeight();
+                int footerHeight = listViewHeight - itemHeight;
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) footerSpacing.getLayoutParams();
+                params.height = footerHeight;
+                footerSpacing.setLayoutParams(params);
+
+                listView.setSelection(listViewAdapter.getCount() - 1);
             }
-
-            //go to end of list to see only current response
-            listView.smoothScrollToPosition(listViewAdapter.getCount() - 1);
-
         }
     }
 
-    //D/SpeechFragment Debug: lastHeight: 288, totalHeight: 1920
-    //D/SpeechFragment Debug: lastHeight: 204, totalHeight: 1920
-    //D/SpeechFragment Debug: lastHeight: 288, totalHeight: 1920
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
