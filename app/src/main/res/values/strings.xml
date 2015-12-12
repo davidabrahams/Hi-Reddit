@@ -6,7 +6,6 @@
     <string name="speech_button">Speech</string>
     <string name="listening_text_indicator">Listening!</string>
     <string name="not_listening_text_indicator">not listening...</string>
-<<<<<<< HEAD
     <string name="what">Confused?</string>
     <string name="info_text">Want to hear what some random Redditor thinks about something? Just ask Snoo about your topic! <i>Ask Snoo Anything</i> returns Reddit comments related to what you say.</string>
     <string name="more">Interested in trying out a feature we\'re working on? It optimizes by number of upvotes- but it is going to make things a bit slower.</string>
@@ -14,7 +13,6 @@
     <string name="medium">Some Optimization - Average</string>
     <string name="slow">Most Optimization - Slowest </string>
     <string name="shake">Try shakin\' for a random response.</string>
-=======
     <string name="shake_string">**Shake Shake**</string>
     <string name="nores1">Umm.. .This question is pretty hard to answer since no one on Reddit knows how to respond.</string>
     <string name="nores2">Sorry, blame the developers, they didn\'t manage to make me smart enough to answer this.</string>
@@ -25,5 +23,4 @@
     <string name="error_not_recognized">Error: Speech was not recognized.</string>
     <string name="error_say_something">Error: Please say something.</string>
     <string name="error_try_again">Error occurred! Try again.</string>
->>>>>>> master
 </resources>
