@@ -2,6 +2,7 @@ package com.mobileproto.hireddit.hireddit.visuals;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,10 @@ public class InfoFragment extends Fragment {
     @Bind(R.id.medium) RadioButton mediumButton;
     @Bind(R.id.slow) RadioButton slowButton;
 
+    private static final String DEBUG_TAG = "InfoFragment Debug";
 
-    NumberCommentsToSearchCallback cb;
+
+    private NumberCommentsToSearchCallback cb;
 
     /**
      * @return A new instance of fragment InfoFragment.
@@ -33,7 +36,6 @@ public class InfoFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         fragment.setCallback(cb);
-        fragment.setSelection(cb.getCommentsToSearch());
         return fragment;
     }
 
@@ -77,20 +79,23 @@ public class InfoFragment extends Fragment {
             }
         });
 
+        setSelection();
+
         return view;
     }
 
-    private void setSelection(int c)
+    private void setSelection()
     {
-        switch (c) {
+        Log.d(DEBUG_TAG, "Setting selection to :" + cb.getCommentsToSearch());
+        switch (this.cb.getCommentsToSearch()) {
             case 1:
-                fastButton.setSelected(true);
+                fastButton.setChecked(true);
                 break;
             case 5:
-                mediumButton.setSelected(true);
+                mediumButton.setChecked(true);
                 break;
             case 10:
-                slowButton.setSelected(true);
+                slowButton.setChecked(true);
                 break;
 
         }

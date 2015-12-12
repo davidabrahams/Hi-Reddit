@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,9 +15,13 @@ import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentIntera
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener,
+        InfoFragment.NumberCommentsToSearchCallback {
 
     private WordToSpeech speech;
+    private int commentsToSearch;
+
+    private static final String DEBUG_TAG = "MainActivity Debug";
 
     FragmentManager manager;
 
@@ -26,7 +31,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        switchFragment(SpeechFragment.newInstance());
+        switchFragment(SpeechFragment.newInstance(this));
+
+        commentsToSearch = 5;
 
         speech = new WordToSpeech(this);
     }
@@ -103,4 +110,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         super.onDestroy();
         speech.destroy();
     }
+
+    @Override
+    public int getCommentsToSearch() {
+        return commentsToSearch;
+    }
+
+    @Override
+    public void setCommentsToSearch(int c) {
+        Log.d(DEBUG_TAG, "Setting comments to search to :" + Integer.toString(c));
+        this.commentsToSearch = c;
+    }
+
 }

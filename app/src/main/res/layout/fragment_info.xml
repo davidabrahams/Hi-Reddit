@@ -88,7 +88,6 @@ android:paddingBottom="50dp">
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:text="@string/medium"
-            android:checked="true"
             android:id="@+id/medium" />
         <RadioButton
             android:layout_width="wrap_content"
