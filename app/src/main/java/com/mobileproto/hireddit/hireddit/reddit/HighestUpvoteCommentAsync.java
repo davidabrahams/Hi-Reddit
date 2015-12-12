@@ -10,9 +10,6 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by david on 12/6/15.
- */
 public class HighestUpvoteCommentAsync {
 
     private static final String DEBUG_TAG = "Upvote Debug";

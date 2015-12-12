@@ -108,8 +108,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public SpeechFragment() {
     }
 
-    private void setNumToSearchCb(InfoFragment.NumberCommentsToSearchCallback cb)
-    {
+    private void setNumToSearchCb(InfoFragment.NumberCommentsToSearchCallback cb) {
         this.numToSearchCb = cb;
     }
 
@@ -339,15 +338,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
 
         String firstResult = voiceInput.get(0).toString();
-            speechTextDisplay.setText(firstResult);
-            if (mListener.isNetworkConnectionAvailable()) {
-                new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
-            } else {
-                Random mRandom = new Random();
-                int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-                mListener.speak(NETWORK_UNAVAILABLE.get(index));
-                commentText.setText(NETWORK_UNAVAILABLE.get(index));
-            }
+        speechTextDisplay.setText(firstResult);
+        if (mListener.isNetworkConnectionAvailable()) {
+            new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        } else {
+            Random mRandom = new Random();
+            int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+            mListener.speak(NETWORK_UNAVAILABLE.get(index));
+            commentText.setText(NETWORK_UNAVAILABLE.get(index));
+        }
 
     }
 
@@ -390,8 +389,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
     }
 
-    private void switchToInfoFragment()
-    {
+    private void switchToInfoFragment() {
 
         mListener.switchFragment(InfoFragment.newInstance(numToSearchCb), FragmentTransaction.TRANSIT_NONE,
                 R.anim.slide_out_up);

@@ -84,8 +84,7 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
-    private void setSelection()
-    {
+    private void setSelection() {
         Log.d(DEBUG_TAG, "Setting selection to :" + cb.getCommentsToSearch());
         switch (this.cb.getCommentsToSearch()) {
             case 1:
@@ -104,6 +103,7 @@ public class InfoFragment extends Fragment {
 
     public interface NumberCommentsToSearchCallback {
         void setCommentsToSearch(int c);
+
         int getCommentsToSearch();
     }
 

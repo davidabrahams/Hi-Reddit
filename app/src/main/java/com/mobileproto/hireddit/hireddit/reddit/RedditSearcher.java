@@ -1,6 +1,5 @@
 package com.mobileproto.hireddit.hireddit.reddit;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -43,7 +42,6 @@ import io.indico.utils.IndicoException;
  * Calls ChooseComment to get the best comment
  */
 public class RedditSearcher implements Response.Listener<JSONObject>, Response.ErrorListener {
-
 
     private static final String DEBUG_TAG = "RedditSearcher Debug";
     private static final String ERROR_TAG = "RedditSearcher Error";
@@ -142,7 +140,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             // often don't have upvote info.
 
             List<String[]> commentRange = allComments.subList(Math.max(allComments.size() -
-                            myCommentCallback.getCommentsToSearch(), 0), allComments.size());
+                    myCommentCallback.getCommentsToSearch(), 0), allComments.size());
 
             if (commentRange.size() == 1)
                 myCommentCallback.commentCallback(commentRange.get(0)[0], commentRange.get(0)[1]);
@@ -201,6 +199,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
     public interface CommentCallback {
         int getCommentsToSearch();
+
         void commentCallback(String comment, String link);
     }
 
