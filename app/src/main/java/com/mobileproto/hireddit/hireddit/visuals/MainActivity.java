@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         ButterKnife.bind(this);
         switchFragment(SpeechFragment.newInstance(this));
 
-        commentsToSearch = 5;
+        commentsToSearch = 1;
 
         speech = new WordToSpeech(this);
     }
