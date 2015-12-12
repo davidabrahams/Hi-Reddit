@@ -1,7 +1,9 @@
 package com.mobileproto.hireddit.hireddit.reddit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.io.CharStreams;
+import com.mobileproto.hireddit.hireddit.R;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -160,6 +163,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     public void onResponse(JSONObject response) {
 
         ArrayList<String[]> allComments = new ArrayList<>();
+        Resources res = context.getResources();
         try {
             JSONArray items = response.getJSONArray("data");
             for (int i = 0; i < items.length(); i++) {
@@ -176,13 +180,18 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             pickComment(allComments);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
-            Toast.makeText(context, "No comments available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, res.getString(R.string.no_comments), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e(ERROR_TAG, "Volley experienced an error");
+
+        Resources res = context.getResources();
+        String TOO_GENERAL = res.getString(R.string.general);
+        myCommentCallback.commentCallback(TOO_GENERAL, null);
+
         if (error.networkResponse == null) {
             if (error.getClass().equals(TimeoutError.class)) {
                 Log.e(ERROR_TAG, "A timeout error occurred");

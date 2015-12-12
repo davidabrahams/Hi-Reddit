@@ -1,5 +1,8 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         transaction.addToBackStack(null);
         transaction.replace(R.id.container, f);
         transaction.commit();
+
     }
 
     // We overload the switchFragment function to allow the user to customize the
@@ -76,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         transaction.addToBackStack(null);
         transaction.replace(R.id.container, f);
         transaction.commit();
+    }
+
+    public boolean isNetworkConnectionAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null) return false;
+        NetworkInfo.State network = info.getState();
+        return (network == NetworkInfo.State.CONNECTED || network == NetworkInfo.State.CONNECTING);
     }
 
     @Override
