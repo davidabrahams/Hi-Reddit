@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
+import com.mobileproto.hireddit.hireddit.sharedPreference.SharedPreference;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
@@ -53,6 +54,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
+    private static final String PREFS_MODE = "MODE";
+    private static final String PREFS_VIBRATE = "VIBRATE";
+    private static final String QUIET_MODE = "QUIET_MODE";
+    private static final String VOICE_MODE = "VOICE_MODE";
+    private static final String VIBRATE_ON = "VIBRATE_ON";
+    private static final String VIBRATE_OFF = "VIBRATE_OFF";
     private boolean isListening;
     private boolean shakeOn = true;
     private Intent recognizerIntent;
@@ -62,6 +69,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private String link;
     private ViewGroup.LayoutParams cParams;
     private int initialParams;
+    private SharedPreference sharedPreference;
+
 
     private static ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
             Arrays.asList(
@@ -105,14 +114,28 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
         }
+
         ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
             @Override
             public void OnShake() {
                 shake();
             }
         });
+
+        String modeBuf, vibrateBuf;
+        sharedPreference = new SharedPreference();
+        modeBuf = sharedPreference.getValue(getActivity(), PREFS_MODE);
+        vibrateBuf = sharedPreference.getValue(getActivity(), PREFS_VIBRATE);
+
+        if (modeBuf.equals(QUIET_MODE)) {
+            quietMode();
+        }
+
+        shakeOn = vibrateBuf.equals(VIBRATE_ON);
+        updateShake();
     }
 
     @Override
@@ -405,6 +428,19 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (quietMode) {
+            sharedPreference.save(getActivity(), PREFS_MODE, QUIET_MODE);
+        } else {
+            sharedPreference.save(getActivity(), PREFS_MODE, VOICE_MODE);
+        }
+
+        if (shakeOn) {
+            sharedPreference.save(getActivity(), PREFS_VIBRATE, VIBRATE_ON);
+        } else {
+            sharedPreference.save(getActivity(), PREFS_VIBRATE, VIBRATE_OFF);
+        }
+
         ShakeDetector.destroy();
     }
 

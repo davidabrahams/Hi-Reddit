@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     private WordToSpeech speech;
-
     FragmentManager manager;
 
     @Override
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         switchFragment(SpeechFragment.newInstance());
-
         speech = new WordToSpeech(this);
     }
 
