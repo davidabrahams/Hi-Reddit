@@ -12,24 +12,24 @@ public class SharedPreference {
         super();
     }
 
-    public void save(Context context, String key, String text) {
+    public void save(Context context, String key, Boolean text) {
         SharedPreferences settings;
         Editor editor;
 
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = settings.edit();
 
-        editor.putString(key, text);
+        editor.putBoolean(key, text);
 
         editor.apply();
     }
 
-    public String getValue(Context context, String key) {
+    public Boolean getValue(Context context, String key) {
         SharedPreferences settings;
-        String text;
+        Boolean text;
 
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        text = settings.getString(key, null);
+        text = settings.getBoolean(key, false);
         return text;
     }
 

@@ -55,11 +55,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private static final String PREFS_MODE = "MODE";
-    private static final String PREFS_VIBRATE = "VIBRATE";
-    private static final String QUIET_MODE = "QUIET_MODE";
-    private static final String VOICE_MODE = "VOICE_MODE";
-    private static final String VIBRATE_ON = "VIBRATE_ON";
-    private static final String VIBRATE_OFF = "VIBRATE_OFF";
+    private static final String PREFS_SHAKE = "VIBRATE";
     private boolean isListening;
     private boolean shakeOn = true;
     private Intent recognizerIntent;
@@ -130,7 +126,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-        String modeBuf, vibrateBuf;
         sharedPreference = new SharedPreference();
         SpeechListener listener = new SpeechListener(this);
 
@@ -211,15 +206,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         cParams = listenButton.getLayoutParams();
         initialParams = cParams.width;
 
-        modeBuf = sharedPreference.getValue(getActivity(), PREFS_MODE);
-        vibrateBuf = sharedPreference.getValue(getActivity(), PREFS_VIBRATE);
-
-        if (QUIET_MODE.equals(modeBuf)) {
+        if (sharedPreference.getValue(getActivity(), PREFS_MODE)) {
             quietMode();
+        } else {
+            voiceMode();
         }
 
-        shakeOn = VIBRATE_OFF.equals(vibrateBuf);
-
+        shakeOn = sharedPreference.getValue(getActivity(), PREFS_SHAKE);
         updateShake();
         return view;
     }
@@ -421,15 +414,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         super.onStop();
 
         if (quietMode) {
-            sharedPreference.save(getActivity(), PREFS_MODE, QUIET_MODE);
+            sharedPreference.save(getActivity(), PREFS_MODE, true);
         } else {
-            sharedPreference.save(getActivity(), PREFS_MODE, VOICE_MODE);
+            sharedPreference.save(getActivity(), PREFS_MODE, false);
         }
 
         if (shakeOn) {
-            sharedPreference.save(getActivity(), PREFS_VIBRATE, VIBRATE_ON);
+            sharedPreference.save(getActivity(), PREFS_SHAKE, false);
         } else {
-            sharedPreference.save(getActivity(), PREFS_VIBRATE, VIBRATE_OFF);
+            sharedPreference.save(getActivity(), PREFS_SHAKE, true);
         }
 
         ShakeDetector.stop();
