@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,9 +18,13 @@ import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentIntera
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener,
+        InfoFragment.NumberCommentsToSearchCallback {
 
     private WordToSpeech speech;
+    private int commentsToSearch;
+
+    private static final String DEBUG_TAG = "MainActivity Debug";
 
     FragmentManager manager;
 
@@ -29,7 +34,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        switchFragment(SpeechFragment.newInstance());
+        switchFragment(SpeechFragment.newInstance(this));
+
+        commentsToSearch = 1;
 
         speech = new WordToSpeech(this);
     }
@@ -56,17 +63,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         return super.onOptionsItemSelected(item);
     }
 
-    private void switchFragment(Fragment f) {
+    public void switchFragment(Fragment f) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, f);
         transaction.commit();
-
     }
 
     // We overload the switchFragment function to allow the user to customize the
     // transition between two fragments on a switch if they want. The two functions
     // have identical behavior outside of the animation.
-    private void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut) {
+    public void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(customAnimationIn, customAnimationOut);
         transaction.addToBackStack(null);
@@ -114,4 +120,16 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         super.onDestroy();
         speech.destroy();
     }
+
+    @Override
+    public int getCommentsToSearch() {
+        return commentsToSearch;
+    }
+
+    @Override
+    public void setCommentsToSearch(int c) {
+        Log.d(DEBUG_TAG, "Setting comments to search to :" + Integer.toString(c));
+        this.commentsToSearch = c;
+    }
+
 }
