@@ -114,28 +114,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
         }
-
         ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
             @Override
             public void OnShake() {
                 shake();
             }
         });
-
-        String modeBuf, vibrateBuf;
-        sharedPreference = new SharedPreference();
-        modeBuf = sharedPreference.getValue(getActivity(), PREFS_MODE);
-        vibrateBuf = sharedPreference.getValue(getActivity(), PREFS_VIBRATE);
-
-        if (modeBuf.equals(QUIET_MODE)) {
-            quietMode();
-        }
-
-        shakeOn = vibrateBuf.equals(VIBRATE_ON);
-        updateShake();
     }
 
     @Override
@@ -144,7 +130,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-
+        String modeBuf, vibrateBuf;
+        sharedPreference = new SharedPreference();
         SpeechListener listener = new SpeechListener(this);
 
         isListening = false;
@@ -224,6 +211,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         cParams = listenButton.getLayoutParams();
         initialParams = cParams.width;
 
+        modeBuf = sharedPreference.getValue(getActivity(), PREFS_MODE);
+        vibrateBuf = sharedPreference.getValue(getActivity(), PREFS_VIBRATE);
+
+        if (QUIET_MODE.equals(modeBuf)) {
+            quietMode();
+        }
+
+        shakeOn = VIBRATE_OFF.equals(vibrateBuf);
+
+        updateShake();
         return view;
     }
 
@@ -422,12 +419,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onStop() {
         super.onStop();
-        ShakeDetector.stop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
         if (quietMode) {
             sharedPreference.save(getActivity(), PREFS_MODE, QUIET_MODE);
@@ -441,6 +432,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             sharedPreference.save(getActivity(), PREFS_VIBRATE, VIBRATE_OFF);
         }
 
+        ShakeDetector.stop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         ShakeDetector.destroy();
     }
 
