@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -52,7 +53,10 @@ import butterknife.ButterKnife;
  */
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback {
+
+    private InfoFragment.NumberCommentsToSearchCallback numToSearchCb;
     private OnFragmentInteractionListener mListener;
+    private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
     private static final String PREFS_MODE = "MODE";
     private static final String PREFS_SHAKE = "VIBRATE";
@@ -63,6 +67,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private boolean typeMode = false;
     private boolean quietMode = false;
     private String link;
+
     private ViewGroup.LayoutParams cParams;
     private int initialParams;
     private SharedPreference sharedPreference;
@@ -89,6 +94,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.commentText) TextView commentText;
     @Bind(R.id.shakeButton) ImageView shakeButton;
+    @Bind(R.id.infoButton) ImageView infoButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -96,22 +102,24 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      *
      * @return A new instance of fragment SpeechFragment.
      */
-    public static SpeechFragment newInstance() {
+    public static SpeechFragment newInstance(InfoFragment.NumberCommentsToSearchCallback cb) {
         SpeechFragment fragment = new SpeechFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setNumToSearchCb(cb);
         return fragment;
     }
 
     public SpeechFragment() {
-        // Required empty public constructor
+    }
+
+    private void setNumToSearchCb(InfoFragment.NumberCommentsToSearchCallback cb) {
+        this.numToSearchCb = cb;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
         ShakeDetector.create(this.getContext(), new ShakeDetector.OnShakeListener() {
             @Override
             public void OnShake() {
@@ -203,6 +211,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToInfoFragment();
+            }
+        });
         cParams = listenButton.getLayoutParams();
         initialParams = cParams.width;
 
@@ -336,18 +350,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             commentText.setText(didntUnderstand);
         }
 
-        else {
         String firstResult = voiceInput.get(0).toString();
-            speechTextDisplay.setText(firstResult);
-            if (mListener.isNetworkConnectionAvailable()) {
-                new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
-            } else {
-                Random mRandom = new Random();
-                int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-                mListener.speak(NETWORK_UNAVAILABLE.get(index));
-                commentText.setText(NETWORK_UNAVAILABLE.get(index));
-            }
+        speechTextDisplay.setText(firstResult);
+        if (mListener.isNetworkConnectionAvailable()) {
+            new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        } else {
+            Random mRandom = new Random();
+            int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+            mListener.speak(NETWORK_UNAVAILABLE.get(index));
+            commentText.setText(NETWORK_UNAVAILABLE.get(index));
         }
+
     }
 
     @Override
@@ -365,33 +378,54 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override
     public void errorCallback(int errorCode, int numErrors) {
-        isListening = false;
         updateListeningIndicator();
         Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
-        if (numErrors == 1) { // to prevent showing multiple toasts
-            if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
-                //TODO: change this to saying out loud, "please try again"
-                Toast.makeText(getActivity().getApplicationContext(),
-                        res.getString(R.string.error_not_recognized), Toast.LENGTH_SHORT).show();
-            } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
-                Toast.makeText(getActivity().getApplicationContext(),
-                        res.getString(R.string.error_say_something), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        res.getString(R.string.error_try_again), Toast.LENGTH_SHORT).show();
+        if (isListening) {
+
+            if (numErrors == 1) { // to prevent showing multiple toasts
+                if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
+                    //TODO: change this to saying out loud, "please try again"
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         }
+
+        isListening = false;
+    }
+
+    private void switchToInfoFragment() {
+
+        mListener.switchFragment(InfoFragment.newInstance(numToSearchCb), FragmentTransaction.TRANSIT_NONE,
+                R.anim.slide_out_up);
+        mListener.stopSpeaking();
+        dontListen();
     }
 
     @Override
-    public void commentCallback(String comment, ArrayList<String> linkInfo) {
-        //context is 2 to show the previous two comments above (if available) because people wanted to see the parent comments
-        if (linkInfo != null) {
-            link = "https://www.reddit.com/comments/" + linkInfo.get(0) + "/_/" + linkInfo.get(1) + "?context=2";
+    public int getCommentsToSearch() {
+        return numToSearchCb.getCommentsToSearch();
+    }
+
+    @Override
+    public void commentCallback(String comment, String link) {
+        if (comment == null) {
+            Log.d(DEBUG_TAG, "No valid comments found");
+            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+
         } else {
-            link = null;
+            Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
+            commentText.setText(comment);
+            mListener.speak(comment);
+            this.link = link;
         }
         commentText.setText(comment);
         mListener.speak(comment);
@@ -445,6 +479,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+
+        void switchFragment(Fragment f);
+
+        void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut);
+
         void speak(String comment);
 
         void stopSpeaking();
