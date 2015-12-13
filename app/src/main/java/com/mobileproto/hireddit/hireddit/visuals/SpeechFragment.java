@@ -58,7 +58,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
-    private static final String PREFS_MODE = "MODE";
+    private static final String PREFS_QUIET = "QUIET";
     private static final String PREFS_SHAKE = "VIBRATE";
     private boolean isListening;
     private boolean shakeOn = true;
@@ -220,7 +220,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         cParams = listenButton.getLayoutParams();
         initialParams = cParams.width;
 
-        if (sharedPreference.getValue(getActivity(), PREFS_MODE)) {
+        if (sharedPreference.getValue(getActivity(), PREFS_QUIET)) {
             quietMode();
         } else {
             voiceMode();
@@ -448,9 +448,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         super.onStop();
 
         if (quietMode) {
-            sharedPreference.save(getActivity(), PREFS_MODE, true);
+            sharedPreference.save(getActivity(), PREFS_QUIET, true);
         } else {
-            sharedPreference.save(getActivity(), PREFS_MODE, false);
+            sharedPreference.save(getActivity(), PREFS_QUIET, false);
         }
 
         if (shakeOn) {
