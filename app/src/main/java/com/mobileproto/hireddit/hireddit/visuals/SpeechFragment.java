@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,7 +39,7 @@ import android.widget.ListView;
  * create an instance of this fragment.
  */
 public class SpeechFragment extends Fragment implements SpeechCallback,
-        RedditSearcher.CommentCallback {
+        RedditSearcher.CommentCallback, ListViewAdapterCallback {
     private OnFragmentInteractionListener mListener;
     private static final String DEBUG_TAG = "SpeechFragmentDebug";
     private boolean isListening;
@@ -54,14 +55,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private int listViewHeight;
     private int itemHeight;
 
-    @Bind(R.id.listView) ListView listView;
-    @Bind(R.id.listenButton) ImageView listenButton;
-    @Bind(R.id.helloReddit) TextView helloReddit;
-    @Bind(R.id.speechText) TextView speechTextDisplay;
+    @Bind (R.id.listView) ListView listView;
+    @Bind (R.id.listenButton) ImageView listenButton;
+    @Bind (R.id.helloReddit) TextView helloReddit;
+    @Bind (R.id.speechText) TextView speechTextDisplay;
     //@Bind(R.id.commentText) TextView commentText;
-    @Bind(R.id.settingsButton) ImageView settingsButton;
+    @Bind (R.id.settingsButton) ImageView settingsButton;
     private View footerSpacing;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -80,15 +80,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
@@ -99,7 +97,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         footerSpacing = (View) footerView.findViewById(R.id.footerSpace);
         listView.addFooterView(footerView);
 
-        listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses);
+        listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses, this);
         listView.setAdapter(listViewAdapter);
 
         // voice recognition
@@ -129,8 +127,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
+    @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
@@ -140,23 +137,24 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
     }
 
-    @Override
-    public void onDetach() {
+    @Override public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    private int getTotalHeightofListView() {
-        return listView.getHeight();     //<-- Gives you height in pixels, NORA tested for accuracy.
-    }
-
     public void doListen() {
-        //TODO: make listView animate off page and set to not visible
+        //TODO: make listView animate off page instead
+        //listView.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
+        //                            R.anim.listview_out));
+        listView.setAlpha(0);
+        speechTextDisplay.setText(""); //reset what speechText says
+        speechTextDisplay.setAlpha(1);
+
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
-        updateListeningIndicator();
         mListener.stopSpeaking();
         sr.startListening(recognizerIntent);
+        updateListeningIndicator(); //sometimes there's a lag between when you click the button and when it actually starts listening (the sound) so update indicator later
     }
 
     public void dontListen() {
@@ -173,8 +171,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             listenButton.setImageResource(R.drawable.no_mic);
     }
 
-    @Override
-    public void speechResultCallback(ArrayList voiceResult) {
+    @Override public void speechResultCallback(ArrayList voiceResult) {
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -185,13 +182,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
-    @Override
-    public void partialCallback(ArrayList partialResult) {
+    @Override public void partialCallback(ArrayList partialResult) {
         speechTextDisplay.setText(partialResult.get(0).toString());
     }
 
-    @Override
-    public void errorCallback(int errorCode, int numErrors) {
+    @Override public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
@@ -201,9 +196,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error: Speech was not recognized.", Toast.LENGTH_SHORT).show();
+                showComment("make sense pls");
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error: Please say something.", Toast.LENGTH_SHORT).show();
+                showComment("speak faster slowpoke");
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
@@ -211,43 +208,50 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
     }
 
-    @Override
-    public void commentCallback(String comment) {
+    @Override public void commentCallback(String comment) {
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
         } else {
-            //show and speak final result:
-
-            //TODO: currently, listView is not visible. while it's invisible, ...
-            // add your comment to it, change the footer, scroll to the bottom (immediate),
-            // make listView visible again and overlayed textviews not visible. should only require
-            // you to use the voiceInput textview and not the comment one, as the voiceInput
-            // textview has partial making it animate and all that
-
-            //commentText.setText(comment);
-            mListener.speak(comment);
-
-            //add full result to history (aka listView):
-            allRequests.add(voiceInput.get(0).toString());
-            allResponses.add(comment);
-            listViewAdapter.notifyDataSetChanged();
-
-            //make history visible
-            if(firstResponse == true) {
-                listViewHeight = getTotalHeightofListView();
-                firstResponse = false;
-            } else{
-                //update footer height if you have multiple items:
-                itemHeight = listViewAdapter.getLastItemHeight();
-                int footerHeight = listViewHeight - itemHeight;
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) footerSpacing.getLayoutParams();
-                params.height = footerHeight;
-                footerSpacing.setLayoutParams(params);
-
-                listView.setSelection(listViewAdapter.getCount() - 1);
-            }
+            showComment(comment);
         }
+    }
+
+    public void showComment(String comment){ //a comment will always show, so do it here
+        //show and speak final result:
+        //commentText.setText(comment);
+        mListener.speak(comment);
+
+        //add full result to history (aka listView):
+        allRequests.add(voiceInput.get(0).toString());
+        allResponses.add(comment);
+        listViewAdapter.notifyDataSetChanged();
+
+        //change footer view
+        if(firstResponse == true) {
+            //gives you height in pixels, NORA tested for accuracy
+            listViewHeight = listView.getHeight();
+            firstResponse = false;
+        } else {
+            updateFooter(listViewAdapter.getLastItemHeight());
+        }
+
+        //make listview visible and overlayed input invisible
+        listView.setAlpha(1);
+        speechTextDisplay.setAlpha(0);
+    }
+
+    @Override
+    public void itemHeightCallback(int height) {
+        itemHeight = height;
+        updateFooter(itemHeight);
+    }
+
+    public void updateFooter(int height){
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) footerSpacing.getLayoutParams();
+        params.height = listViewHeight - height;
+        footerSpacing.setLayoutParams(params);
+        listView.setSelection(listViewAdapter.getCount() - 1);
     }
 
     /**

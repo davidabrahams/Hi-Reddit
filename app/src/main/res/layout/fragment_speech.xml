@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
-        android:gravity="center"
         android:paddingTop="10dp">
 
         <TextView
@@ -33,7 +32,6 @@
             android:id="@+id/imageView"
             android:layout_gravity="right"
             android:src="@drawable/snoo_head"/>
-
     </LinearLayout>
 
     <ListView
@@ -43,7 +41,8 @@
         android:layout_below="@+id/linearLayout"
         android:layout_above="@+id/listenButton"
         android:scrollbars="none"
-        android:background="@color/colorPrimaryDark">
+        android:divider="@null"
+        android:dividerHeight="0dp">
     </ListView>
 
     <TextView
@@ -53,7 +52,8 @@
         android:id="@+id/speechText"
         android:textColor="@color/colorOrange"
         android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
+        android:paddingLeft="30dp"
+        android:layout_alignParentRight="true"/>
 
     <!--<TextView-->
         <!--android:layout_width="wrap_content"-->
