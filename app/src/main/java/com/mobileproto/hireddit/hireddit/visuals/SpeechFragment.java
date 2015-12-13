@@ -12,12 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mobileproto.hireddit.hireddit.R;
@@ -68,7 +66,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
      * this fragment using the provided parameters.
      *
      * @return A new instance of fragment SpeechFragment.
-     */
+     **/
     public static SpeechFragment newInstance() {
         SpeechFragment fragment = new SpeechFragment();
         Bundle args = new Bundle();
@@ -96,6 +94,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         View footerView = ((LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
         footerSpacing = (View) footerView.findViewById(R.id.footerSpace);
         listView.addFooterView(footerView);
+        //TODO: get rid of overscroll graphic, allow overscroll
 
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses, this);
         listView.setAdapter(listViewAdapter);
@@ -143,9 +142,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void doListen() {
-        //TODO: make listView animate off page instead
-        //listView.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
-        //                            R.anim.listview_out));
+        //TODO: make listView animate off page instead. Code below doesn't work.
+        //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
+        //        R.anim.listview_out);
+        //listView.startAnimation(listViewAnimation);
         listView.setAlpha(0);
         speechTextDisplay.setText(""); //reset what speechText says
         speechTextDisplay.setAlpha(1);
@@ -191,7 +191,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
-        if (numErrors == 1) { // to prevent showing multiple toasts
+        if (numErrors == 1) { // to prevent repeating errors
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Toast.makeText(getActivity().getApplicationContext(),
@@ -200,10 +200,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error: Please say something.", Toast.LENGTH_SHORT).show();
-                showComment("speak faster slowpoke");
+                showComment("you have a mouth right");
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error occurred! Try again.", Toast.LENGTH_SHORT).show();
+                showComment("error on our side, sorry :'-(");
             }
         }
     }
@@ -212,6 +213,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
+            showComment("No valid comments found");
         } else {
             showComment(comment);
         }
