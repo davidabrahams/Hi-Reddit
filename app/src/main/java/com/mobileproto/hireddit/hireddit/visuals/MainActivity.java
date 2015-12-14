@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.sharedPreference.SharedPreference;
 import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
 import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private WordToSpeech speech;
     private int commentsToSearch;
     private static final String DEBUG_TAG = "MainActivity Debug";
+    private static final String NUM_TO_SEARCH = "NUM_TO_SEARCH";
 
     FragmentManager manager;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
         switchFragment(SpeechFragment.newInstance(this));
 
-        commentsToSearch = 1;
+        commentsToSearch = (new SharedPreference()).getValueInt(this, NUM_TO_SEARCH);
 
         speech = new WordToSpeech(this);
     }
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onStop() {
         super.onStop();
+        (new SharedPreference()).save(this, NUM_TO_SEARCH, commentsToSearch);
         speech.stop();
     }
 
