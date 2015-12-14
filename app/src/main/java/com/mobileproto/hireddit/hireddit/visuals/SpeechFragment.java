@@ -446,19 +446,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onStop() {
         super.onStop();
-
-        if (quietMode) {
-            sharedPreference.save(getActivity(), PREFS_QUIET, true);
-        } else {
-            sharedPreference.save(getActivity(), PREFS_QUIET, false);
-        }
-
-        if (shakeOn) {
-            sharedPreference.save(getActivity(), PREFS_SHAKE, false);
-        } else {
-            sharedPreference.save(getActivity(), PREFS_SHAKE, true);
-        }
-
+        sharedPreference.save(getActivity(), PREFS_QUIET, quietMode);
+        sharedPreference.save(getActivity(), PREFS_SHAKE, !shakeOn);
         ShakeDetector.stop();
     }
 
