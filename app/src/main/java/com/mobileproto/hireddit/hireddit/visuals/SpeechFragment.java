@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
+import com.mobileproto.hireddit.hireddit.sharedPreference.SharedPreference;
 import com.mobileproto.hireddit.hireddit.speech.SpeechCallback;
 import com.mobileproto.hireddit.hireddit.speech.SpeechListener;
 
@@ -57,6 +58,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private OnFragmentInteractionListener mListener;
     private static final String ERROR_TAG = "SpeechFragment Error";
     private static final String DEBUG_TAG = "SpeechFragment Debug";
+    private static final String PREFS_QUIET = "QUIET";
+    private static final String PREFS_SHAKE = "VIBRATE";
     private boolean isListening;
     private boolean shakeOn = true;
     private Intent recognizerIntent;
@@ -67,6 +70,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     private ViewGroup.LayoutParams cParams;
     private int initialParams;
+    private SharedPreference sharedPreference;
+
 
     private static ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
             Arrays.asList(
@@ -129,7 +134,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         View view = inflater.inflate(R.layout.fragment_speech, container, false);
         ButterKnife.bind(this, view);
-
+        sharedPreference = new SharedPreference();
         SpeechListener listener = new SpeechListener(this);
 
         isListening = false;
@@ -215,6 +220,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         cParams = listenButton.getLayoutParams();
         initialParams = cParams.width;
 
+        if (sharedPreference.getValue(getActivity(), PREFS_QUIET)) {
+            quietMode();
+        } else {
+            voiceMode();
+        }
+
+        shakeOn = sharedPreference.getValue(getActivity(), PREFS_SHAKE);
+        updateShake();
         return view;
     }
 
@@ -433,6 +446,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override
     public void onStop() {
         super.onStop();
+        sharedPreference.save(getActivity(), PREFS_QUIET, quietMode);
+        sharedPreference.save(getActivity(), PREFS_SHAKE, !shakeOn);
         ShakeDetector.stop();
     }
 
