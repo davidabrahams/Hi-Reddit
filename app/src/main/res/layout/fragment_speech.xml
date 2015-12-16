@@ -34,16 +34,16 @@
             android:src="@drawable/snoo_head"/>
     </LinearLayout>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/listView"
-        android:layout_below="@+id/linearLayout"
-        android:layout_above="@+id/listenButtonFrame"
-        android:scrollbars="none"
-        android:divider="@null"
-        android:dividerHeight="0dp">
-    </ListView>
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/linearLayout"
+            android:layout_above="@+id/listenButtonFrame"
+            android:id="@+id/listView"
+            android:scrollbars="none"
+            android:divider="@null"
+            android:dividerHeight="0dp">
+        </ListView>
 
     <EditText
         android:layout_width="fill_parent"
@@ -51,14 +51,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textInputDisplay"
         android:layout_below="@+id/linearLayout"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorOrange"
         android:textColorHighlight="@color/colorOrangeDark"
         android:paddingLeft="30dp"
         android:gravity="right"
         android:visibility="invisible"
         android:cursorVisible="false"
         android:background="@android:color/transparent"
-        android:inputType="text" />
+        android:scrollHorizontally="false"
+        android:maxLength="60"
+        android:inputType="text"/>
 
     <!--FrameLayout is 140 so that any expansion from the microphone button will not appear chopped off-->
     <FrameLayout
