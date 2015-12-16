@@ -255,7 +255,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "enabled voiceMode");
         mListener.flipMute();
         if (!isListening && listViewAdapter.getCount() != 0) mListener.speak(allResponses.get(listViewAdapter.getCount() - 1));
-        //if (!isListening) mListener.speak(commentText.getText().toString());
         quietModeButton.setImageResource(R.drawable.volume_on);
         quietMode = false;
     }
@@ -265,13 +264,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (typeMode) return;
         mListener.stopSpeaking();
         inputTextDisplay.setText(inputTextDisplay.getText().toString());
-
-        //speechTextDisplay.setVisibility(View.INVISIBLE);
         listView.setAlpha(0);
         //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
         //        R.anim.listview_fade);
         //listView.startAnimation(listViewAnimation);
-        //inputTextDisplay.setVisibility(View.VISIBLE);
 
         inputTextDisplay.setCursorVisible(true);
 
@@ -286,10 +282,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (!typeMode) return;
         mListener.stopSpeaking();
         inputTextDisplay.setText(inputTextDisplay.getText().toString()); //TODO: shouldn't this be speechTextDisplay? this is redundant
-        //inputTextDisplay.setVisibility(View.INVISIBLE);
-        listView.setAlpha(1);
+        //listView.setAlpha(1);
         inputTextDisplay.setCursorVisible(false);
-        //speechTextDisplay.setVisibility(View.VISIBLE);
         typeMode = false;
     }
 
@@ -364,11 +358,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
         voiceInput = voiceResult;
 
-        //TODO: why not just let error callback do this? if your voiceInput is null you're going
-        // to get an error
-//        if (voiceInput == null) {
-//            showComment(didntUnderstand);
-//        }
+        // TODO: why not just let error callback do this? if your voiceInput is null you're
+        // going to get an error
+        if (voiceInput == null) {
+            showComment("Sorry, you said nothing.", "false");
+        }
 
         String firstResult = voiceInput.get(0).toString();
         inputTextDisplay.setText(firstResult);
@@ -426,14 +420,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         } else {
             Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             showComment(comment, link);
-            //this.link = link;
         }
     }
 
     public void showComment(String comment, String link){ //a comment will always show, so do it here
         Log.d(DEBUG_TAG, "calling showComment");
         //show and speak final result:
-        //commentText.setText(comment);
         mListener.speak(comment);
 
         //add full result to history (aka listView):

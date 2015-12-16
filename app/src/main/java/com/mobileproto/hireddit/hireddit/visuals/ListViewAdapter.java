@@ -53,10 +53,6 @@ public class ListViewAdapter extends BaseAdapter {
       return mHeights.get(getCount() - 1);
     }
 
-    public void allowEditText(int position){
-        //edittext stuff
-    }
-
     @Override public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         LayoutInflater inflater = LayoutInflater.from(context);
