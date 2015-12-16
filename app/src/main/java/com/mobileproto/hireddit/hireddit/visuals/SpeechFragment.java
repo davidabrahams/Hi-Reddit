@@ -141,6 +141,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses, this);
         listView.setAdapter(listViewAdapter);
 
+        inputTextDisplay.setHorizontallyScrolling(false);
+        inputTextDisplay.setLines(3);
+        inputTextDisplay.setMaxLines(3);
+
         // voice recognition
         SpeechListener listener = new SpeechListener(this);
         isListening = false;

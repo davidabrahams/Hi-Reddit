@@ -59,6 +59,7 @@
         android:cursorVisible="false"
         android:background="@android:color/transparent"
         android:scrollHorizontally="false"
+        android:maxLength="60"
         android:inputType="text"/>
 
     <!--FrameLayout is 140 so that any expansion from the microphone button will not appear chopped off-->
