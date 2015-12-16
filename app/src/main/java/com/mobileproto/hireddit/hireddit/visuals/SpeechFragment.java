@@ -27,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.mobileproto.hireddit.hireddit.R;
 import com.mobileproto.hireddit.hireddit.reddit.RedditSearcher;
@@ -71,7 +70,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private int initialParams;
     private SharedPreference sharedPreference;
 
-
     private ArrayList<String> allRequests = new ArrayList<String>();
     private ArrayList<String> allResponses = new ArrayList<String>();
     private ListViewAdapter listViewAdapter;
@@ -79,7 +77,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private int itemHeight;
     private View footerSpacing;
 
-    @Bind (R.id.listView) ListView listView;
+    @Bind(R.id.listView) ListView listView;
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.textInputDisplay) EditText inputTextDisplay;
     @Bind(R.id.listenButton) ImageView listenButton;
@@ -89,18 +87,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.infoButton) ImageView infoButton;
 
     //private static final String didntUnderstand = "Sorry, what was that? I didn't understand what you said.";
-    private static final ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
-            Arrays.asList(
-                    "You know, life without Wi-Fi is hard.",
-                    "maybe you should move to canada, we have really good internet here :o)",
-                    "Pay me $50 and I will get you Wi-Fi",
-                    "I agree that free Wi-Fi shouldn't be forbidden",
-                    "Keep looking on the internet. Surely there must be a good forecast somewhere" +
-                            " out there.",
-                    "I won't work until you provide me with life-long free Wi-Fi"
-            )
-    );
-
 
     public static SpeechFragment newInstance(InfoFragment.NumberCommentsToSearchCallback cb) {
         SpeechFragment fragment = new SpeechFragment();
@@ -353,6 +339,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     // TODO: Make this function only take a String
     @Override public void speechResultCallback(ArrayList voiceResult) {
+        Resources res = getResources();
+        ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.no_wifi_1),
+                        res.getString(R.string.no_wifi_2),
+                        res.getString(R.string.no_wifi_3),
+                        res.getString(R.string.no_wifi_4),
+                        res.getString(R.string.no_wifi_5),
+                        res.getString(R.string.no_wifi_6)
+                )
+        );
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -361,12 +358,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         // TODO: why not just let error callback do this? if your voiceInput is null you're
         // going to get an error
         if (voiceInput == null) {
-            showComment("Sorry, you said nothing.", "false");
+            showComment(res.getString(R.string.error_not_recognized), "false");
         }
 
         String firstResult = voiceInput.get(0).toString();
         inputTextDisplay.setText(firstResult);
-
         if (mListener.isNetworkConnectionAvailable()) {
             new RedditSearcher(this,
                     firstResult, getActivity().getApplicationContext()).getRedditComment();
@@ -391,19 +387,20 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
+        Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
 
         if (numErrors == 1) { // to prevent repeating errors
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
-                showComment("make sense pls", "false");
+                showComment(res.getString(R.string.error_1), "false");
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Log.d(DEBUG_TAG, "Error 6: Speech timed out");
-                showComment("you have a mouth right", "false");
+                showComment(res.getString(R.string.error_say_something), "false");
             } else {
                 Log.d(DEBUG_TAG, "Error " + errorCode + ": Error callback occurred from speech listener");
-                showComment("error on our side, sorry :'-(", "false");
+                showComment(res.getString(R.string.error_our_side), "false");
             }
         }
     }
@@ -413,10 +410,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override public void commentCallback(String comment, String link) {
+        Resources res = getResources();
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
-            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-            showComment("Reddit doesn't know how to respond to that", "false");
+            showComment(res.getString(R.string.no_comments), "false");
         } else {
             Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             showComment(comment, link);

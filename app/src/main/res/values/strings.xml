@@ -14,13 +14,16 @@
     <string name="slow">Most Optimization - Slowest </string>
     <string name="shake">Try shakin\' for a random response.</string>
     <string name="shake_string">**Shake Shake**</string>
-    <string name="nores1">Umm.. .This question is pretty hard to answer since no one on Reddit knows how to respond.</string>
-    <string name="nores2">Sorry, blame the developers, they didn\'t manage to make me smart enough to answer this.</string>
-    <string name="nores3">Shhhhhhhhh, no one on Reddit talks about this.</string>
-    <string name="nores4">There is no response available from Reddit, but I will tell you a secrete about the developing team.\n\n Next time.</string>
     <string name="general">The question is too general for me to answer, please be specific</string>
-    <string name="no_comments">No comments available</string>
-    <string name="error_not_recognized">Error: Speech was not recognized.</string>
-    <string name="error_say_something">Error: Please say something.</string>
-    <string name="error_try_again">Error occurred! Try again.</string>
+    <string name="no_comments">Reddit doesn\'t know how to respond to that</string>
+    <string name="error_not_recognized">Sorry, you said nothing.</string>
+    <string name="error_say_something">you have a mouth right- say something</string>
+    <string name="error_our_side">error on our side, sorry :\'-(</string>
+    <string name="no_wifi_1">You know, life without Wi-Fi is hard.</string>
+    <string name="no_wifi_2">maybe you should move to canada, we have really good internet here :o)</string>
+    <string name="no_wifi_3">Pay me $50 and I will get you Wi-Fi</string>
+    <string name="no_wifi_4">I agree that free Wi-Fi shouldn\'t be forbidden</string>
+    <string name="no_wifi_5">Keep looking on the internet. Surely there must be a good forecast somewhere out there</string>
+    <string name="no_wifi_6">I won\'t work until you provide me with life-long free Wi-Fi</string>
+    <string name="error_1">make sense pls</string>
 </resources>
