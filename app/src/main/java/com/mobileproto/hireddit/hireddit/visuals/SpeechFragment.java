@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -24,8 +25,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
@@ -53,7 +56,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     private InfoFragment.NumberCommentsToSearchCallback numToSearchCb;
     private OnFragmentInteractionListener mListener;
-    private static final String DEBUG_TAG = "SpeechFragment Debug";
+    private static final String DEBUG_TAG = "SpeechFragmentDebug";
     private static final String PREFS_QUIET = "QUIET";
     private static final String PREFS_SHAKE = "VIBRATE";
     private boolean isListening;
@@ -71,7 +74,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private int initialParams;
     private SharedPreference sharedPreference;
 
-
     private ArrayList<String> allRequests = new ArrayList<String>();
     private ArrayList<String> allResponses = new ArrayList<String>();
     private ListViewAdapter listViewAdapter;
@@ -84,11 +86,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Bind(R.id.textInputDisplay) EditText inputTextDisplay;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
-    //@Bind(R.id.speechTextDisplay) TextView speechTextDisplay;
     @Bind(R.id.shakeButton) ImageView shakeButton;
     @Bind(R.id.infoButton) ImageView infoButton;
 
-    //private static final String didntUnderstand = "Sorry, what was that? I didn't understand what you said.";
     private static final ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
             Arrays.asList(
                     "You know, life without Wi-Fi is hard.",
@@ -100,7 +100,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                     "I won't work until you provide me with life-long free Wi-Fi"
             )
     );
-
 
     public static SpeechFragment newInstance(InfoFragment.NumberCommentsToSearchCallback cb) {
         SpeechFragment fragment = new SpeechFragment();
@@ -173,40 +172,39 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         });
 
         //allowing text input
-        inputTextDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            //allows you to type
+        inputTextDisplay.setOnTouchListener(new View.OnTouchListener() {
+            @Override public boolean onTouch(View v, MotionEvent event) {
                 typeMode();
+                return false;
+            }
+        });
+
+            //allows you to re-search value
+        inputTextDisplay.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.hideSoftInputFromWindow(inputTextDisplay.getWindowToken(), 0);
+                    ArrayList<String> textInput = new ArrayList<String>();
+                    textInput.add(0, inputTextDisplay.getText().toString());
+                    speechResultCallback(textInput);
+                    speakMode();
+                    return true;
+                }
+                return false;
             }
         });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() { //if scroll, disallow changing input
             @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
-                Log.d(DEBUG_TAG, "onscrollstatechangeddddd");
+                Log.d(DEBUG_TAG, "onScrollStateChanged called - making editText invisible");
                 inputTextDisplay.setVisibility(View.INVISIBLE);
             }
-
-            @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                //Do nothing
-                }
+            @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
         });
 
-        inputTextDisplay.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-                    @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Log.d(DEBUG_TAG, "on editor action");
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            Log.d(DEBUG_TAG, "on editor action DONE");
-                            InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            mgr.hideSoftInputFromWindow(inputTextDisplay.getWindowToken(), 0);
-                            ArrayList<String> textInput = new ArrayList<String>();
-                            textInput.add(0, inputTextDisplay.getText().toString());
-                            speechResultCallback(textInput);
-                            speakMode();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-
+        // add link functionality
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if(links.get(position) != "false") {
@@ -263,14 +261,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "enabled typeMode");
         if (typeMode) return;
         mListener.stopSpeaking();
-        inputTextDisplay.setText(inputTextDisplay.getText().toString());
-        listView.setAlpha(0);
-        //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
-        //        R.anim.listview_fade);
-        //listView.startAnimation(listViewAnimation);
-
+        listView.setAlpha(0); //TODO: animation for listview instead here
         inputTextDisplay.setCursorVisible(true);
-
         inputTextDisplay.requestFocus();
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.showSoftInput(inputTextDisplay, InputMethodManager.SHOW_IMPLICIT);
@@ -281,8 +273,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "enabled speakMode");
         if (!typeMode) return;
         mListener.stopSpeaking();
-        inputTextDisplay.setText(inputTextDisplay.getText().toString()); //TODO: shouldn't this be speechTextDisplay? this is redundant
-        //listView.setAlpha(1);
+        listView.setAlpha(0);
         inputTextDisplay.setCursorVisible(false);
         typeMode = false;
     }
@@ -391,8 +382,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override public void errorCallback(int errorCode, int numErrors) {
         isListening = false;
         updateListeningIndicator();
-        Log.d(DEBUG_TAG, "Got error, stopped listening.");
+        Resources res = getResources();
 
+        Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent repeating errors
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
