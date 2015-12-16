@@ -1,30 +1,32 @@
 package com.mobileproto.hireddit.hireddit.visuals;
 
-import com.mobileproto.hireddit.hireddit.R;
-import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
-import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
-
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.Bind;
+import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.speech.WordToSpeech;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment.OnFragmentInteractionListener;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements
-        MainFragment.OnFragmentInteractionListener, OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener,
+        InfoFragment.NumberCommentsToSearchCallback {
 
     private WordToSpeech speech;
+    private int commentsToSearch;
+
+    private static final String DEBUG_TAG = "MainActivity Debug";
 
     FragmentManager manager;
-
-    public static final int HOME_SCREEN_CLICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity implements
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        switchFragment(SpeechFragment.newInstance());
+        switchFragment(SpeechFragment.newInstance(this));
+
+        commentsToSearch = 1;
 
         speech = new WordToSpeech(this);
     }
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private void switchFragment(Fragment f) {
+    public void switchFragment(Fragment f) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, f);
         transaction.commit();
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
     // We overload the switchFragment function to allow the user to customize the
     // transition between two fragments on a switch if they want. The two functions
     // have identical behavior outside of the animation.
-    private void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut) {
+    public void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut) {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(customAnimationIn, customAnimationOut);
         transaction.addToBackStack(null);
@@ -76,15 +80,12 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
-    @Override
-    public void onFragmentInteraction(int transition) {
-        switch (transition) {
-            case HOME_SCREEN_CLICK:
-                SpeechFragment f = SpeechFragment.newInstance();
-                switchFragment(f, FragmentTransaction.TRANSIT_NONE,
-                        R.anim.slide_out_up);
-                break;
-        }
+    public boolean isNetworkConnectionAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null) return false;
+        NetworkInfo.State network = info.getState();
+        return (network == NetworkInfo.State.CONNECTED || network == NetworkInfo.State.CONNECTING);
     }
 
     @Override
@@ -95,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void stopSpeaking() {
         speech.stop();
+    }
+
+    @Override
+    public void flipMute() {
+        speech.flipMute();
     }
 
     @Override
@@ -113,6 +119,17 @@ public class MainActivity extends AppCompatActivity implements
     public void onDestroy() {
         super.onDestroy();
         speech.destroy();
+    }
+
+    @Override
+    public int getCommentsToSearch() {
+        return commentsToSearch;
+    }
+
+    @Override
+    public void setCommentsToSearch(int c) {
+        Log.d(DEBUG_TAG, "Setting comments to search to :" + Integer.toString(c));
+        this.commentsToSearch = c;
     }
 
 }

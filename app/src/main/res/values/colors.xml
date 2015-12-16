@@ -6,5 +6,6 @@
     <color name="colorBlue">#cee3f8</color>
     <color name="colorBackground">#000000</color>
     <color name="colorOrange">#ff5700</color>
+    <color name="colorOrangeDark">#cc3600</color>
     <color name="colorWhite">#ffffff</color>
 </resources>

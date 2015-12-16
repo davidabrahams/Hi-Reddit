@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.mobileproto.hireddit.hireddit.R;
 import java.util.ArrayList;
@@ -33,21 +34,18 @@ public class ListViewAdapter extends BaseAdapter {
         listCallback = mlistCallback;
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
         return requests.size();
     }
 
-    @Override
-    public Object getItem(int position) {
+    @Override public Object getItem(int position) {
         ArrayList<String> items = new ArrayList<>(2);
         items.add(requests.get(position));
         items.add(responses.get(position));
         return items;
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return position;
     }
 
@@ -55,8 +53,11 @@ public class ListViewAdapter extends BaseAdapter {
       return mHeights.get(getCount() - 1);
     }
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public void allowEditText(int position){
+        //edittext stuff
+    }
+
+    @Override public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         LayoutInflater inflater = LayoutInflater.from(context);
 
