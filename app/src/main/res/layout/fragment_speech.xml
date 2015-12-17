@@ -42,7 +42,9 @@
             android:id="@+id/listView"
             android:scrollbars="none"
             android:divider="@null"
-            android:dividerHeight="0dp">
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never">
         </ListView>
 
     <EditText
@@ -59,7 +61,7 @@
         android:cursorVisible="false"
         android:background="@android:color/transparent"
         android:scrollHorizontally="false"
-        android:maxLength="60"
+        android:maxLength="100"
         android:inputType="text"/>
 
     <!--FrameLayout is 140 so that any expansion from the microphone button will not appear chopped off-->
