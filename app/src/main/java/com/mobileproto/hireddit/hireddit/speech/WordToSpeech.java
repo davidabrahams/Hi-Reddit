@@ -47,11 +47,11 @@ public class WordToSpeech {
     }
 
     public void Mute() {
-        mute = false;
+        mute = true;
     }
 
     public void unMute() {
-        mute = true;
+        mute = false;
     }
 
     public void destroy() {
