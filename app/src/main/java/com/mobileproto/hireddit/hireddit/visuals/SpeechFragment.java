@@ -334,16 +334,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     // TODO: Make this function only take a String
     @Override public void speechResultCallback(ArrayList voiceResult) {
         Resources res = getResources();
-        ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
-                Arrays.asList(
-                        res.getString(R.string.no_wifi_1),
-                        res.getString(R.string.no_wifi_2),
-                        res.getString(R.string.no_wifi_3),
-                        res.getString(R.string.no_wifi_4),
-                        res.getString(R.string.no_wifi_5),
-                        res.getString(R.string.no_wifi_6)
-                )
-        );
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -357,14 +347,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         String firstResult = voiceInput.get(0).toString();
         inputTextDisplay.setText(firstResult);
-        if (mListener.isNetworkConnectionAvailable()) {
-            new RedditSearcher(this,
-                    firstResult, getActivity().getApplicationContext()).getRedditComment();
-        } else {
-            Random mRandom = new Random();
-            int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-            showComment(NETWORK_UNAVAILABLE.get(index), "false");
-        }
+        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
     @Override public void partialCallback(ArrayList partialResult) {
@@ -384,8 +367,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent repeating errors
+            if (!mListener.isNetworkConnectionAvailable()){
+                noWifi();
+            }
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
-                //TODO: change this to saying out loud, "please try again"
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
                 showComment(res.getString(R.string.error_1), "false");
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
@@ -495,6 +480,22 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         dontListen();
     }
 
+    private void noWifi() {
+        Resources res = getResources();
+        ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.no_wifi_1),
+                        res.getString(R.string.no_wifi_2),
+                        res.getString(R.string.no_wifi_3),
+                        res.getString(R.string.no_wifi_4),
+                        res.getString(R.string.no_wifi_5),
+                        res.getString(R.string.no_wifi_6)
+                )
+        );
+        Random mRandom = new Random();
+        int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+        showComment(NETWORK_UNAVAILABLE.get(index), "false");
+    }
     public interface OnFragmentInteractionListener {
         void switchFragment(Fragment f);
         void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut);

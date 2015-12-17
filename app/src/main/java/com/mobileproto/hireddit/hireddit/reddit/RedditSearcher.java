@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.io.CharStreams;
 import com.mobileproto.hireddit.hireddit.R;
+import com.mobileproto.hireddit.hireddit.visuals.MainActivity;
+import com.mobileproto.hireddit.hireddit.visuals.SpeechFragment;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -29,6 +32,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import io.indico.Indico;
 import io.indico.network.IndicoCallback;
@@ -51,6 +55,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private CommentCallback myCommentCallback;
     private RequestQueue queue;
 
+    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
+        this.context = context;
+        this.myCommentCallback = myCommentCallback;
+        this.spokenString = spokenString;
+        String indicoApiKey = getApi(context);
+        this.indico = Indico.init(context, indicoApiKey, null);
+        this.queue = Volley.newRequestQueue(context);
+    }
+
     private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
         public void handle(IndicoResult result) throws IndicoException {
@@ -64,17 +77,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             }
         }
     };
-
-    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
-
-        this.myCommentCallback = myCommentCallback;
-        this.spokenString = spokenString;
-        this.context = context;
-        String indicoApiKey = getApi(context);
-        this.indico = Indico.init(context, indicoApiKey, null);
-        this.queue = Volley.newRequestQueue(context);
-
-    }
 
     private static String getApi(Context context) {
         try {
@@ -202,5 +204,4 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
         void commentCallback(String comment, String link);
     }
-
 }
