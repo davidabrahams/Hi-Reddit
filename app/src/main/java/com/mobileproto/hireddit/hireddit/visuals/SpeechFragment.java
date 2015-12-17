@@ -30,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,25 +73,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private int listViewHeight;
     private View footerSpacing;
 
-    @Bind (R.id.listView) ListView listView;
+    @Bind(R.id.listView) ListView listView;
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
     @Bind(R.id.textInputDisplay) CustomEditText editText;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.shakeButton) ImageView shakeButton;
     @Bind(R.id.infoButton) ImageView infoButton;
-
-    private static final ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
-            Arrays.asList(
-                    "You know, life without Wi-Fi is hard.",
-                    "maybe you should move to canada, we have really good internet here :o)",
-                    "Pay me $50 and I will get you Wi-Fi",
-                    "I agree that free Wi-Fi shouldn't be forbidden",
-                    "Keep looking on the internet. Surely there must be a good forecast somewhere" +
-                            " out there.",
-                    "I won't work until you provide me with life-long free Wi-Fi"
-            )
-    );
 
     public static SpeechFragment newInstance(InfoFragment.NumberCommentsToSearchCallback cb) {
         SpeechFragment fragment = new SpeechFragment();
@@ -228,8 +215,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         if (sharedPreference.getValue(getActivity(), PREFS_QUIET))
             quietMode();
-         else
-            voiceMode();
 
         shakeOn = sharedPreference.getValue(getActivity(), PREFS_SHAKE);
         updateShake();
@@ -244,15 +229,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void quietMode() {
         Log.d(DEBUG_TAG, "enabled quietMode");
         fragmentInteractionListener.stopSpeaking();
-        fragmentInteractionListener.flipMute();
+        fragmentInteractionListener.mute();
         quietModeButton.setImageResource(R.drawable.mute);
         quietMode = true;
     }
 
     public void voiceMode() {
         Log.d(DEBUG_TAG, "enabled voiceMode");
-        fragmentInteractionListener.flipMute();
+        fragmentInteractionListener.unMute();
         if (!isListening && listViewAdapter.getCount() != 0) fragmentInteractionListener.speak(allResponses.get(listViewAdapter.getCount() - 1));
+
         quietModeButton.setImageResource(R.drawable.volume_on);
         quietMode = false;
     }
@@ -323,7 +309,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Random mRandom = new Random();
             int index = mRandom.nextInt(possibleWords.size());
             String shakeWord = possibleWords.get(index);
-            new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
+            if (!fragmentInteractionListener.isNetworkConnectionAvailable())
+                noWifi();
+            else
+                new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -352,6 +341,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     // TODO: Make this function only take a String
     @Override public void speechResultCallback(ArrayList voiceResult) {
+        Resources res = getResources();
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
@@ -359,20 +349,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         // TODO: why not just let error callback do this? if your voiceResult is null you're
         // going to get an error
         if (voiceResult == null) {
-            showComment("Sorry, you said nothing.", null);
+            showComment(res.getString(R.string.error_not_recognized), null);
         }
-
         String firstResult = voiceResult.get(0).toString();
         editText.setText(firstResult);
-
-        if (fragmentInteractionListener.isNetworkConnectionAvailable()) {
-            new RedditSearcher(this,
-                    firstResult, getActivity().getApplicationContext()).getRedditComment();
-        } else {
-            Random mRandom = new Random();
-            int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-            showComment(NETWORK_UNAVAILABLE.get(index), null);
-        }
+        if (!fragmentInteractionListener.isNetworkConnectionAvailable())
+            noWifi();
+        else
+            new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
     @Override public void partialCallback(ArrayList partialResult) {
@@ -390,19 +374,20 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         Resources res = getResources();
-
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent repeating errors
-            if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
-                //TODO: change this to saying out loud, "please try again"
+            if (!fragmentInteractionListener.isNetworkConnectionAvailable()){
+                noWifi();
+            }
+            else if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
-                showComment("make sense pls", null);
+                showComment(res.getString(R.string.error_1), null);
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Log.d(DEBUG_TAG, "Error 6: Speech timed out");
-                showComment("...you have a mouth, right?", null);
+                showComment(res.getString(R.string.error_say_something), null);
             } else {
                 Log.d(DEBUG_TAG, "Error " + errorCode + ": Error callback occurred from speech listener");
-                showComment("An error occurred on our side, sorry :'-(", null);
+                showComment(res.getString(R.string.error_our_side), null);
             }
         }
     }
@@ -412,10 +397,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override public void commentCallback(String comment, String link) {
+        Resources res = getResources();
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
-            Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-            showComment("Reddit doesn't know how to respond to that.", null);
+            showComment(res.getString(R.string.no_comments), null);
         } else {
             Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             showComment(comment, link);
@@ -503,12 +488,29 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         dontListen();
     }
 
+    private void noWifi() {
+        Resources res = getResources();
+        ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.no_wifi_1),
+                        res.getString(R.string.no_wifi_2),
+                        res.getString(R.string.no_wifi_3),
+                        res.getString(R.string.no_wifi_4),
+                        res.getString(R.string.no_wifi_5),
+                        res.getString(R.string.no_wifi_6)
+                )
+        );
+        Random mRandom = new Random();
+        int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
+        showComment(NETWORK_UNAVAILABLE.get(index), null);
+    }
     public interface OnFragmentInteractionListener {
         void switchFragment(Fragment f);
         void switchFragment(Fragment f, int customAnimationIn, int customAnimationOut);
         void speak(String comment);
         void stopSpeaking();
         boolean isNetworkConnectionAvailable();
-        void flipMute();
+        void mute();
+        void unMute();
     }
 }

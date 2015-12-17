@@ -1,100 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.mobileproto.hireddit.hireddit.visuals.InfoFragment"
-android:background="@color/colorBackground"
-android:paddingTop="15dp"
-android:paddingLeft="15dp"
-android:paddingRight="15dp"
-android:paddingBottom="50dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mobileproto.hireddit.hireddit.visuals.InfoFragment"
+    android:background="@color/colorBackground"
+    android:paddingTop="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="50dp">
 
-    <ImageView
-        android:layout_width="74dp"
-        android:layout_height="62dp"
-        android:id="@+id/snooHead"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/snoo_head"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        <ImageView
+            android:layout_width="74dp"
+            android:layout_height="62dp"
+            android:id="@+id/snooHead"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/snoo_head"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center_vertical"
-        android:text="@string/what"
-        android:id="@+id/whatTitle"
-        android:textColor="@color/colorOrange"
-        android:paddingTop="15dp"
-        android:layout_below="@+id/snooHead"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColor="@color/colorWhite"
-        android:text="@string/info_text"
-        android:layout_below="@+id/whatTitle"
-        android:id="@+id/infoText"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColor="@color/colorWhite"
-        android:text="@string/shake"
-        android:layout_below="@+id/infoText"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:id="@+id/shake" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColor="@color/colorWhite"
-        android:text="@string/more"
-        android:layout_below="@+id/shake"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:id="@+id/more" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/more"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/selectOptimization">
-
-        <RadioButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:text="@string/fast"
-            android:id="@+id/fast" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:text="@string/medium"
-            android:id="@+id/medium" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:text="@string/slow"
-            android:id="@+id/slow" />
-    </RadioGroup>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_vertical"
+            android:text="@string/what"
+            android:id="@+id/whatTitle"
+            android:textColor="@color/colorOrange"
+            android:paddingTop="15dp"
+            android:layout_below="@+id/snooHead"
+            android:layout_centerHorizontal="true" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorWhite"
+            android:text="@string/info_text"
+            android:layout_below="@+id/whatTitle"
+            android:id="@+id/infoText"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorWhite"
+            android:text="@string/shake"
+            android:layout_below="@+id/infoText"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:id="@+id/shake" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorWhite"
+            android:text="@string/more"
+            android:layout_below="@+id/shake"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:id="@+id/more" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/selectOptimization">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="@string/fast"
+                android:id="@+id/fast" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="@string/medium"
+                android:id="@+id/medium" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="@string/slow"
+                android:id="@+id/slow" />
+        </RadioGroup>
+
+    </RelativeLayout>
+</ScrollView>

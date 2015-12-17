@@ -46,8 +46,12 @@ public class WordToSpeech {
         }
     }
 
-    public void flipMute() {
-        mute = !mute;
+    public void Mute() {
+        mute = false;
+    }
+
+    public void unMute() {
+        mute = true;
     }
 
     public void destroy() {
