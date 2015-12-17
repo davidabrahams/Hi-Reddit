@@ -233,7 +233,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void quietMode() {
         Log.d(DEBUG_TAG, "enabled quietMode");
         fragmentInteractionListener.stopSpeaking();
-        fragmentInteractionListener.Mute();
+        fragmentInteractionListener.mute();
         quietModeButton.setImageResource(R.drawable.mute);
         quietMode = true;
     }
@@ -306,7 +306,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             Random mRandom = new Random();
             int index = mRandom.nextInt(possibleWords.size());
             String shakeWord = possibleWords.get(index);
-            new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
+            if (!fragmentInteractionListener.isNetworkConnectionAvailable())
+                noWifi();
+            else
+                new RedditSearcher(this, shakeWord, getActivity().getApplicationContext()).getRedditComment();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -347,7 +350,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
         String firstResult = voiceResult.get(0).toString();
         editText.setText(firstResult);
-        new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        if (!fragmentInteractionListener.isNetworkConnectionAvailable())
+            noWifi();
+        else
+            new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
 
     @Override public void partialCallback(ArrayList partialResult) {
@@ -370,7 +376,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             if (!fragmentInteractionListener.isNetworkConnectionAvailable()){
                 noWifi();
             }
-            if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
+            else if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
                 showComment(res.getString(R.string.error_1), "false");
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
@@ -501,7 +507,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         void speak(String comment);
         void stopSpeaking();
         boolean isNetworkConnectionAvailable();
-        void Mute();
+        void mute();
         void unMute();
     }
 }
