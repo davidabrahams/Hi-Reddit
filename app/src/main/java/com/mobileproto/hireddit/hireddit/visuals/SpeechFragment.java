@@ -378,13 +378,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
             else if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
-                showComment(res.getString(R.string.error_1), "false");
+                showComment(res.getString(R.string.error_1), null);
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Log.d(DEBUG_TAG, "Error 6: Speech timed out");
-                showComment(res.getString(R.string.error_say_something), "false");
+                showComment(res.getString(R.string.error_say_something), null);
             } else {
                 Log.d(DEBUG_TAG, "Error " + errorCode + ": Error callback occurred from speech listener");
-                showComment(res.getString(R.string.error_our_side), "false");
+                showComment(res.getString(R.string.error_our_side), null);
             }
         }
     }
@@ -397,7 +397,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Resources res = getResources();
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
-            showComment(res.getString(R.string.no_comments), "false");
+            showComment(res.getString(R.string.no_comments), null);
         } else {
             Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             showComment(comment, link);
@@ -499,7 +499,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         );
         Random mRandom = new Random();
         int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-        showComment(NETWORK_UNAVAILABLE.get(index), "false");
+        showComment(NETWORK_UNAVAILABLE.get(index), null);
     }
     public interface OnFragmentInteractionListener {
         void switchFragment(Fragment f);
