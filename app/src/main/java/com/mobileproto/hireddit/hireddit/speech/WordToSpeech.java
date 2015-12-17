@@ -2,6 +2,7 @@ package com.mobileproto.hireddit.hireddit.speech;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -30,6 +31,7 @@ public class WordToSpeech {
     }
 
     public void speak(String toSpeak) {
+        Log.d("I'm alive still and ", Boolean.toString(mute));
         if (mute) return;
         // version check, if SDK is newer than 21, use the update speak method
         // if not, use the deprecated one
@@ -47,11 +49,12 @@ public class WordToSpeech {
     }
 
     public void Mute() {
-        mute = false;
+        Log.d("I'm alive ", "and mute");
+        mute = true;
     }
 
     public void unMute() {
-        mute = true;
+        mute = false;
     }
 
     public void destroy() {
