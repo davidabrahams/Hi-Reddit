@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -175,8 +174,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                     ArrayList<String> textInput = new ArrayList<String>();
                     textInput.add(0, editText.getText().toString());
                     speechResultCallback(textInput);
-                    speakMode();
-                    return true;
+                    if(!fragmentInteractionListener.isNetworkConnectionAvailable()){
+                        noWifi();
+                    }
+                    else {
+                        speakMode();
+                        return true;
+                    }
                 }
                 return false;
             }
