@@ -101,8 +101,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void flipMute() {
-        speech.flipMute();
+    public void Mute() {
+        speech.Mute();
+    }
+
+    @Override
+    public void unMute() {
+        speech.unMute();
     }
 
     @Override

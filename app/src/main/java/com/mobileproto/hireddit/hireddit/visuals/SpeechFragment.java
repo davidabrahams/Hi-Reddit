@@ -223,8 +223,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         if (sharedPreference.getValue(getActivity(), PREFS_QUIET)) {
             quietMode();
-        } else {
-            voiceMode();
         }
 
         shakeOn = sharedPreference.getValue(getActivity(), PREFS_SHAKE);
@@ -235,14 +233,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void quietMode() {
         Log.d(DEBUG_TAG, "enabled quietMode");
         mListener.stopSpeaking();
-        mListener.flipMute();
+        mListener.Mute();
         quietModeButton.setImageResource(R.drawable.mute);
         quietMode = true;
     }
 
     public void voiceMode() {
         Log.d(DEBUG_TAG, "enabled voiceMode");
-        mListener.flipMute();
+        mListener.unMute();
         if (!isListening && listViewAdapter.getCount() != 0) mListener.speak(allResponses.get(listViewAdapter.getCount() - 1));
         quietModeButton.setImageResource(R.drawable.volume_on);
         quietMode = false;
@@ -503,6 +501,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         void speak(String comment);
         void stopSpeaking();
         boolean isNetworkConnectionAvailable();
-        void flipMute();
+        void Mute();
+        void unMute();
     }
 }
