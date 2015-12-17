@@ -382,8 +382,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (numErrors == 1) { // to prevent repeating errors
             if (!fragmentInteractionListener.isNetworkConnectionAvailable()){
                 noWifi();
-            }
-            else if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
+            } else if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
                 showComment(res.getString(R.string.error_1), null);
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
