@@ -376,9 +376,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override public void errorCallback(int errorCode, int numErrors) {
+        if(getActivity() == null || !isAdded()) return;
         isListening = false;
         updateListeningIndicator();
-        if(getActivity() == null || !isAdded()) return;
         Resources res = getResources();
         Log.d(DEBUG_TAG, "Got error, stopped listening.");
         if (numErrors == 1) { // to prevent repeating errors
@@ -486,7 +486,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override public void onDetach() {
         super.onDetach();
         fragmentInteractionListener = null;
-        if (isListening) dontListen();
+        dontListen();
     }
 
     private void switchToInfoFragment() {
