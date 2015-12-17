@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -18,17 +19,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
@@ -49,41 +46,39 @@ import butterknife.ButterKnife;
 import android.widget.ListView;
 
 /**
- * SpeechFragment: Primary fragment shown in the app that has
+ * SpeechFragment: Primary fragment shown in the app that has all speech related views
  **/
 public class SpeechFragment extends Fragment implements SpeechCallback,
         RedditSearcher.CommentCallback, ListViewAdapterCallback {
 
     private InfoFragment.NumberCommentsToSearchCallback numToSearchCb;
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener fragmentInteractionListener;
     private static final String DEBUG_TAG = "SpeechFragmentDebug";
     private static final String PREFS_QUIET = "QUIET";
     private static final String PREFS_SHAKE = "VIBRATE";
     private boolean isListening;
     private boolean firstResponse = true;
     private boolean shakeOn = true;
-    private ArrayList voiceInput;
 
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
     private boolean typeMode = false;
     private boolean quietMode = false;
-    private ArrayList<String> links = new ArrayList<String>();
+    private ArrayList<String> links = new ArrayList<>();
 
-    private ViewGroup.LayoutParams cParams;
+    private ViewGroup.LayoutParams layoutParams;
     private int initialParams;
     private SharedPreference sharedPreference;
 
-    private ArrayList<String> allRequests = new ArrayList<String>();
-    private ArrayList<String> allResponses = new ArrayList<String>();
+    private ArrayList<String> allRequests = new ArrayList<>();
+    private ArrayList<String> allResponses = new ArrayList<>();
     private ListViewAdapter listViewAdapter;
     private int listViewHeight;
-    private int itemHeight;
     private View footerSpacing;
 
     @Bind (R.id.listView) ListView listView;
     @Bind(R.id.volumeOnButton) ImageView quietModeButton;
-    @Bind(R.id.textInputDisplay) EditText inputTextDisplay;
+    @Bind(R.id.textInputDisplay) EditText editText;
     @Bind(R.id.listenButton) ImageView listenButton;
     @Bind(R.id.helloReddit) TextView helloReddit;
     @Bind(R.id.shakeButton) ImageView shakeButton;
@@ -132,18 +127,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         sharedPreference = new SharedPreference();
 
-        // listView
+        // view
         View footerView = ((LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listview_footer, null, false);
         footerSpacing = footerView.findViewById(R.id.footerSpace);
         listView.addFooterView(footerView);
-        //TODO: get rid of overscroll graphic
-
         listViewAdapter = new ListViewAdapter(getActivity(), allRequests, allResponses, this);
         listView.setAdapter(listViewAdapter);
 
-        inputTextDisplay.setHorizontallyScrolling(false);
-        inputTextDisplay.setLines(3);
-        inputTextDisplay.setMaxLines(3);
+        editText.setHorizontallyScrolling(false);
+        editText.setLines(6);
 
         // voice recognition
         SpeechListener listener = new SpeechListener(this);
@@ -169,7 +161,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         });
 
         quietModeButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (quietMode) voiceMode();
                 else quietMode();
             }
@@ -177,21 +170,23 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         //allowing text input
             //allows you to type
-        inputTextDisplay.setOnTouchListener(new View.OnTouchListener() {
-            @Override public boolean onTouch(View v, MotionEvent event) {
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
                 typeMode();
                 return false;
             }
         });
 
             //allows you to re-search value
-        inputTextDisplay.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    mgr.hideSoftInputFromWindow(inputTextDisplay.getWindowToken(), 0);
+                    mgr.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                     ArrayList<String> textInput = new ArrayList<String>();
-                    textInput.add(0, inputTextDisplay.getText().toString());
+                    textInput.add(0, editText.getText().toString());
                     speechResultCallback(textInput);
                     speakMode();
                     return true;
@@ -201,17 +196,22 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() { //if scroll, disallow changing input
-            @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
                 Log.d(DEBUG_TAG, "onScrollStateChanged called - making editText invisible");
-                inputTextDisplay.setVisibility(View.INVISIBLE);
+                editText.setVisibility(View.INVISIBLE);
             }
-            @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
         });
 
         // add link functionality
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(links.get(position) != "false") {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (links.get(position) != null) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(links.get(position)));
                     startActivity(browserIntent);
                 }
@@ -231,8 +231,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             }
         });
 
-        cParams = listenButton.getLayoutParams();
-        initialParams = cParams.width;
+        layoutParams = listenButton.getLayoutParams();
+        initialParams = layoutParams.width;
 
         if (sharedPreference.getValue(getActivity(), PREFS_QUIET)) {
             quietMode();
@@ -247,16 +247,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void quietMode() {
         Log.d(DEBUG_TAG, "enabled quietMode");
-        mListener.stopSpeaking();
-        mListener.flipMute();
+        fragmentInteractionListener.stopSpeaking();
+        fragmentInteractionListener.flipMute();
         quietModeButton.setImageResource(R.drawable.mute);
         quietMode = true;
     }
 
     public void voiceMode() {
         Log.d(DEBUG_TAG, "enabled voiceMode");
-        mListener.flipMute();
-        if (!isListening && listViewAdapter.getCount() != 0) mListener.speak(allResponses.get(listViewAdapter.getCount() - 1));
+        fragmentInteractionListener.flipMute();
+        if (!isListening && listViewAdapter.getCount() != 0) fragmentInteractionListener.speak(allResponses.get(listViewAdapter.getCount() - 1));
         quietModeButton.setImageResource(R.drawable.volume_on);
         quietMode = false;
     }
@@ -264,21 +264,21 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void typeMode() {
         Log.d(DEBUG_TAG, "enabled typeMode");
         if (typeMode) return;
-        mListener.stopSpeaking();
+        fragmentInteractionListener.stopSpeaking();
         listView.setAlpha(0); //TODO: animation for listview instead here
-        inputTextDisplay.setCursorVisible(true);
-        inputTextDisplay.requestFocus();
+        editText.setCursorVisible(true);
+        editText.requestFocus();
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.showSoftInput(inputTextDisplay, InputMethodManager.SHOW_IMPLICIT);
+        mgr.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
         typeMode = true;
     }
 
     public void speakMode() {
         Log.d(DEBUG_TAG, "enabled speakMode");
         if (!typeMode) return;
-        mListener.stopSpeaking();
+        fragmentInteractionListener.stopSpeaking();
         listView.setAlpha(0);
-        inputTextDisplay.setCursorVisible(false);
+        editText.setCursorVisible(false);
         typeMode = false;
     }
 
@@ -288,12 +288,12 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         //        R.anim.listview_out);
         //listView.startAnimation(listViewAnimation);
         listView.setAlpha(0);
-        inputTextDisplay.setText(""); //reset what speechText says
-        inputTextDisplay.setAlpha(1);
+        editText.setText(""); //reset what speechText says
+        editText.setAlpha(1);
 
         Log.d(DEBUG_TAG, "Start listening");
         isListening = true;
-        mListener.stopSpeaking();
+        fragmentInteractionListener.stopSpeaking();
         sr.startListening(recognizerIntent);
         updateListeningIndicator();
     }
@@ -307,7 +307,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void shake() {
         Log.d(DEBUG_TAG, "you shaked shaked");
-        inputTextDisplay.setText(R.string.shake_string);
+        editText.setText(R.string.shake_string);
         try {
             ArrayList<String> possibleWords = new ArrayList<>();
             AssetManager assetManager = getContext().getAssets();
@@ -327,12 +327,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     private void updateShake() {
-        Log.d(DEBUG_TAG, "changing shake mode");
         if (shakeOn) {
+            Log.d(DEBUG_TAG, "Shake mode off");
             shakeButton.setImageResource(R.drawable.no_shake);
             ShakeDetector.stop();
             shakeOn = false;
         } else {
+            Log.d(DEBUG_TAG, "Shake mode on");
             shakeButton.setImageResource(R.drawable.yes_shake);
             ShakeDetector.start();
             shakeOn = true;
@@ -351,36 +352,35 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
-        voiceInput = voiceResult;
 
-        // TODO: why not just let error callback do this? if your voiceInput is null you're
+        // TODO: why not just let error callback do this? if your voiceResult is null you're
         // going to get an error
-        if (voiceInput == null) {
-            showComment("Sorry, you said nothing.", "false");
+        if (voiceResult == null) {
+            showComment("Sorry, you said nothing.", null);
         }
 
-        String firstResult = voiceInput.get(0).toString();
-        inputTextDisplay.setText(firstResult);
+        String firstResult = voiceResult.get(0).toString();
+        editText.setText(firstResult);
 
-        if (mListener.isNetworkConnectionAvailable()) {
+        if (fragmentInteractionListener.isNetworkConnectionAvailable()) {
             new RedditSearcher(this,
                     firstResult, getActivity().getApplicationContext()).getRedditComment();
         } else {
             Random mRandom = new Random();
             int index = mRandom.nextInt(NETWORK_UNAVAILABLE.size());
-            showComment(NETWORK_UNAVAILABLE.get(index), "false");
+            showComment(NETWORK_UNAVAILABLE.get(index), null);
         }
     }
 
     @Override public void partialCallback(ArrayList partialResult) {
-        inputTextDisplay.setText(partialResult.get(0).toString());
+        editText.setText(partialResult.get(0).toString());
     }
 
     @Override public void rmsCallback(float rmsdB) {
         int radius = initialParams + (int) rmsdB * 2;
-        cParams.width = radius;
-        cParams.height = radius;
-        listenButton.setLayoutParams(cParams);
+        layoutParams.width = radius;
+        layoutParams.height = radius;
+        listenButton.setLayoutParams(layoutParams);
     }
 
     @Override public void errorCallback(int errorCode, int numErrors) {
@@ -393,13 +393,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             if (errorCode == SpeechRecognizer.ERROR_NO_MATCH) { // error 7
                 //TODO: change this to saying out loud, "please try again"
                 Log.d(DEBUG_TAG, "Error 7: speech not recognized");
-                showComment("make sense pls", "false");
+                showComment("make sense pls", null);
             } else if (errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) { //error 6
                 Log.d(DEBUG_TAG, "Error 6: Speech timed out");
-                showComment("you have a mouth right", "false");
+                showComment("...you have a mouth, right?", null);
             } else {
                 Log.d(DEBUG_TAG, "Error " + errorCode + ": Error callback occurred from speech listener");
-                showComment("error on our side, sorry :'-(", "false");
+                showComment("An error occurred on our side, sorry :'-(", null);
             }
         }
     }
@@ -412,7 +412,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
             Toast.makeText(getContext(), "No valid comments available", Toast.LENGTH_SHORT).show();
-            showComment("Reddit doesn't know how to respond to that", "false");
+            showComment("Reddit doesn't know how to respond to that.", null);
         } else {
             Log.d(DEBUG_TAG, "Comment callback with comment: " + comment);
             showComment(comment, link);
@@ -422,16 +422,16 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     public void showComment(String comment, String link){ //a comment will always show, so do it here
         Log.d(DEBUG_TAG, "calling showComment");
         //show and speak final result:
-        mListener.speak(comment);
+        fragmentInteractionListener.speak(comment);
 
         //add full result to history (aka listView):
-        allRequests.add(inputTextDisplay.getText().toString());
+        allRequests.add(editText.getText().toString());
         allResponses.add(comment);
         links.add(link);
         listViewAdapter.notifyDataSetChanged();
 
         //change footer view
-        if(firstResponse == true) {
+        if(firstResponse) {
             //gives you height in pixels, NORA tested for accuracy
             listViewHeight = listView.getHeight();
             firstResponse = false;
@@ -440,14 +440,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
             updateFooter(listViewAdapter.getLastItemHeight());
         }
 
-        //make listview visible and overlayed input visible (as long as you don't scroll)
+        //make listView visible and overlayed input visible (as long as you don't scroll)
         listView.setAlpha(1);
-        inputTextDisplay.setVisibility(View.VISIBLE);
+        editText.setVisibility(View.VISIBLE);
     }
 
     @Override public void itemHeightCallback(int height) {
-        itemHeight = height;
-        updateFooter(itemHeight);
+        updateFooter(height);
     }
 
     public void updateFooter(int height) {
@@ -482,7 +481,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            fragmentInteractionListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -491,13 +490,13 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override public void onDetach() {
         super.onDetach();
-        mListener = null;
+        fragmentInteractionListener = null;
     }
 
     private void switchToInfoFragment() {
-        mListener.switchFragment(InfoFragment.newInstance(numToSearchCb), FragmentTransaction.TRANSIT_NONE,
+        fragmentInteractionListener.switchFragment(InfoFragment.newInstance(numToSearchCb), FragmentTransaction.TRANSIT_NONE,
                 R.anim.slide_out_up);
-        mListener.stopSpeaking();
+        fragmentInteractionListener.stopSpeaking();
         dontListen();
     }
 
