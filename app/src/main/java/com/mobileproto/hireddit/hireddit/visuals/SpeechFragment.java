@@ -269,26 +269,30 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     public void doListen() {
-        //TODO: make listView animate off page instead. Code below doesn't work.
-        //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
-        //        R.anim.listview_out);
-        //listView.startAnimation(listViewAnimation);
-        listView.setAlpha(0);
-        editText.setText(""); //reset what speechText says
-        editText.setAlpha(1);
+        if (!isListening) {
+            //TODO: make listView animate off page instead. Code below doesn't work.
+            //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
+            //        R.anim.listview_out);
+            //listView.startAnimation(listViewAnimation);
+            listView.setAlpha(0);
+            editText.setText(""); //reset what speechText says
+            editText.setAlpha(1);
 
-        Log.d(DEBUG_TAG, "Start listening");
-        isListening = true;
-        fragmentInteractionListener.stopSpeaking();
-        sr.startListening(recognizerIntent);
-        updateListeningIndicator();
+            Log.d(DEBUG_TAG, "Start listening");
+            isListening = true;
+            fragmentInteractionListener.stopSpeaking();
+            sr.startListening(recognizerIntent);
+            updateListeningIndicator();
+        }
     }
 
     public void dontListen() {
-        Log.d(DEBUG_TAG, "Stop listening.");
-        isListening = false;
-        updateListeningIndicator();
-        sr.stopListening();
+        if (isListening) {
+            Log.d(DEBUG_TAG, "Stop listening.");
+            isListening = false;
+            updateListeningIndicator();
+            sr.stopListening();
+        }
     }
 
     public void shake() {
