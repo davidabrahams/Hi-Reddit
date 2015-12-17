@@ -4,7 +4,7 @@
 ###What is this?
 ___**Hi Reddit**___ is an Android app that takes your voice as input and outputs an occasionally funny comment from Reddit. Want to know who some random user on reddit thinks is a pretty cool person? Or maybe, you want to hear the opinion of some Redditor on bread - If so, then this app is for you. Download it from the Play Store ~~here~~ (app not yet available on Earth).
 
-###... why?
+###... Why?
 We thought it'd be funny. Also, it's a project for Olin's Mobile Prototyping course.
 	
 __APIs/libraries we used if you're interested__:
