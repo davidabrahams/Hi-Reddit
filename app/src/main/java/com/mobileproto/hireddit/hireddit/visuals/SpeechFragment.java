@@ -345,8 +345,15 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (voiceResult == null) {
             showComment(res.getString(R.string.error_not_recognized), null);
         }
-        String firstResult = voiceResult.get(0).toString();
-        editText.setText(firstResult);
+
+        editText.setText(voiceResult.get(0).toString()); //this cuts off what you said
+
+        if (!fragmentInteractionListener.isNetworkConnectionAvailable()) {
+            noWifi();
+            return;
+        }
+
+        String firstResult = editText.getText().toString();
 
         ArrayList<String> hiReddit = new ArrayList<>(
                 Arrays.asList(
@@ -359,9 +366,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
                 )
         );
 
-        if (!fragmentInteractionListener.isNetworkConnectionAvailable())
-            noWifi();
-        else if (hiReddit.contains(firstResult))
+        if (hiReddit.contains(firstResult))
             showComment(res.getString(R.string.hi_reddit_response), null);
         else
             new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
