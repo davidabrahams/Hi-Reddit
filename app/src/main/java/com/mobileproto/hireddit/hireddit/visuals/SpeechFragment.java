@@ -347,6 +347,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     // TODO: Make this function only take a String
     @Override public void speechResultCallback(ArrayList voiceResult) {
+        if(getActivity() == null || !isAdded()) return;
         Resources res = getResources();
         isListening = false;
         updateListeningIndicator();
@@ -377,6 +378,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override public void errorCallback(int errorCode, int numErrors) {
+        if(getActivity() == null || !isAdded()) return;
         isListening = false;
         updateListeningIndicator();
         Resources res = getResources();
@@ -402,6 +404,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     @Override public void commentCallback(String comment, String link) {
+        if (getActivity() == null || !isAdded()) return;
         Resources res = getResources();
         if (comment == null) {
             Log.d(DEBUG_TAG, "No valid comments found");
@@ -484,6 +487,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     @Override public void onDetach() {
         super.onDetach();
         fragmentInteractionListener = null;
+        dontListen();
     }
 
     private void switchToInfoFragment() {
@@ -494,6 +498,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     }
 
     private void noWifi() {
+        if(getActivity() == null || !isAdded()) return;
         Resources res = getResources();
         ArrayList<String> NETWORK_UNAVAILABLE = new ArrayList<>(
                 Arrays.asList(
