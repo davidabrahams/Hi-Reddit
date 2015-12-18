@@ -66,8 +66,7 @@ public class ListViewAdapter extends BaseAdapter {
         // add items
         holder.speech.setText(requests.get(position));
         holder.comment.setText(responses.get(position));
-        mHeights.add(0); //TODO: make this instead just making sure there's a space at element position that isn't overwritten
-                        //so you can do mHeights.set(position, bottom - top) later without null pointer error
+        mHeights.add(0); //TODO: make this better
 
         // animating comment in
         Animation commentAnimation = AnimationUtils.loadAnimation(context, R.anim.comment_slide);
@@ -85,7 +84,6 @@ public class ListViewAdapter extends BaseAdapter {
                 }
             });
         }
-
         return convertView;
     }
 
