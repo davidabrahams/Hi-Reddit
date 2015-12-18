@@ -46,7 +46,7 @@ public class WordToSpeech {
         }
     }
 
-    public void Mute() {
+    public void mute() {
         mute = true;
     }
 

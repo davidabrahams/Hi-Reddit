@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     @Override
     public void mute() {
-        speech.Mute();
+        speech.mute();
     }
 
     @Override
