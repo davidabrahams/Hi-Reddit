@@ -139,8 +139,10 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         //create listeners for buttons
         listenButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (isListening) dontListen();
-                else doListen();
+                if (isListening)
+                    dontListen();
+                else
+                    doListen();
             }
         });
 
@@ -368,8 +370,9 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
         if (hiReddit.contains(firstResult))
             showComment(res.getString(R.string.hi_reddit_response), null);
-        else
+        else {
             new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
+        }
     }
 
     @Override public void partialCallback(ArrayList partialResult) {

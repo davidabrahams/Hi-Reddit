@@ -21,7 +21,6 @@ public class SpeechListener implements RecognitionListener {
         numErrors = 0;
     }
 
-
     @Override
     public void onReadyForSpeech(Bundle params) {
         Log.d(DEBUG_TAG, "onReadyForSpeech " + params);
