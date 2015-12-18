@@ -246,7 +246,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         Log.d(DEBUG_TAG, "enabled typeMode");
         if (typeMode) return;
         fragmentInteractionListener.stopSpeaking();
-        listView.setAlpha(0); //TODO: animation for listview instead here
+        listView.setAlpha(0);
         editText.setCursorVisible(true);
         editText.requestFocus();
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -272,10 +272,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     public void doListen() {
         if (!isListening) {
-            //TODO: make listView animate off page instead. Code below doesn't work.
-            //Animation listViewAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),
-            //        R.anim.listview_out);
-            //listView.startAnimation(listViewAnimation);
             listView.setAlpha(0);
             editText.setText(""); //reset what speechText says
             editText.setAlpha(1);

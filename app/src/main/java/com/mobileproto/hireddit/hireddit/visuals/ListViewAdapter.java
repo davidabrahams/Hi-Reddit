@@ -23,7 +23,6 @@ public class ListViewAdapter extends BaseAdapter {
     private ArrayList<String> responses;
     private ArrayList<Integer> mHeights = new ArrayList<>();
     private ListViewAdapterCallback listCallback;
-    private ArrayList<Integer> elementCall = new ArrayList<>();
 
     public ListViewAdapter(Activity mcontext, ArrayList<String> question,
                            ArrayList<String> answer, ListViewAdapterCallback mlistCallback) {
@@ -72,25 +71,8 @@ public class ListViewAdapter extends BaseAdapter {
                         //so you can do mHeights.set(position, bottom - top) later without null pointer error
 
         // animating comment in
-
-        // NOTE: the else portion was used to slide in history elements, but I couldn't get
-        // them to animate correctly. with below code, last comment horizontally always slides in
-        // and other items do the history animation.
-        // using if(elementCall.get(position) == 0) and elementCall.set(position, 1)
-        // sometimes uses both animations instead. I think this is because the adapter has some
-        // problems and will set the second to last item as the last item (which is why i use the
-        // callback below because that was causing a lot of problems with updating the footer.)
-
-        //elementCall.add(0);
-//         if (position == getCount() - 1 ){
         Animation commentAnimation = AnimationUtils.loadAnimation(context, R.anim.comment_slide);
         holder.comment.startAnimation(commentAnimation);
-//        } else {
-//            Animation historyAnimation = AnimationUtils.loadAnimation(context, R.anim.down_from_top);
-//            convertView.startAnimation(historyAnimation);
-//        }
-
-
 
         // get height of the item
         if(android.os.Build.VERSION.SDK_INT >= 11) { // see http://stackoverflow.com/questions/13131948/calculating-the-height-of-each-row-of-a-listview
