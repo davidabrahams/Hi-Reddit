@@ -190,9 +190,11 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (links.get(position) != null) {
+                try {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(links.get(position)));
                     startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return false;
             }
