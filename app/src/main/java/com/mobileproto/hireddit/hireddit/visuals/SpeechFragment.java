@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.BufferedReader;
@@ -156,18 +157,17 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         //allowing text input
             //allows you to type
         editText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            @Override public boolean onTouch(View v, MotionEvent event) {
                 typeMode();
                 return false;
             }
         });
 
-            //allows you to re-search value
+            //if you press "done"
         editText.setOnEditorActionListener(new CustomEditText.OnEditorActionListener() {
             @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    speakMode();
+                    doneTypeMode();
                     return true;
                 }
                 return false;
@@ -175,21 +175,18 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() { //if scroll, disallow changing input
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
                 Log.d(DEBUG_TAG, "onScrollStateChanged called - making editText invisible");
                 editText.setVisibility(View.INVISIBLE);
             }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
 
         // add link functionality
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(links.get(position)));
                     startActivity(browserIntent);
@@ -225,7 +222,7 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
 
     @Override public void leavingEditTextCallback() {
         Log.d(DEBUG_TAG, "Leaving Edit Text callback called");
-        speakMode();
+        doneTypeMode();
     }
 
     public void quietMode() {
@@ -257,8 +254,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         typeMode = true;
     }
 
-    public void speakMode() {
-        Log.d(DEBUG_TAG, "enabled speakMode");
+    public void doneTypeMode() {
+        Log.d(DEBUG_TAG, "enabled doneTypeMode");
 
         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -267,8 +264,8 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         speechResultCallback(textInput);
 
         if (!typeMode) return;
+        Log.d(DEBUG_TAG, "typeMode is true");
         fragmentInteractionListener.stopSpeaking();
-        listView.setAlpha(0);
         editText.setCursorVisible(false);
         typeMode = false;
     }
@@ -360,8 +357,22 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         }
         String firstResult = voiceResult.get(0).toString();
         editText.setText(firstResult);
+
+        ArrayList<String> hiReddit = new ArrayList<>(
+                Arrays.asList(
+                        res.getString(R.string.hi_reddit_1),
+                        res.getString(R.string.hi_reddit_2),
+                        res.getString(R.string.hi_reddit_3),
+                        res.getString(R.string.hi_reddit_4),
+                        res.getString(R.string.hi_reddit_5),
+                        res.getString(R.string.hi_reddit_6)
+                )
+        );
+
         if (!fragmentInteractionListener.isNetworkConnectionAvailable())
             noWifi();
+        else if (hiReddit.contains(firstResult))
+            showComment(res.getString(R.string.hi_reddit_response), null);
         else
             new RedditSearcher(this, firstResult, getActivity().getApplicationContext()).getRedditComment();
     }
