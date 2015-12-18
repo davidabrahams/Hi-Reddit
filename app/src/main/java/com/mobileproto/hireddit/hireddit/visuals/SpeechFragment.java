@@ -264,7 +264,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         if (!typeMode) return;
         Log.d(DEBUG_TAG, "typeMode is true");
         fragmentInteractionListener.stopSpeaking();
-        //listView.setAlpha(0);
         editText.setCursorVisible(false);
         typeMode = false;
     }
