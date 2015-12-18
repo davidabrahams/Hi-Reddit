@@ -21,7 +21,6 @@ public class SpeechListener implements RecognitionListener {
         numErrors = 0;
     }
 
-
     @Override
     public void onReadyForSpeech(Bundle params) {
         Log.d(DEBUG_TAG, "onReadyForSpeech " + params);
@@ -34,7 +33,6 @@ public class SpeechListener implements RecognitionListener {
 
     @Override
     public void onRmsChanged(float rmsdB) {
-        //Log.d(DEBUG_TAG, "onRmsChanged " + rmsdB);
         speechCallback.rmsCallback(rmsdB);
     }
 

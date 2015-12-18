@@ -35,11 +35,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         manager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         switchFragment(SpeechFragment.newInstance(this));
-
         commentsToSearch = (new SharedPreference()).getValueInt(this, NUM_TO_SEARCH);
-
         speech = new WordToSpeech(this);
     }
 
@@ -56,12 +53,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -101,8 +95,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void flipMute() {
-        speech.flipMute();
+    public void mute() {
+        speech.mute();
+    }
+
+    @Override
+    public void unMute() {
+        speech.unMute();
     }
 
     @Override

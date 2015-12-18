@@ -24,8 +24,6 @@ public class InfoFragment extends Fragment {
     @Bind(R.id.slow) RadioButton slowButton;
 
     private static final String DEBUG_TAG = "InfoFragment Debug";
-
-
     private NumberCommentsToSearchCallback cb;
 
     /**
@@ -41,13 +39,6 @@ public class InfoFragment extends Fragment {
 
     public InfoFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
@@ -96,10 +87,8 @@ public class InfoFragment extends Fragment {
             case 10:
                 slowButton.setChecked(true);
                 break;
-
         }
     }
-
 
     public interface NumberCommentsToSearchCallback {
         void setCommentsToSearch(int c);

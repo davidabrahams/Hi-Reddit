@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -51,6 +50,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private CommentCallback myCommentCallback;
     private RequestQueue queue;
 
+    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
+        this.context = context;
+        this.myCommentCallback = myCommentCallback;
+        this.spokenString = spokenString;
+        String indicoApiKey = getApi(context);
+        this.indico = Indico.init(context, indicoApiKey, null);
+        this.queue = Volley.newRequestQueue(context);
+    }
+
     private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
         public void handle(IndicoResult result) throws IndicoException {
@@ -64,17 +72,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             }
         }
     };
-
-    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
-
-        this.myCommentCallback = myCommentCallback;
-        this.spokenString = spokenString;
-        this.context = context;
-        String indicoApiKey = getApi(context);
-        this.indico = Indico.init(context, indicoApiKey, null);
-        this.queue = Volley.newRequestQueue(context);
-
-    }
 
     private static String getApi(Context context) {
         try {
@@ -178,7 +175,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             pickComment(allComments);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
-            Toast.makeText(context, res.getString(R.string.no_comments), Toast.LENGTH_SHORT).show();
+            myCommentCallback.commentCallback(res.getString(R.string.no_comments), null);
         }
     }
 
@@ -202,5 +199,4 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
         void commentCallback(String comment, String link);
     }
-
 }

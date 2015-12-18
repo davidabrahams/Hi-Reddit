@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#3F51B5</color> <!--> I can't figure out how to change the color for the editText cursor, so this is the same as colorPrimary<-->
     <color name="colorBlue">#cee3f8</color>
     <color name="colorBackground">#000000</color>
     <color name="colorOrange">#ff5700</color>
+    <color name="colorOrangeDark">#cc3600</color>
     <color name="colorWhite">#ffffff</color>
 </resources>

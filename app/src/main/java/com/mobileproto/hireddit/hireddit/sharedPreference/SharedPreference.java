@@ -20,12 +20,9 @@ public class SharedPreference {
     }
 
     public void save(Context context, String key, int commentsToSearch) {
-
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
-
         editor.putInt(key, commentsToSearch);
-
         editor.apply();
     }
 
@@ -39,19 +36,5 @@ public class SharedPreference {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         int i = settings.getInt(key, 1);
         return i;
-    }
-
-    public void clearSharedPreference(Context context) {
-        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        Editor editor = settings.edit();
-        editor.clear();
-        editor.apply();
-    }
-
-    public void removeValue(Context context, String key) {
-        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        Editor editor = settings.edit();
-        editor.remove(key);
-        editor.apply();
     }
 }
