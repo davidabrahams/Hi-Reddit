@@ -51,6 +51,15 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
     private CommentCallback myCommentCallback;
     private RequestQueue queue;
 
+    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
+        this.context = context;
+        this.myCommentCallback = myCommentCallback;
+        this.spokenString = spokenString;
+        String indicoApiKey = getApi(context);
+        this.indico = Indico.init(context, indicoApiKey, null);
+        this.queue = Volley.newRequestQueue(context);
+    }
+
     private IndicoCallback<IndicoResult> indicoCallback = new IndicoCallback<IndicoResult>() {
         @Override
         public void handle(IndicoResult result) throws IndicoException {
@@ -64,17 +73,6 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             }
         }
     };
-
-    public RedditSearcher(CommentCallback myCommentCallback, String spokenString, Context context) {
-
-        this.myCommentCallback = myCommentCallback;
-        this.spokenString = spokenString;
-        this.context = context;
-        String indicoApiKey = getApi(context);
-        this.indico = Indico.init(context, indicoApiKey, null);
-        this.queue = Volley.newRequestQueue(context);
-
-    }
 
     private static String getApi(Context context) {
         try {
@@ -202,5 +200,4 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
 
         void commentCallback(String comment, String link);
     }
-
 }

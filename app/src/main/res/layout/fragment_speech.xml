@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
-        android:gravity="center"
         android:paddingTop="10dp">
 
         <TextView
@@ -35,52 +34,52 @@
             android:src="@drawable/snoo_head"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/linearLayout"
+            android:layout_above="@+id/listenButtonFrame"
+            android:id="@+id/listView"
+            android:scrollbars="none"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never">
+        </ListView>
+
+    <com.mobileproto.hireddit.hireddit.visuals.CustomEditText
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/speechTextDisplay"
-        android:textColor="@color/colorOrange"
+        android:id="@+id/textInputDisplay"
         android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/TextInputDisplay"
         android:textColor="@color/colorOrange"
-        android:paddingTop="72dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:inputType="text" />
+        android:textColorHighlight="@color/colorOrangeDark"
+        android:paddingLeft="30dp"
+        android:gravity="right"
+        android:visibility="invisible"
+        android:cursorVisible="false"
+        android:background="@android:color/transparent"
+        android:scrollHorizontally="false"
+        android:maxLength="100"
+        android:inputType="text"/>
 
-    <!--android:layout_below="@+id/linearLayout"-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/commentText"
-        android:layout_below="@id/speechTextDisplay"
-        android:paddingLeft="40dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
     <!--FrameLayout is 140 so that any expansion from the microphone button will not appear chopped off-->
     <FrameLayout
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:id="@+id/listenButtonFrame"
         android:layout_gravity="center_vertical|center_horizontal">
+
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:id="@+id/listenButton"
             android:layout_gravity="center_vertical|center_horizontal"
             android:foregroundGravity="center"/>
+
     </FrameLayout>
 
     <ImageView
@@ -113,6 +112,6 @@
         android:id="@+id/infoButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>
