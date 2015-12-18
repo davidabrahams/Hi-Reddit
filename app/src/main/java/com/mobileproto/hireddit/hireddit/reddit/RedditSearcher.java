@@ -176,7 +176,7 @@ public class RedditSearcher implements Response.Listener<JSONObject>, Response.E
             pickComment(allComments);
         } catch (JSONException e) {
             Log.e(ERROR_TAG, "JSON Exception");
-            Toast.makeText(context, res.getString(R.string.no_comments), Toast.LENGTH_SHORT).show();
+            myCommentCallback.commentCallback(res.getString(R.string.no_comments), null);
         }
     }
 

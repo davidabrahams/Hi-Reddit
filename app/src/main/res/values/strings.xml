@@ -12,6 +12,7 @@
     <string name="shake_string">**Shake Shake**</string>
     <string name="general">The question is too general for me to answer, please be specific</string>
     <string name="no_comments">Reddit doesn\'t know how to respond to that.</string>
+    <string name="error_1">make sense pls</string>
     <string name="error_not_recognized">Sorry, you said nothing.</string>
     <string name="error_say_something">...You have a mouth, right? Say something, or type it above.</string>
     <string name="error_our_side">error on our side, sorry :\'-(</string>
@@ -21,5 +22,11 @@
     <string name="no_wifi_4">I agree that free Wi-Fi shouldn\'t be forbidden</string>
     <string name="no_wifi_5">Keep looking on the internet. Surely there must be a good forecast somewhere out there</string>
     <string name="no_wifi_6">I won\'t work until you provide me with life-long free Wi-Fi</string>
-    <string name="error_1">make sense pls</string>
+    <string name="hi_reddit_1">hi reddit</string>
+    <string name="hi_reddit_2">hello reddit</string>
+    <string name="hi_reddit_3">hey reddit</string>
+    <string name="hi_reddit_4">hi snoo</string>
+    <string name="hi_reddit_5">hello snoo</string>
+    <string name="hi_reddit_6">hey snoo</string>
+    <string name="hi_reddit_response">Hey friend, I\'m Snoo!! Ask me anything ;-)</string>
 </resources>
