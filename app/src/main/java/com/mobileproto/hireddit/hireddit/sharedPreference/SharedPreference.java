@@ -20,12 +20,9 @@ public class SharedPreference {
     }
 
     public void save(Context context, String key, int commentsToSearch) {
-
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
-
         editor.putInt(key, commentsToSearch);
-
         editor.apply();
     }
 

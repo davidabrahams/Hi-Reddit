@@ -16,7 +16,6 @@ public class WordToSpeech {
     private boolean mute;
 
     public WordToSpeech(Context appContext) {
-
         mTtobj = new TextToSpeech(appContext, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -25,7 +24,6 @@ public class WordToSpeech {
                 }
             }
         });
-
         mute = false;
     }
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
 import com.mobileproto.hireddit.hireddit.R;
 import java.util.ArrayList;
