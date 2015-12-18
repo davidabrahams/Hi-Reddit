@@ -57,17 +57,14 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
     private boolean isListening;
     private boolean firstResponse = true;
     private boolean shakeOn = true;
-
     private Intent recognizerIntent;
     private SpeechRecognizer sr;
     private boolean typeMode = false;
     private boolean quietMode = false;
     private ArrayList<String> links = new ArrayList<>();
-
     private ViewGroup.LayoutParams layoutParams;
     private int initialParams;
     private SharedPreference sharedPreference;
-
     private ArrayList<String> allRequests = new ArrayList<>();
     private ArrayList<String> allResponses = new ArrayList<>();
     private ListViewAdapter listViewAdapter;
@@ -349,9 +346,6 @@ public class SpeechFragment extends Fragment implements SpeechCallback,
         isListening = false;
         updateListeningIndicator();
         Log.d(DEBUG_TAG, "Got result, stopped listening.");
-
-        // TODO: why not just let error callback do this? if your voiceResult is null you're
-        // going to get an error
         if (voiceResult == null) {
             showComment(res.getString(R.string.error_not_recognized), null);
         }
