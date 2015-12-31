@@ -14,5 +14,3 @@ __APIs/libraries we used if you're interested__:
 * [Volley](http://developer.android.com/training/volley/index.html)
 * [android.speech](http://developer.android.com/reference/android/speech/package-summary.html)
 * android.speech.texttospeech
-
-![reddit luvs u](http://i.imgur.com/SDMVh.gif)
